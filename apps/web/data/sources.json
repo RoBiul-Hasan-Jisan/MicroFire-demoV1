@@ -1,0 +1,201 @@
+[
+ {
+  "source_id": "bass2-summary",
+  "ntrs_id": "20210011385",
+  "title": "Burning and Suppression of Solids–II  (BASS-II) Summary Report",
+  "authors": [
+   "Sandra L. Olson",
+   "Paul V. Ferkul",
+   "Subrata Bhattacharjee",
+   "Fletcher J. Miller",
+   "Carlos Fernandez-Pello",
+   "Shmuel Link",
+   "James S. T'ien",
+   "Indrek Wichman"
+  ],
+  "organization": "NASA",
+  "document_type": "TECHNICAL_MEMORANDUM",
+  "published": "2021-10-01",
+  "url": "https://ntrs.nasa.gov/citations/20210011385",
+  "pdf_url": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf",
+  "copyright": "GOV_PERMITTED",
+  "sha256": "5ffa911fd9b6356f204646003fb9342e341810dcdfdf5cb15756e7f01ec5f770",
+  "retrieved": "2026-10-01",
+  "used_for": "Test matrices (Tables 7.1, A.1, A.2) and apparatus description",
+  "abstract": "The Burning and Suppression of Solids (BASS) experiment hardware is a small flow duct that\nprovides containment for small scale burning of solid samples within the Microgravity Science Glovebox (MSG) aboard the International Space Station (ISS). A video camera with a data overlay and a 35-mm still camera record the combustion events. The controls (ignition, fan speed, etc.) are operated by an astronaut while the principal investigator team monitors the experiment from the ground and communicates directly with the astronaut. For the first time on ISS, BASS–II utilized MSG working volume dilution with gaseous N2. We developed a perfectly stirred reactor model to determine the N2 flow time and flow rate to obtain the desired reduced O2 concentration in the working volume for each test. We calibrated the model with the Compound Specific Analyzer-Combustion Products (CSA-CP) O2 readings offset using the Major Constituents Analyzer reading of the ISS ambient atmosphere data for that day. This worked out extremely well for operations, and added a new vital variable, ambient O2 level, to our test matrices. The main variables tested in BASS–II were ambient O2 concentration, ventilation flow velocity, and fuel type, thickness, and geometry. BASS–II also utilized the onboard CSA-CP for O2 and CO readings, and the Carbon Dioxide Monitor for CO2 readings before and after each test. Readings from these sensors allow us to evaluate the completeness of the combustion. The O2 and CO2 readings before and after each test were analyzed and compared very well to stoichiometric ratios for a one-step gas-phase reaction. The CO versus CO2 followed a linear trend for some datasets, but not for all the different geometries of fuel and flow tested. We calculated the heat release rates during each test from the O2 consumption and burn times, using the constant 13.1 kJ of heat released per gram of O2 consumed. The results showed that most of the tests had heat release rates well below 100 W. Lastly, the global equivalence ratio for the tests is estimated to be fuel rich, 1.3 on average using mass loss and O2 consumption data."
+ },
+ {
+  "source_id": "bass2-results",
+  "ntrs_id": "20160000593",
+  "title": "Combustion of Solids in Microgravity: Results from the BASS-II Experiment",
+  "authors": [
+   "Ferkul, Paul V.",
+   "Bhattacharjee, Subrata ",
+   "Fernandez-Pello, Carlos",
+   "Miller, Fletcher ",
+   "Olson, Sandra L.",
+   "Takahashi, Fumiaki ",
+   "T’ien, James S."
+  ],
+  "organization": "NASA",
+  "document_type": "PRESENTATION",
+  "published": "2014-10-23",
+  "url": "https://ntrs.nasa.gov/citations/20160000593",
+  "pdf_url": "https://ntrs.nasa.gov/api/citations/20160000593/downloads/20160000593.pdf",
+  "copyright": "PUBLIC_USE_PERMITTED",
+  "sha256": "9f2c89db9e1954c3c44409364ed6764f7e7466250264c28ff2d425350287546c",
+  "retrieved": "2026-10-01",
+  "used_for": "BASS-II overview findings (low-flow dim flames, test counts)",
+  "abstract": "The Burning and Suppression of Solids-II (BASS-II) experiment was performed on the International Space Station. Microgravity combustion tests burned thin and thick flat samples, acrylic slabs, spheres, and cylinders. The samples were mounted inside a small wind tunnel which could impose air flow speeds up to 53 cms. The wind tunnel was installed in the Microgravity Science Glovebox which supplied power, imaging, and a level of containment. The effects of air flow speed, fuel thickness, fuel preheating, and oxygen concentration on flame appearance, growth, spread rate, and extinction were examined in both the opposed and concurrent flow configuration. The flames are quite sensitive to air flow speed in the range 0 to 5 cms. They can be sustained at very low flow speeds of less than 1 cms, when they become dim blue and stable. In this state they are not particularly dangerous from a fire safety perspective, but they can flare up quickly with a sudden increase in air flow speed. Including earlier BASS-I results, well over one hundred tests have been conducted of the various samples in the different geometries, flow speeds, and oxygen concentrations. There are several important implications related to fundamental combustion research as well as spacecraft fire safety. This work was supported by the NASA Space Life and Physical Sciences Research and Applications Division (SLPSRA)."
+ },
+ {
+  "source_id": "pmma-rods-concurrent",
+  "ntrs_id": "20150008961",
+  "title": "Microgravity Flammability of PMMA Rods in Concurrent Flow",
+  "authors": [
+   "Olson, Sandra L.",
+   "Ferkul, Paul V."
+  ],
+  "organization": "NASA",
+  "document_type": "CONFERENCE_PAPER",
+  "published": "2015-05-17",
+  "url": "https://ntrs.nasa.gov/citations/20150008961",
+  "pdf_url": "https://ntrs.nasa.gov/api/citations/20150008961/downloads/20150008961.pdf",
+  "copyright": "PUBLIC_USE_PERMITTED",
+  "sha256": "8cee8a023d9f0aab214996ebaeefb842080b0c935ba9e01db0096a47379519f7",
+  "retrieved": "2026-10-01",
+  "used_for": "PMMA rod flammability in concurrent flow",
+  "abstract": "Microgravity experiments burning cast PMMA cylindrical rods in axial flow have been conducted aboard the International Space Station in the Microgravity Science Glovebox (MSG) facility using the Burning and Suppression of Solids (BASS) flow duct, as part of the BASS-II experiment. Twenty-four concurrent-flow tests were performed, focusing on finding flammability limits as a function of oxygen and flow speed. The oxygen was varied by using gaseous nitrogen to vitiate the working volume of the MSG. The speed of the flow parallel to the rod was varied using a fan at the entrance to the duct. Both blowoff and quenching limits were obtained at several oxygen concentrations. Each experiment ignited the rod at the initially hemispherical stagnation tip of the rod, and allowed the flame to develop and heat the rod at a sufficient flow to sustain burning. For blowoff limit tests, the astronaut quickly turned up the flow to obtain extinction. Complementary 5.18-second Zero Gravity Facility drop tests were conducted to compare blowoff limits in short and long duration microgravity. For quenching tests, the flow was incrementally turned down and the flame allowed to stabilize at the new flow condition for at least the solid-phase response time before changing it again. Quenching was observed when the flow became sufficiently weak that the flame could no longer provide adequate heat flux to compensate for the heat losses (conduction into the rod and radiation). A surface energy balance is presented that shows the surface radiative loss exceeds the conductive loss into the rod near the limit. The flammability boundary is shown to represent a critical Damkohler number, expressed in terms of the reaction rate divided by the stretch rate. For the blowoff branch, the boundary exhibits a linear dependence on oxygen concentration and stretch rate, indicating that the temperature at blowoff must be fairly constant. For the quenching branch, the dominance of the exponential nature of the Arrhenius kinetics reaction rate indicates that the temperature is critical."
+ },
+ {
+  "source_id": "sibal-concurrent",
+  "ntrs_id": "20150008962",
+  "title": "Concurrent Flame Growth, Spread and Extinction over Composite Fabric Samples in Low Speed Purely Forced Flow in Microgravity",
+  "authors": [
+   "Zhao, Xiaoyang",
+   "T'ien, James S.",
+   "Ferkul, Paul V.",
+   "Olson, Sandra L."
+  ],
+  "organization": "NASA",
+  "document_type": "CONFERENCE_PAPER",
+  "published": "2015-05-17",
+  "url": "https://ntrs.nasa.gov/citations/20150008962",
+  "pdf_url": "https://ntrs.nasa.gov/api/citations/20150008962/downloads/20150008962.pdf",
+  "copyright": "PUBLIC_USE_PERMITTED",
+  "sha256": "50590fd7e6619203eb75a46f49e83556e6798a53e67869cd52ea89961c692c30",
+  "retrieved": "2026-10-01",
+  "used_for": "SIBAL fabric concurrent flame growth and quenching",
+  "abstract": "As a part of the NASA BASS and BASS-II experimental projects aboard the International Space Station, flame growth, spread and extinction over a composite cotton-fiberglass fabric blend (referred to as the SIBAL fabric) were studied in low-speed concurrent forced flows. The tests were conducted in a small flow duct within the Microgravity Science Glovebox. The fuel samples measured 1.2 and 2.2 cm wide and 10 cm long. Ambient oxygen was varied from 21% down to 16% and flow speed from 40 cm/s down to 1 cm/s. A small flame resulted at low flow, enabling us to observe the entire history of flame development including ignition, flame growth, steady spread (in some cases) and decay at the end of the sample. In addition, by decreasing flow velocity during some of the tests, low-speed flame quenching extinction limits were found as a function of oxygen percentage. The quenching speeds were found to be between 1 and 5 cm/s with higher speed in lower oxygen atmosphere. The shape of the quenching boundary supports the prediction by earlier theoretical models. These long duration microgravity experiments provide a rare opportunity for solid fuel combustion since microgravity time in ground-based facilities is generally not sufficient. This is the first time that a low-speed quenching boundary in concurrent spread is determined in a clean and unambiguous manner."
+ },
+ {
+  "source_id": "bass-thickness",
+  "ntrs_id": "20140011099",
+  "title": "Thickness and Fuel Preheating Effects on Material Flammability in Microgravity from the BASS Experiment",
+  "authors": [
+   "Ferkul, Paul V.",
+   "Olson, Sandra L.",
+   "Takahashi, Fumiaki",
+   "Endo, Makoto",
+   "Johnson, Michael C.",
+   "T'ien, James S."
+  ],
+  "organization": "NASA",
+  "document_type": "PRESENTATION",
+  "published": "2013-11-03",
+  "url": "https://ntrs.nasa.gov/citations/20140011099",
+  "pdf_url": "https://ntrs.nasa.gov/api/citations/20140011099/downloads/20140011099.pdf",
+  "copyright": "PUBLIC_USE_PERMITTED",
+  "sha256": "fd5e89467bddd426e40081311f0b36541aac6a29236b2d3fc3758a901bc8c072",
+  "retrieved": "2026-10-01",
+  "used_for": "Thickness and preheating effects (BASS)",
+  "abstract": "The Burning and Suppression of Solids (BASS) experiment was performed on the International Space Station. Microgravity combustion tests burning thin and thick flat samples, acrylic spheres, and candles were conducted. The samples were mounted inside a small wind tunnel which could impose air flow speeds up to 40 cms. The wind tunnel was installed in the Microgravity Science Glovebox which supplied power, imaging, and a level of containment. The effects of air flow speed, fuel thickness, fuel preheating, and nitrogen dilution on flame appearance, flame growth, and spread rates were determined in both the opposed and concurrent flow configuration. In some cases, a jet of nitrogen was introduced to attempt to extinguish the flame. Microgravity flames were found to be especially sensitive to air flow speed in the range 0 to 5 cms. The gas phase response is much faster compared to the solid and so as the flow speed is changed, the flame responds with almost no delay. At the lowest speeds examined (less than 1 cms) all the flames tended to become dim blue and very stable. However, heat loss at these very low convective rates is small so the flames can burn for a long time. At moderate flow speeds (between about 1 and 5 cms) the flame continually heats the solid fuel resulting in an increasing fuel temperature, higher rate of fuel vaporization, and a stronger, more luminous flame as time progresses. Only the smallest flames burning acrylic slabs appeared to be adversely influenced by solid conductive heat loss, but even these burned for over 5 minutes before self-extinguishing. This has implications for spacecraft fire safety since a tiny flame might be undetected for a long time. While the small flame is not particularly hazardous if it remains small, the danger is that it might flare up if the air convection is suddenly increased or if the flame spreads into another fuel source."
+ },
+ {
+  "source_id": "confinement",
+  "ntrs_id": "20205004657",
+  "title": "Effects of Confinement on Flame Spread in Microgravity",
+  "authors": [
+   "Yanjun Li",
+   "Ya-Ting T Liao",
+   "Paul V Ferkul",
+   "Michael C Johnston",
+   "Charles Bunnell"
+  ],
+  "organization": "NASA",
+  "document_type": "CONFERENCE_PAPER",
+  "published": null,
+  "url": "https://ntrs.nasa.gov/citations/20205004657",
+  "pdf_url": "https://ntrs.nasa.gov/api/citations/20205004657/downloads/ICES-2020-407-final.pdf",
+  "copyright": "GOV_PERMITTED",
+  "sha256": "3096713e1da5122b0d06235a0194ecc2ccaa0fac0df40d11095241401bfb916a",
+  "retrieved": "2026-10-01",
+  "used_for": "Saffire vs BASS confinement comparison",
+  "abstract": "Solid fuel combustion experiments aboard the ISS examine the effects of confinement on a concurrent, purely-forced-flow flame spread in microgravity environment. The results for a thin, cotton-fiberglass-blended textile fabric fuel are presented. Flat baffles of differing materials are used to alter the radiative boundary conditions with transparent polycarbonate, black anodized aluminum (reflectance ~ 0), and highly polished aluminum (reflectance ~ 1). The baffles are parallel to the fuel sheet and placed symmetrically on each side. The inter-baffle distance is varied to change the boundary conditions for the flow. In all tests, samples are ignited at the upstream leading edge and allowed to burn to completion. Results show that the flame reaches a steady length and spread rate at low flow speeds (< 15 cm/s) for all tested inter-baffle distances. As the distance decreases, the flame length and spread rate first increase then decrease showing an optimal inter-baffle distance. For all baffle types, the flame either fails to ignite or extinguishes before reaching the end of the sample when the inter-baffle distance is too small (~ 1 cm). This is attributed to the reduction of oxygen supply to the flame zone and heat loss to the baffles. The results also show at the same inter-baffle distance, flame length and spread rate are highest for polished aluminum baffles, and lowest for transparent polycarbonate baffles. The differences are most prominent at intermediate tested baffle distances. While the radiative heat feedback from the baffles is expected to increase when the baffle distance decreases, the combustion is limited by the reduced oxygen supply. Near this limit, flame lengths and spread rates are similar for all baffle types."
+ },
+ {
+  "source_id": "partial-g",
+  "ntrs_id": "20130010991",
+  "title": "Evaluating Material Flammability in Microgravity and Martian Gravity Compared to the NASA Standard Normal Gravity Test",
+  "authors": [
+   "Oslon, Sandra. L.",
+   "Ferkul, Paul"
+  ],
+  "organization": "NASA",
+  "document_type": "CONFERENCE_PAPER",
+  "published": "2012-07-15",
+  "url": "https://ntrs.nasa.gov/citations/20130010991",
+  "pdf_url": "https://ntrs.nasa.gov/api/citations/20130010991/downloads/20130010991.pdf",
+  "copyright": "PUBLIC_USE_PERMITTED",
+  "sha256": "2b0cabdfe7942f56bad38967e9c870dd1c73f3cb52f614a1873a93f8cc51436e",
+  "retrieved": "2026-10-01",
+  "used_for": "Microgravity vs Martian gravity vs NASA-STD-6001 Test 1",
+  "abstract": "Drop tower tests are conducted at Martian gravity to determine the flammability of three materials compared to previous tests in other normal gravity and reduced gravity environments. The comparison is made with consideration of a modified NASA standard test protocol. Material flammability limits in the different gravity and flow environments are tabulated to determine the factor of safety associated with normal gravity flammability screening. Previous testing at microgravity and Lunar gravity indicated that some materials burned to lower oxygen concentrations in low gravity than in normal gravity, although the low g extinction limit criteria are not the same as 1g due to time constraints in drop testing. Similarly, the data presented in this paper for Martian gravity suggest that there is a gravity level below Earth s at which materials burn more readily than on Earth. If proven for more materials, this may indicate the need to include a factor of safety on 1g flammability limits."
+ },
+ {
+  "source_id": "luci",
+  "ntrs_id": "20250010653",
+  "title": "Lunar Combustion Investigation: Flammability Results from a Rotating Sounding Rocket",
+  "authors": [
+   "Paul V Ferkul",
+   "Michael C Johnston",
+   "Nathan Kralik",
+   "Ya-Ting Liao"
+  ],
+  "organization": "NASA",
+  "document_type": "PRESENTATION",
+  "published": null,
+  "url": "https://ntrs.nasa.gov/citations/20250010653",
+  "pdf_url": "https://ntrs.nasa.gov/api/citations/20250010653/downloads/ASGSR%202025-LUCI-Ferkul-Presentation-v2-20250010653.pdf",
+  "copyright": "GOV_PERMITTED",
+  "sha256": "bb0aadd2f9543483467b86796e6aa19f4e13c3f8169eec96134015f95ed61d79",
+  "retrieved": "2026-10-01",
+  "used_for": "Lunar-gravity flammability from a rotating sounding rocket",
+  "abstract": "The Lunar Combustion Investigation (LUCI) demonstrates the feasibility of conducting material flammability experiments in partial-g.  A spinning Blue Origin New Shepard sounding rocket yields Lunar gravity by using centrifugal acceleration.  These are the first-ever, extended-duration (greater than 25 seconds) combustion tests performed in simulated Lunar gravity.  A steady vehicle rotation of 11 RPM is established, with an effective radius of rotation of 1.22 m at the experiment location.  Two samples are burned simultaneously in air at normal pressure.  The first sample is a cotton-fiberglass composite fabric sheet and the second a 4-mm diameter rod of acrylic plastic (polymethyl methacrylate).  Flame images from two orthogonal cameras are used to determine flame spread and growth rates, and the burn lasts for over two and a half minutes.  The oxygen concentration in the chamber is measured.  As the burns progress, the oxygen concentration drops, enabling a limiting value for extinction to be defined.  The effect of Coriolis force is discussed.  Results from this experiment are compared to related 1-g work, drop tower tests, aircraft experiments, and modeling.  The results are applicable to NASA’s exploration efforts in that they guide the selection of fire-safe materials and environments and ensure safety of future spacecraft and Lunar habitats.  The data also provides fundamental understanding of fires.  Finally, the experiment is a steppingstone to the ultimate goal of performing burn tests on the Lunar surface in the Flammability of Materials on the Moon (FM2) experiment which is planned to launch in late 2026."
+ },
+ {
+  "source_id": "exploration-atmosphere",
+  "ntrs_id": "20220009546",
+  "title": "Results of a 3-day Pilot Study to Validate Planetary Prebreathe Protocols Using a 56.5 kPa 34% O2, 66% N2 Saturation Cabin Atmosphere",
+  "authors": [
+   "Alejandro Garbino",
+   "E Lichar Dillon",
+   "Patrick Estep",
+   "Monica Hew",
+   "Karina Marshall-Bowman",
+   "Jason Norcross",
+   "Kadambari Suri",
+   "Andrew F J Abercromby"
+  ],
+  "organization": "NASA",
+  "document_type": "PRESENTATION",
+  "published": null,
+  "url": "https://ntrs.nasa.gov/citations/20220009546",
+  "pdf_url": null,
+  "copyright": "PUBLIC_USE_PERMITTED",
+  "sha256": null,
+  "retrieved": "2026-10-01",
+  "used_for": "Source for the 56.5 kPa, 34 % O2 exploration cabin atmosphere scenario",
+  "abstract": "INTRODUCTION:\nApollo missions used 100% O2 cabin atmospheres which effectively eliminated the risk of decompression sickness (DCS) during extravehicular activities (EVAs, ‘spacewalks’); however, this atmosphere presented a flammability risk that is no longer acceptable to NASA. Denitrogenation prebreathe protocols used to mitigate DCS risk for Space Shuttle and International Space Station EVAs are validated for the microgravity environment, but the significantly increased risk of DCS during equivalent ambulatory surface EVAs make these protocols inapplicable to planetary/Lunar missions. An “exploration atmosphere” of 56.5 kPa (8.2 psia), 34% O2, 66% N2 has been recommended by NASA for future Moon and Mars missions as a compromise that balances subsequent pre-EVA prebreathe duration, hypoxia, and flammability risk, assuming a 29.6 kPa (4.3 psi) spacesuit.  Prebreathe validation studies was initiated utilizing a three-story 6m diameter hypobaric chamber at NASA’s Johnson Space Center. Here, we report the results of a 3-day human-in-the-loop system checkout. \n\nMETHODS:\nSix volunteers acclimated to the 56.6kPa/34% O2 66% N2 environment for 48hrs prior to conducting a 20-minute prebreathe and a 6-hour simulated EVA at 34kPa/85% O2 / 15% N2.  The EVA simulation was designed to include tasks that are physically and ergonomically representative of future planetary EVAs.  Decompression stress was evaluated by serial doppler and echocardiographs, as well as by clinical features of DCS signs/symptoms. \n\nRESULTS AND DISCUSSION:\nPreliminary data analysis noted venous gas emboli (VGE) in 3 of 6 subjects, with peak Grade II VGE by Doppler and peak E-B score of 5 by cardiac ultrasonography. No volunteers were diagnosed with DCS during this initial test. No acute hypoxic symptoms were noted. Musculoskeletal and gastrointestinal complaints were noted, likely associated with the exercise load and the food system. Validation of exploration prebreathe protocols has since been initiated with an 11-day saturation test using the same facility and protocol."
+ }
+]

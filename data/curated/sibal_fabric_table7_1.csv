@@ -1,0 +1,32 @@
+test_id,investigation,sample_width_cm,flow_start_cm_s,flow_end_cm_s,o2_vol_pct,o2_reading_suspect,comment_verbatim
+GMT45-T1,BASS-II,2.2,10,10,18.5,true,
+GMT45-T2,BASS-II,2.2,10,5,18.5,true,
+GMT45-T4,BASS-II,2.2,10,2.2,18.7,false,Quenched
+GMT45-T15,BASS-II,2.2,10,29,18.7,false,No blowoff
+GMT100-T5,BASS-II,2.2,10,2.4,18.8,false,
+GMT100-T6,BASS-II,2.2,4.5,2.6,18.8,false,
+GMT100-T13,BASS-II,2.2,4,2.2,17.5,false,Quenched
+GMT100-T16,BASS-II,2.2,4,3,17.6,false,
+GMT175-T9,BASS-II,2.2,10,10,16.4,false,No ignition
+GMT175-T10,BASS-II,2.2,5,5,16.4,false,No ignition
+GMT175-T18,BASS-II,2.2,5,2.6,17.4,false,Quenched
+GMT178-T11,BASS-II,2.2,4,4,17.1,false,
+GMT178-T12,BASS-II,2.2,5,5,16.8,false,No ignition
+GMT178-T14,BASS-II,2.2,4,2.8,16.9,false,Quenched
+GMT178-T17,BASS-II,2.2,6,53,16.9,false,No blowoff
+GMT190-T19,BASS-II,1.2,11,11,17.2,false,
+GMT190-T20,BASS-II,1.2,11,3,17.2,false,Quenched
+GMT190-T21,BASS-II,1.2,11,47,17.2,false,Blow-off
+GMT190-T22,BASS-II,1.2,10.5,5,17.1,false,Quenched
+GMT190-T23,BASS-II,2.2,10,10,17.2,false,"Reused, did not ignite"
+GMT190-T24,BASS-II,2.2,10,10,18.2,false,"Reused, one-sided flame"
+GMT216-T25,BASS-II,2.2,5,2.5,20.8,false,"Reused, ignited"
+GMT216-T26,BASS-II,2.2,5,2.5,20.8,false,"Reused, ignited"
+GMT216-T27,BASS-II,1.2,5,2,20.7,false,"Reused, ignited"
+GMT216-T28a,BASS-II,1.2,5,5,20.7,false,"Reused, did not ignite"
+GMT216-T28b,BASS-II,1.2,5,5,20.7,false,"Reused, did not ignite"
+GMT216-T29,BASS-II,1.2,5,2,20.7,false,"Reused, ignited"
+GMT96-T8,BASS,2.2,5,5,21,false,BASS
+GMT96-T7,BASS,2.2,10,10,21,false,BASS
+GMT131-T10,BASS,1.2,11,11,21,false,BASS
+GMT222-T11,BASS,1.2,19,19,21,false,BASS
