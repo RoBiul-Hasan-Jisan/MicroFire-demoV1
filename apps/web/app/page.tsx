@@ -46,7 +46,10 @@ export default function Home() {
               with every number traced to NASA&apos;s own pages.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-3">
-              <Link href="/story" className="story-cta">
+              <Link href="/lab" className="story-cta">
+                Enter the Flame Lab
+              </Link>
+              <Link href="/story" className="border border-rule-strong px-5 py-3 rounded-full hover:border-signal">
                 Play Mission Freefall
               </Link>
               <Link href="/mission" className="border border-rule-strong px-5 py-3 rounded-full hover:border-signal">

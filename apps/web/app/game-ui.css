@@ -286,7 +286,7 @@
 @keyframes gx-hop {
   0%   { translate: 0 0;      scale: 1.18 .82; }
   18%  { translate: 0 -30px;  scale: .92 1.12; }
-  50%  { translate: 0 -170px; scale: 1 1; }
+  50%  { translate: 0 -230px; scale: 1 1; }
   84%  { translate: 0 -25px;  scale: .95 1.06; }
   94%  { translate: 0 0;      scale: 1.2 .8; }
   100% { translate: 0 0;      scale: 1 1; }
@@ -295,14 +295,14 @@
 @keyframes gx-jump {
   0%   { translate: 0 0;      scale: 1.15 .85; }
   25%  { translate: 0 -50px;  scale: .94 1.1; }
-  50%  { translate: 0 -120px; scale: 1 1; }
+  50%  { translate: 0 -150px; scale: 1 1; }
   90%  { translate: 0 0;      scale: 1.18 .82; }
   100% { translate: 0 0;      scale: 1 1; }
 }
-.gx-flip { transform-origin: 0 -60px; animation: gx-flip .7s cubic-bezier(.3, 0, .5, 1) both; }
+.gx-flip { transform-origin: 0 -100px; animation: gx-flip .7s cubic-bezier(.3, 0, .5, 1) both; }
 @keyframes gx-flip {
   0%   { translate: 0 0;      rotate: 0deg; }
-  50%  { translate: 0 -150px; rotate: 180deg; }
+  50%  { translate: 0 -200px; rotate: 180deg; }
   100% { translate: 0 0;      rotate: 360deg; }
 }
 .gx-eyes { transform-box: fill-box; transform-origin: 50% 50%; animation: gx-blink 4.2s infinite; }
@@ -330,7 +330,7 @@
 }
 
 /* ---------- funny extras: moods, Sparky, UFO ---------- */
-.gx-wobble { transform-origin: 0 -60px; animation: gx-wobble 1.6s ease-in-out both; }
+.gx-wobble { transform-origin: 0 -100px; animation: gx-wobble 1.6s ease-in-out both; }
 @keyframes gx-wobble { 0%, 100% { rotate: 0deg; } 15% { rotate: -14deg; } 35% { rotate: 12deg; } 55% { rotate: -9deg; } 75% { rotate: 6deg; } }
 .gx-orbit { transform-origin: 0 -86px; animation: gx-orbit 1s linear infinite; }
 @keyframes gx-orbit { to { rotate: 360deg; } }
@@ -355,3 +355,42 @@
   .gx-orbit, .gx-dizzy-eye, .gx-zzz, .gx-snore, .gx-wiggle, .gx-shake, .gx-ufo, .gx-light, .gx-wobble { animation: none; }
   .gx-pet-pos, .gx-ufo-pos { transition: none; }
 }
+
+/* speech bubble follows the astronaut's vertical motion only (no squash / spin) */
+.gx-b-hop  { animation: gx-b-hop .6s cubic-bezier(.3, 0, .6, 1) both; }
+@keyframes gx-b-hop { 0%, 100% { translate: 0 0; } 18% { translate: 0 -30px; } 50% { translate: 0 -230px; } 84% { translate: 0 -25px; } }
+.gx-b-jump { animation: gx-b-jump .5s cubic-bezier(.3, 0, .6, 1) both; }
+@keyframes gx-b-jump { 0%, 100% { translate: 0 0; } 25% { translate: 0 -50px; } 50% { translate: 0 -150px; } }
+.gx-b-flip { animation: gx-b-flip .7s cubic-bezier(.3, 0, .5, 1) both; }
+@keyframes gx-b-flip { 0%, 100% { translate: 0 0; } 50% { translate: 0 -200px; } }
+@media (prefers-reduced-motion: reduce) { .gx-b-hop, .gx-b-jump, .gx-b-flip { animation: none; } }
+
+/* ---------- CSP-safe positioning: the project forbids inline style attributes ---------- */
+.gx-p1 { transform: translate(calc(var(--px, 0) * -6px),  calc(var(--py, 0) * -4px)); }
+.gx-p2 { transform: translate(calc(var(--px, 0) * -16px), calc(var(--py, 0) * -10px)); }
+.gx-p3 { transform: translate(calc(var(--px, 0) * -30px), calc(var(--py, 0) * -16px)); }
+.gx-p4 { transform: translate(calc(var(--px, 0) * -40px), calc(var(--py, 0) * -22px)); }
+.gx-spin { transform-origin: 800px 360px; }
+.gx-dl-0 { animation-delay: 0s; } .gx-dl-1 { animation-delay: .25s; } .gx-dl-2 { animation-delay: .5s; }
+.gx-dl-3 { animation-delay: .75s; } .gx-dl-4 { animation-delay: 1s; }
+.gx-burst-0 { --dx: 80px;  --dy: 0px; }   .gx-burst-1 { --dx: 57px;  --dy: 57px; }
+.gx-burst-2 { --dx: 0px;   --dy: 80px; }  .gx-burst-3 { --dx: -57px; --dy: 57px; }
+.gx-burst-4 { --dx: -80px; --dy: 0px; }   .gx-burst-5 { --dx: -57px; --dy: -57px; }
+.gx-burst-6 { --dx: 0px;   --dy: -80px; } .gx-burst-7 { --dx: 57px;  --dy: -57px; }
+.gx-at-0 { transform: translate(230px, 712px); }
+.gx-at-1 { transform: translate(835px, 702px); }
+.gx-at-2 { transform: translate(1400px, 724px); }
+.gx-pet-0r { transform: translate(115px, 716px); }  .gx-pet-0l { transform: translate(345px, 716px); }
+.gx-pet-1r { transform: translate(720px, 706px); }  .gx-pet-1l { transform: translate(950px, 706px); }
+.gx-pet-2r { transform: translate(1285px, 728px); } .gx-pet-2l { transform: translate(1515px, 728px); }
+.gx-ufo-in   { transform: translate(-220px, 140px); }
+.gx-ufo-out  { transform: translate(1800px, 40px); }
+.gx-ufo-flee { transform: translate(1900px, -220px); }
+.gx-ufo-s0 { transform: translate(230px, 470px); }  .gx-ufo-s1 { transform: translate(835px, 460px); }
+.gx-ufo-s2 { transform: translate(1400px, 480px); } .gx-ufo-s3 { transform: translate(532px, 400px); }
+.gx-ufo-s4 { transform: translate(1117px, 405px); }
+.gx-ufo-d0 { transition-duration: 0s; } .gx-ufo-d07 { transition-duration: .7s; }
+.gx-ufo-d14 { transition-duration: 1.4s; } .gx-ufo-d18 { transition-duration: 1.8s; }
+.gx-look-r { transform: translate(1.8px, 0); transition: transform .3s; }
+.gx-look-l { transform: translate(-1.8px, 0); transition: transform .3s; }
+.gx-say-text { font-family: var(--font-fredoka, var(--font-archivo)), system-ui, sans-serif; }

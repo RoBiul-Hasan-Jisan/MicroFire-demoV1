@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /* Game-style space backdrop.
    - Layers drift with the pointer (parallax): far stars < planets < clouds < platforms.
@@ -26,15 +26,12 @@ const STAR_POS: Record<string, [number, number]> = {
 const ALL_STARS = Object.keys(STAR_POS);
 
 type Mood = "idle" | "happy" | "sleep" | "dizzy" | "shock";
-type Ufo = { x: number; y: number; beam: boolean; star: string | null; dur: number };
+/** pos / dur are class keys (see game-ui.css): the project CSP forbids inline style attributes. */
+type Ufo = { pos: string; beam: boolean; star: string | null; dur: "0" | "07" | "14" | "18" };
 const rankFor = (n: number) => (n < 5 ? "Space Rookie" : n < 15 ? "Star Nibbler" : n < 30 ? "Galaxy Goblin" : "Cosmic Legend");
 
 const sparklePath = (s: number) =>
   `M0 ${-s} L${s * 0.28} ${-s * 0.28} L${s} 0 L${s * 0.28} ${s * 0.28} L0 ${s} L${-s * 0.28} ${s * 0.28} L${-s} 0 L${-s * 0.28} ${-s * 0.28} Z`;
-
-const layer = (fx: number, fy: number) => ({
-  transform: `translate(calc(var(--px, 0) * ${fx}px), calc(var(--py, 0) * ${fy}px))`,
-});
 
 export function SpaceBg({ interactive = false, onSfx }: { interactive?: boolean; onSfx?: (k: "whoosh" | "right" | "fanfare" | "snap") => void }) {
   const root = useRef<HTMLDivElement>(null);
@@ -60,6 +57,28 @@ export function SpaceBg({ interactive = false, onSfx }: { interactive?: boolean;
     raf = requestAnimationFrame(tick);
     return () => { window.removeEventListener("pointermove", move); cancelAnimationFrame(raf); };
   }, []);
+
+  /* ---------- camera: on tall / narrow screens, show a window of the scene that follows the astronaut ---------- */
+  useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let raf = 0;
+    let cam = -1;
+    const tick = () => {
+      const el = root.current;
+      if (el && el.clientWidth && el.clientHeight) {
+        const visW = Math.min(1600, 900 * (el.clientWidth / el.clientHeight));
+        const max = 1600 - visW;
+        const want = interactive ? STAND[idxRef.current][0] - visW / 2 : max / 2;
+        const t = Math.max(0, Math.min(max, want));
+        cam = cam < 0 || reduce ? t : cam + (t - cam) * 0.08;
+        const vb = `${cam.toFixed(1)} 0 ${visW.toFixed(1)} 900`;
+        el.querySelectorAll("svg.gx-bg-svg").forEach((svg) => svg.setAttribute("viewBox", vb));
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [interactive]);
 
   /* ---------- astronaut ---------- */
   const [idx, setIdx] = useState(0);
@@ -197,7 +216,7 @@ export function SpaceBg({ interactive = false, onSfx }: { interactive?: boolean;
     ufoTimers.current = [];
     const s = stolenRef.current;
     if (s) { stolenRef.current = null; setStolen(null); pop(STAR_POS[s][0], STAR_POS[s][1]); }
-    setUfo((u) => (u ? { ...u, beam: false, star: null, dur: 0.7, x: 1900, y: -220 } : u));
+    setUfo((u) => (u ? { ...u, beam: false, star: null, dur: "07", pos: "flee" } : u));
     setMood("happy", 1500);
     talk(["Haha! Take that, alien!", "Shoo! Shoo!", "Nobody steals MY stars!"], 1900);
     sfx.current?.("right");
@@ -214,9 +233,10 @@ export function SpaceBg({ interactive = false, onSfx }: { interactive?: boolean;
       if (!free.length || ufoBusy.current || document.hidden) { schedule(); return; }
       const star = free[Math.floor(Math.random() * free.length)];
       const [tx, ty] = STAR_POS[star];
+      const sIdx = ALL_STARS.indexOf(star);
       ufoBusy.current = true;
-      setUfo({ x: -220, y: 140, beam: false, star: null, dur: 0 });
-      later(() => setUfo({ x: tx, y: ty - 120, beam: false, star: null, dur: 1.4 }), 60);
+      setUfo({ pos: "in", beam: false, star: null, dur: "0" });
+      later(() => setUfo({ pos: `s${sIdx}`, beam: false, star: null, dur: "14" }), 60);
       later(() => setUfo((u) => (u ? { ...u, beam: true } : u)), 1600);
       later(() => {
         if (gotRef.current.includes(star)) { talk(["Too slow, alien! 😎"]); setUfo((u) => (u ? { ...u, beam: false } : u)); return; }
@@ -226,7 +246,7 @@ export function SpaceBg({ interactive = false, onSfx }: { interactive?: boolean;
         setMood("shock", 1700);
         talk(["HEY! That's MY star! 😱", "Alien! Give it back!"], 2000);
       }, 2500);
-      later(() => setUfo((u) => (u ? { ...u, beam: false, x: 1800, y: 40, dur: 1.8 } : u)), 3400);
+      later(() => setUfo((u) => (u ? { ...u, beam: false, pos: "out", dur: "18" } : u)), 3400);
       later(() => { setUfo(null); ufoBusy.current = false; }, 5300);
       later(() => {
         if (stolenRef.current === star) {
@@ -283,8 +303,6 @@ export function SpaceBg({ interactive = false, onSfx }: { interactive?: boolean;
     return () => window.removeEventListener("keydown", onKey);
   }, [interactive, hopTo, jump]);
 
-  const [sx, sy] = STAND[idx];
-
   return (
     <div ref={root} className="gx-bg" aria-hidden={interactive ? undefined : true}>
       <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" className="gx-bg-svg" aria-hidden="true">
@@ -308,20 +326,20 @@ export function SpaceBg({ interactive = false, onSfx }: { interactive?: boolean;
         </defs>
 
         {/* far layer */}
-        <g style={layer(-6, -4)}>
+        <g className="gx-p1">
           <g className="gx-comet" transform="translate(120 70) rotate(24)"><path d="M0 0 L-150 0" stroke="url(#gxTail)" strokeWidth="5" strokeLinecap="round" /><path d={sparklePath(11)} fill="#fff" /></g>
           <g className="gx-comet gx-comet-b" transform="translate(760 20) rotate(24)"><path d="M0 0 L-120 0" stroke="url(#gxTail)" strokeWidth="4" strokeLinecap="round" /><path d={sparklePath(9)} fill="#ffe08a" /></g>
           {DOTS.map(([x, y, r], i) => <circle key={i} cx={x} cy={y} r={r} fill="#a89cf0" opacity=".55" />)}
-          {SPARKLES.map(([x, y, s, d], i) => (
+          {SPARKLES.map(([x, y, s], i) => (
             <g key={i} transform={`translate(${x} ${y})`}>
-              <path d={sparklePath(s)} fill="#8f86d8" className="gx-twinkle" style={{ animationDelay: `${d}s` }} />
+              <path d={sparklePath(s)} fill="#8f86d8" className={`gx-twinkle gx-dl-${i % 5}`} />
             </g>
           ))}
         </g>
 
         {/* mid layer: galaxy + planets */}
-        <g style={layer(-16, -10)}>
-          <g className="gx-spin" style={{ transformOrigin: "800px 360px" }}>
+        <g className="gx-p2">
+          <g className="gx-spin">
             <circle cx="800" cy="360" r="210" fill="url(#gxGalaxy)" opacity=".5" />
             <path d="M800 360 m-40 0 a40 40 0 0 1 80 0 a90 90 0 0 1 -150 55 a150 150 0 0 1 -35 -215 a220 220 0 0 1 300 -50" fill="none" stroke="#4a3ccf" strokeWidth="46" strokeLinecap="round" opacity=".75" />
             <path d="M800 360 m40 0 a40 40 0 0 1 -80 0 a90 90 0 0 1 150 -55 a150 150 0 0 1 35 215 a220 220 0 0 1 -300 50" fill="none" stroke="#5a48e0" strokeWidth="38" strokeLinecap="round" opacity=".55" />
@@ -347,7 +365,7 @@ export function SpaceBg({ interactive = false, onSfx }: { interactive?: boolean;
         </g>
 
         {/* near layer: clouds */}
-        <g style={layer(-30, -16)}>
+        <g className="gx-p3">
           <g fill="#2e1d78" opacity=".85">
             {[-40, 110, 270, 430, 600, 760, 920, 1080, 1250, 1410, 1570].map((x, i) => (
               <circle key={i} cx={x} cy={800 + ((i * 37) % 5) * 8} r={110 + ((i * 53) % 4) * 14} />
@@ -374,7 +392,7 @@ export function SpaceBg({ interactive = false, onSfx }: { interactive?: boolean;
               </linearGradient>
               <clipPath id="gxHead"><circle cx="0" cy="-86" r="30" /></clipPath>
             </defs>
-            <g style={layer(-40, -22)}>
+            <g className="gx-p4">
               {/* blue rock */}
               <g className="gx-rock" role="button" tabIndex={0} aria-label="Hop to the blue rock" onClick={() => hopTo(0)} onKeyDown={(e) => e.key === "Enter" && hopTo(0)} transform="translate(120 700)">
                 <path d="M10 20 L90 0 L190 12 L215 52 L170 90 L190 130 L120 120 L60 150 L40 100 L0 62 Z" fill="#5b7bf0" />
@@ -403,48 +421,48 @@ export function SpaceBg({ interactive = false, onSfx }: { interactive?: boolean;
               {bursts.map((bu) => (
                 <g key={bu.id} transform={`translate(${bu.x} ${bu.y})`}>
                   {Array.from({ length: 8 }, (_, i) => {
-                    const a = (i / 8) * Math.PI * 2;
-                    return <path key={i} d={sparklePath(i % 2 ? 7 : 10)} className="gx-burst" fill={i % 2 ? "#fff" : "#ffc83d"} style={{ "--dx": `${Math.cos(a) * 80}px`, "--dy": `${Math.sin(a) * 80}px` } as CSSProperties} />;
+                    return <path key={i} d={sparklePath(i % 2 ? 7 : 10)} className={`gx-burst gx-burst-${i}`} fill={i % 2 ? "#fff" : "#ffc83d"} />;
                   })}
                 </g>
               ))}
 
               {/* Sparky, the flame buddy, trots after the astronaut */}
-              <g className="gx-pet-pos" style={{ transform: `translate(${Math.min(1520, Math.max(80, sx + (look > 0 ? -78 : 78)))}px, ${sy + 4}px)` }}>
+              <g className={`gx-pet-pos gx-pet-${idx}${look > 0 ? "r" : "l"}`}>
                 <g key={motion ? `p${motion.kind}${motion.n}` : "pidle"} className={motion && motion.kind !== "wobble" ? "gx-hop gx-late" : "gx-idle"}>
                   <Sparky mood={mood} scared={!!ufo} />
                 </g>
               </g>
 
               {/* astronaut: outer glides to the rock, inner plays the hop / jump / flip */}
-              <g className="gx-hero-pos" style={{ transform: `translate(${sx}px, ${sy}px)` }}>
+              <g className={`gx-hero-pos gx-at-${idx}`}>
                 <g key={motion ? `${motion.kind}${motion.n}` : "idle"} className={motion ? `gx-${motion.kind}` : "gx-idle"}>
                   <g onClick={poke} className="gx-hero" role="button" tabIndex={0} aria-label="Poke the astronaut" onKeyDown={(e) => e.key === "Enter" && poke()}>
                     <Astro mood={mood} moving={moving} look={look} />
                   </g>
                 </g>
-                {say && (
-                  <g key={say.n} className="gx-say" transform="translate(0 -176)">
-                    <rect x={-(say.text.length * 5.5 + 16)} y="-30" width={say.text.length * 11 + 32} height="38" rx="19" fill="#fff" />
-                    <path d="M-8 7 L0 20 L8 7 Z" fill="#fff" />
-                    <text x="0" y="-5" textAnchor="middle" fontSize="19" fontWeight="700" fill="#2a1a63" style={{ fontFamily: "var(--font-fredoka, var(--font-archivo)), system-ui, sans-serif" }}>{say.text}</text>
-                  </g>
-                )}
+                <g key={motion ? `b${motion.kind}${motion.n}` : "bidle"} className={motion && motion.kind !== "wobble" ? `gx-b-${motion.kind}` : ""}>
+                  {say && (
+                    <g key={say.n} className="gx-say" transform="translate(0 -268)">
+                      <rect x={-(say.text.length * 6.6 + 18)} y="-34" width={say.text.length * 13.2 + 36} height="46" rx="23" fill="#fff" />
+                      <path d="M-9 10 L0 26 L9 10 Z" fill="#fff" />
+                      <text x="0" y="-2" textAnchor="middle" fontSize="24" fontWeight="700" fill="#2a1a63" className="gx-say-text">{say.text}</text>
+                    </g>
+                  )}
+                </g>
               </g>
 
               {/* sparkle bursts */}
               {bursts.map((bu) => (
                 <g key={bu.id} transform={`translate(${bu.x} ${bu.y})`}>
                   {Array.from({ length: 8 }, (_, i) => {
-                    const a = (i / 8) * Math.PI * 2;
-                    return <path key={i} d={sparklePath(i % 2 ? 7 : 10)} className="gx-burst" fill={["#ffc83d", "#fff", "#ff7ac0", "#3fd0ff"][i % 4]} style={{ "--dx": `${Math.cos(a) * 80}px`, "--dy": `${Math.sin(a) * 80}px` } as CSSProperties} />;
+                    return <path key={i} d={sparklePath(i % 2 ? 7 : 10)} className={`gx-burst gx-burst-${i}`} fill={["#ffc83d", "#fff", "#ff7ac0", "#3fd0ff"][i % 4]} />;
                   })}
                 </g>
               ))}
 
               {/* cheeky UFO */}
               {ufo && (
-                <g className="gx-ufo-pos" style={{ transform: `translate(${ufo.x}px, ${ufo.y}px)`, transitionDuration: `${ufo.dur}s` }}>
+                <g className={`gx-ufo-pos gx-ufo-${ufo.pos} gx-ufo-d${ufo.dur}`}>
                   {ufo.beam && <path d="M-26 12 L-74 124 L74 124 L26 12 Z" fill="url(#gxBeam)" />}
                   {ufo.star && <path d={sparklePath(20)} transform="translate(0 58)" className="gx-star-svg" />}
                   <g className="gx-ufo" role="button" tabIndex={0} aria-label="Shoo the alien UFO" onClick={scare} onKeyDown={(e) => e.key === "Enter" && scare()}>
@@ -454,7 +472,7 @@ export function SpaceBg({ interactive = false, onSfx }: { interactive?: boolean;
                     <circle cx="0" cy="-15" r="11" fill="#6be08a" />
                     <ellipse cx="-4" cy="-16" rx="2.4" ry="3.6" fill="#10301c" /><ellipse cx="4" cy="-16" rx="2.4" ry="3.6" fill="#10301c" />
                     <path d="M-3 -9 q3 3 6 0" fill="none" stroke="#10301c" strokeWidth="1.6" strokeLinecap="round" />
-                    {[-40, 0, 40].map((x, i) => <circle key={x} cx={x} cy={i === 1 ? 10 : 6} r="4" fill="#ffc83d" className="gx-light" style={{ animationDelay: `${i * 0.25}s` }} />)}
+                    {[-40, 0, 40].map((x, i) => <circle key={x} cx={x} cy={i === 1 ? 10 : 6} r="4" fill="#ffc83d" className={`gx-light gx-dl-${i}`} />)}
                   </g>
                 </g>
               )}
@@ -493,7 +511,7 @@ function Eye({ x, mood, look }: { x: number; mood: Mood; look: number }) {
   return (
     <g>
       <ellipse cx={x} cy="-80" rx={shock ? 9.4 : 8.6} ry={shock ? 12.5 : 11} fill="#fff" />
-      <g style={{ transform: `translate(${look * 1.8}px, 0)`, transition: "transform .3s" }}>
+      <g className={look > 0 ? "gx-look-r" : "gx-look-l"}>
         <ellipse cx={x} cy="-79" rx={shock ? 3.4 : 6.6} ry={shock ? 4.6 : 9.6} fill="url(#gxIris)" />
         <ellipse cx={x} cy="-79" rx={shock ? 1.6 : 3} ry={shock ? 2.4 : 5.2} fill="#1a1040" />
         {!shock && <circle cx={x - 2.6} cy="-84" r="2.9" fill="#fff" />}
@@ -507,7 +525,7 @@ function Eye({ x, mood, look }: { x: number; mood: Mood; look: number }) {
 function Astro({ mood, moving, look }: { mood: Mood; moving: boolean; look: number }) {
   const happy = mood === "happy";
   return (
-    <g transform="scale(1.1)">
+    <g transform="scale(1.7)">
       {/* jet flames */}
       <g className={`gx-flame ${moving ? "gx-boost" : ""}`}>
         {[-23, 23].map((x) => (
@@ -580,7 +598,7 @@ function Astro({ mood, moving, look }: { mood: Mood; moving: boolean; look: numb
       {mood === "dizzy" && (
         <g className="gx-orbit">
           {[0, 120, 240].map((deg) => (
-            <path key={deg} d={sparklePath(7)} fill="#ffc83d" transform={`rotate(${deg} 0 -122) translate(34 -122)`} />
+            <path key={deg} d={sparklePath(7)} fill="#ffc83d" transform={`translate(${Math.cos((deg * Math.PI) / 180) * 50} ${-86 + Math.sin((deg * Math.PI) / 180) * 50})`} />
           ))}
         </g>
       )}
@@ -599,7 +617,7 @@ function Astro({ mood, moving, look }: { mood: Mood; moving: boolean; look: numb
 function Sparky({ mood, scared }: { mood: Mood; scared: boolean }) {
   const asleep = mood === "sleep";
   return (
-    <g transform="scale(.9)" className={scared ? "gx-shake" : "gx-wiggle"}>
+    <g transform="scale(1.3)" className={scared ? "gx-shake" : "gx-wiggle"}>
       <path d="M0 -50 C10 -36 22 -28 22 -14 A22 14 0 0 1 -22 -14 C-22 -28 -10 -36 0 -50 Z" fill="#ff9a3d" />
       <path d="M0 -34 C6 -26 12 -22 12 -14 A12 8 0 0 1 -12 -14 C-12 -22 -6 -26 0 -34 Z" fill="#ffd27a" />
       {asleep ? (
