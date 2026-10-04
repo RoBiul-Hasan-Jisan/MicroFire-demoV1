@@ -84,3 +84,47 @@ class Dataset(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Saffire(unittest.TestCase):
+    """The Saffire transcription is checked against NASA's table lines; a single wrong value must fail the build."""
+
+    @classmethod
+    def setUpClass(cls):
+        import saffire
+        cls.mod = saffire
+        cls.sources = json.loads((ROOT / "data" / "sources.json").read_text())
+        cls.runs = {r["id"]: r for r in saffire.build_saffire(cls.sources)}
+
+    def test_runs_and_spot_values(self):
+        self.assertEqual(len(self.runs), 20)
+        self.assertEqual(self.runs["saffire-1-1"]["spread_rate_mm_s"], 1.8)  # Table I, PDF p. 29
+        self.assertEqual((self.runs["saffire-vi-2"]["pressure_kpa"], self.runs["saffire-vi-2"]["o2_pct"]), (54.1, 31.0))  # Saffire VI Table 1
+        self.assertEqual(self.runs["saffire-vi-1"]["outcome_group"], "not_ignited")
+        self.assertIsNone(self.runs["saffire-vi-1"]["flow_cm_s"])  # not stated for the Nomex sample
+
+    def _tampered(self, row_id, field, value):
+        import csv, tempfile, shutil
+        tmp = pathlib.Path(tempfile.mkdtemp())
+        rows = list(csv.DictReader(open(ROOT / "data" / "curated" / "saffire_runs.csv", encoding="utf-8")))
+        for r in rows:
+            if r["id"] == row_id:
+                r[field] = value
+        with open(tmp / "saffire_runs.csv", "w", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(f, fieldnames=rows[0].keys())
+            w.writeheader()
+            w.writerows(rows)
+        old = self.mod.CURATED
+        self.mod.CURATED = tmp
+        try:
+            with self.assertRaises(ValueError):
+                self.mod.build_saffire(self.sources)
+        finally:
+            self.mod.CURATED = old
+            shutil.rmtree(tmp)
+
+    def test_a_wrong_value_fails(self):
+        self._tampered("saffire-1-1", "spread_rate_mm_s", "1.9")   # row table
+        self._tampered("saffire-vi-2", "o2_pct", "34.0")           # column table
+        self._tampered("saffire-v-2", "cond_col", "1")             # wrong column
+        self._tampered("saffire-2-7", "quote", "The Nomex burned.")  # quote not in source

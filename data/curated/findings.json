@@ -185,6 +185,61 @@
   "kind": "observed"
  },
  {
+  "id": "fm2-measurements",
+  "source_id": "fm2-plan",
+  "in": "abstract",
+  "quote": "The results of flame size, spread rate, atmosphere changes, and extinction oxygen concentration will then be analyzed and used to help quantify the risk and mitigation for future exploration missions.",
+  "topics": [
+   "partial-gravity"
+  ],
+  "kind": "context"
+ },
+ {
+  "id": "fm2-atmospheres",
+  "source_id": "fm2-atmospheres",
+  "in": "abstract",
+  "quote": "The environmental control system can replicate and conduct fire experiments automatically in the expected atmospheres, specifically 21% oxygen at 14.7 psia, and 34% oxygen at 8.2 psia, which are of immediate interest to the Human Lander System (HLS) and Lunar Rover.",
+  "topics": [
+   "partial-gravity",
+   "oxygen",
+   "pressure"
+  ],
+  "kind": "context"
+ },
+ {
+  "id": "fm2-samples",
+  "source_id": "fm2-atmospheres",
+  "in": "abstract",
+  "quote": "There are four samples currently planned; two SIBAL fabrics (cotton/fiberglass blend) which will be burned in air and two acrylic rods which will be burned in Normoxic Space Exploration Atmospheres (SEA).",
+  "topics": [
+   "partial-gravity",
+   "materials-screening"
+  ],
+  "kind": "context"
+ },
+ {
+  "id": "sibal-lunar-downward",
+  "source_id": "fm2-atmospheres",
+  "in": "abstract",
+  "quote": "SIBAL fabric has been found to only burn downward in air in lunar gravity (via Lunar gravity centrifuge and parabolic flight) where on Earth’s gravity it extinguishes immediately after ignition.",
+  "topics": [
+   "partial-gravity",
+   "materials-screening"
+  ],
+  "kind": "observed"
+ },
+ {
+  "id": "lunar-goldilocks",
+  "source_id": "fm2-atmospheres",
+  "in": "abstract",
+  "quote": "Lunar gravity has been found to increase the limits of flammability for some materials compared to Earth gravity, presenting a goldilocks zone of reduced convective heat loss, while generating enough buoyant flow to replenish fresh oxygen into the flame zone.",
+  "topics": [
+   "partial-gravity",
+   "oxygen"
+  ],
+  "kind": "interpretation"
+ },
+ {
   "id": "confinement-small-gap",
   "source_id": "confinement",
   "in": "abstract",
@@ -205,6 +260,40 @@
    "partial-gravity"
   ],
   "kind": "observed"
+ },
+ {
+  "id": "alt-exploration-atmosphere",
+  "source_id": "ea-alt",
+  "in": "abstract",
+  "quote": "Fourteen volunteers completed 11-day hypobaric chamber studies with an “alternate exploration atmosphere” of 66.2kPa, 28.5% O2.",
+  "topics": [
+   "oxygen",
+   "pressure"
+  ],
+  "kind": "context"
+ },
+ {
+  "id": "enriched-o2-flammability",
+  "source_id": "ea-alt",
+  "in": "abstract",
+  "quote": "In previous studies, we validated a prebreathe protocol from a 56.5 kPa 34% O2 cabin to a 29.6 kPa EVA pressure; however, the enriched oxygen cabin environment poses a flammability risk that requires significant changes to material design and selections.",
+  "topics": [
+   "oxygen",
+   "pressure",
+   "materials-screening"
+  ],
+  "kind": "context"
+ },
+ {
+  "id": "proposed-ea-66",
+  "source_id": "ea-6",
+  "in": "abstract",
+  "quote": "Subjects acclimated for 48 hrs at the proposed Exploration Atmosphere (66.2kPa, 28.5% O2) and then participated in five 6-hour simulated EVAs at 29.6 kPa, 95% O2.",
+  "topics": [
+   "oxygen",
+   "pressure"
+  ],
+  "kind": "context"
  },
  {
   "id": "saffire-vs-bass",
@@ -358,5 +447,270 @@
    "apparatus"
   ],
   "kind": "observed"
+ },
+ {
+  "id": "saffire-first-large-fire",
+  "source_id": "saffire-1-3",
+  "in": "pdf",
+  "quote": "For the first time, a large-scale fire was intentionally set inside a spacecraft while in orbit.",
+  "topics": [
+   "scale"
+  ],
+  "kind": "observed",
+  "experiments": [
+   "saffire-1-1",
+   "saffire-1-2"
+  ]
+ },
+ {
+  "id": "saffire-steady-wide-flame",
+  "source_id": "saffire-1-3",
+  "in": "pdf",
+  "quote": "Unlike 1-g, the results revealed that a steady flame could be achieved even for a wide sample burning in concurrent-flow.",
+  "topics": [
+   "scale",
+   "airflow"
+  ],
+  "kind": "observed",
+  "experiments": [
+   "saffire-1-1"
+  ]
+ },
+ {
+  "id": "saffire-confined-slower",
+  "source_id": "saffire-1-3",
+  "in": "pdf",
+  "quote": "The flames spread more slowly than prior tests in smaller ducts. This behavior of the flame demonstrated the importance of confined spaces for potential spacecraft fires.",
+  "topics": [
+   "confinement",
+   "scale"
+  ],
+  "kind": "interpretation",
+  "experiments": [
+   "saffire-1-1"
+  ]
+ },
+ {
+  "id": "saffire-silicone-reduced",
+  "source_id": "saffire-1-3",
+  "in": "pdf",
+  "quote": "Flammability of silicone in microgravity appears to be reduced compared to normal gravity, at least for the flow speeds tested.",
+  "topics": [
+   "materials-screening"
+  ],
+  "kind": "interpretation",
+  "experiments": [
+   "saffire-2-1",
+   "saffire-2-2",
+   "saffire-2-3",
+   "saffire-2-4"
+  ]
+ },
+ {
+  "id": "saffire-nomex-not-ignited",
+  "source_id": "saffire-1-3",
+  "in": "pdf",
+  "quote": "Despite this significant heating load, the fabric was not ignited.",
+  "topics": [
+   "materials-screening"
+  ],
+  "kind": "observed",
+  "experiments": [
+   "saffire-2-7"
+  ]
+ },
+ {
+  "id": "saffire-quiescent-extinguishment",
+  "source_id": "saffire-4-5",
+  "in": "pdf",
+  "quote": "Extinguishment of thin charring fuels at increased oxygen cannot be assumed to occur rapidly in quiescent conditions.",
+  "topics": [
+   "suppression",
+   "oxygen",
+   "airflow"
+  ],
+  "kind": "interpretation",
+  "experiments": [
+   "saffire-v-2"
+  ]
+ },
+ {
+  "id": "saffire-thick-fuel-pinned",
+  "source_id": "saffire-4-5",
+  "in": "pdf",
+  "quote": "Flames on thick fuels in concurrent flow did not spread and were instead pinned to the leading edge of the sample",
+  "topics": [
+   "geometry"
+  ],
+  "kind": "observed"
+ },
+ {
+  "id": "saffire-flame-jumped-gap",
+  "source_id": "saffire-4-5",
+  "in": "pdf",
+  "quote": "In one case, a flame was seen to jump a 4.5 cm gap to ignite a previously warmed PMMA surface.",
+  "topics": [
+   "scale"
+  ],
+  "kind": "observed"
+ },
+ {
+  "id": "saffire-smoke-main-hazard",
+  "source_id": "saffire-6",
+  "in": "pdf",
+  "quote": "Collectively these results demonstrate that the human hazard from a fire in a spacecraft is very similar to terrestrial fires where the heat from the fire is not the principal hazard and rather the smoke and gaseous products are a much greater concern.",
+  "topics": [
+   "smoke",
+   "detection"
+  ],
+  "kind": "interpretation",
+  "experiments": [
+   "saffire-iv-1",
+   "saffire-v-2",
+   "saffire-vi-2",
+   "saffire-vi-3",
+   "saffire-vi-4"
+  ]
+ },
+ {
+  "id": "saffire-alarm-981-s",
+  "source_id": "saffire-6",
+  "in": "pdf",
+  "quote": "The smoke from the fire event was readily detected by an ionization detector and a light scattering system but a typical alarm threshold was only achieved at 981 seconds.",
+  "topics": [
+   "detection",
+   "smoke"
+  ],
+  "kind": "observed"
+ },
+ {
+  "id": "saffire-co-co2-limits",
+  "source_id": "saffire-6",
+  "in": "pdf",
+  "quote": "However, the ambient concentrations of carbon monoxide and carbon dioxide rose significantly with the PMMA tests exceeding the 1-hour carbon dioxide limit and the 24-hour carbon monoxide limit.",
+  "topics": [
+   "smoke"
+  ],
+  "kind": "observed",
+  "experiments": [
+   "saffire-vi-3",
+   "saffire-vi-4"
+  ]
+ },
+ {
+  "id": "saffire-partial-g-needed",
+  "source_id": "saffire-6",
+  "in": "pdf",
+  "quote": "Further work will be needed to extend these results to the partial gravity environment expected on future mission to the moon and Mars.",
+  "topics": [
+   "partial-gravity"
+  ],
+  "kind": "interpretation"
+ },
+ {
+  "id": "saffire-practical-scale-kw",
+  "source_id": "saffire-6",
+  "in": "pdf",
+  "quote": "Practical scale fires ranging from 1.5 to 3.2 kW were tested in unmanned spacecraft with free air volumes of 17 to 19 cubic meters.",
+  "topics": [
+   "scale"
+  ],
+  "kind": "observed",
+  "experiments": [
+   "saffire-iv-1",
+   "saffire-v-2",
+   "saffire-vi-2",
+   "saffire-vi-3",
+   "saffire-vi-4"
+  ]
+ },
+ {
+  "id": "flex-loi-objective",
+  "source_id": "flex",
+  "in": "pdf",
+  "quote": "A principle objective was to determine the limiting oxygen index (LOI), the oxygen percentage below which combustion would not occur.",
+  "topics": [
+   "oxygen",
+   "droplet"
+  ],
+  "kind": "context"
+ },
+ {
+  "id": "flex-loi-lower",
+  "source_id": "flex",
+  "in": "pdf",
+  "quote": "Observed LOI values for these fuels appear to be slightly lower than initially expected.",
+  "topics": [
+   "oxygen",
+   "droplet"
+  ],
+  "kind": "observed"
+ },
+ {
+  "id": "flex-test-conditions",
+  "source_id": "flex",
+  "in": "pdf",
+  "quote": "The droplets had initial diameters between 2 and 5 mm, and they were burned in oxidizing atmospheres at ambient temperature and various pressures between 0.70 and 3.05 atm, over ranges of dilution of oxygen with nitrogen, with carbon dioxide, and with mixtures thereof.",
+  "topics": [
+   "droplet",
+   "pressure",
+   "suppression"
+  ],
+  "kind": "observed"
+ },
+ {
+  "id": "sofie-lower-o2-reduced-g",
+  "source_id": "sofie",
+  "in": "pdf",
+  "quote": "In reduced gravity (0g, Lunar g, Martian g), a flame can be sustained at lower O2.",
+  "topics": [
+   "partial-gravity",
+   "oxygen",
+   "materials-screening"
+  ],
+  "kind": "context"
+ },
+ {
+  "id": "sofie-exploration-atmosphere",
+  "source_id": "sofie",
+  "in": "pdf",
+  "quote": "Thin fuel sheets: few materials rated even in 1g at 34% O2, 8.2 psia (exploration atmosphere).",
+  "topics": [
+   "pressure",
+   "oxygen",
+   "materials-screening"
+  ],
+  "kind": "context"
+ },
+ {
+  "id": "sofie-exploration-testing",
+  "source_id": "sofie",
+  "in": "abstract",
+  "quote": "The CIR chamber provides a level of containment and permits testing at variable oxygen concentrations and pressures representative of current and planned NASA Space Exploration Atmospheres.",
+  "topics": [
+   "pressure",
+   "oxygen"
+  ],
+  "kind": "context"
+ },
+ {
+  "id": "acme-spherical-flames",
+  "source_id": "acme",
+  "in": "abstract",
+  "quote": "The microgravity environment avoids buoyancy-induced flicker and enables the creation of spherical flames, allowing numerical models to focus computational power on transport phenomena and chemical kinetics.",
+  "topics": [
+   "gas-flame"
+  ],
+  "kind": "observed"
+ },
+ {
+  "id": "acme-secondary-objective",
+  "source_id": "acme",
+  "in": "abstract",
+  "quote": "The research is primarily focused on improving practical terrestrial combustion through fundamental microgravity research, where a secondary objective is spacecraft fire safety.",
+  "topics": [
+   "gas-flame"
+  ],
+  "kind": "context"
  }
 ]

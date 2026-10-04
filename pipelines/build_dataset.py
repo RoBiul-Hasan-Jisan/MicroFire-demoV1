@@ -220,11 +220,12 @@ def squash(text):
     return " ".join(text.split())
 
 
-def pdf_pages(ntrs_id):
+def pdf_pages(ntrs_id, layout=True):
     pdf = ROOT / "data" / "raw" / "ntrs" / f"{ntrs_id}.pdf"
     if not pdf.exists():
         raise FileNotFoundError(f"{pdf} missing: run pipelines/fetch_sources.py first")
-    out = subprocess.run(["pdftotext", "-layout", str(pdf), "-"], check=True, capture_output=True, text=True).stdout
+    # layout mode keeps tables intact; reading order keeps sentences whole in two-column papers
+    out = subprocess.run(["pdftotext", *(["-layout"] if layout else []), str(pdf), "-"], check=True, capture_output=True, text=True).stdout
     return [squash(p) for p in out.split("\f")]
 
 
@@ -243,6 +244,9 @@ def build_findings(sources, experiment_ids):
             pages = pages_cache.setdefault(src["ntrs_id"], pdf_pages(src["ntrs_id"]))
             hits = [i + 1 for i, p in enumerate(pages) if q in p]
             if not hits:
+                flow = pages_cache.setdefault(src["ntrs_id"] + ":flow", pdf_pages(src["ntrs_id"], layout=False))
+                hits = [i + 1 for i, p in enumerate(flow) if q in p]
+            if not hits:
                 raise ValueError(f"{f['id']}: quote not found in {f['source_id']} PDF")
             f["pdf_page"] = hits[0]
         for eid in f.get("experiments", []) if isinstance(f.get("experiments"), list) else []:
@@ -252,15 +256,18 @@ def build_findings(sources, experiment_ids):
 
 
 def main():
+    from saffire import build_saffire
+
     records = build()
     sources = json.loads((ROOT / "data" / "sources.json").read_text())
-    findings = build_findings(sources, {r["id"] for r in records})
+    saffire = build_saffire(sources)
+    findings = build_findings(sources, {r["id"] for r in records} | {r["id"] for r in saffire})
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(records, indent=1, ensure_ascii=False) + "\n")
     WEB.mkdir(parents=True, exist_ok=True)
-    for name, data in (("experiments", records), ("sources", sources), ("findings", findings)):
+    for name, data in (("experiments", records), ("saffire", saffire), ("sources", sources), ("findings", findings)):
         (WEB / f"{name}.json").write_text(json.dumps(data, indent=1, ensure_ascii=False) + "\n")
-    print(f"{len(records)} records, {len(findings)} verified findings -> {WEB.relative_to(ROOT)}")
+    print(f"{len(records)} BASS records, {len(saffire)} Saffire runs, {len(findings)} verified findings -> {WEB.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":

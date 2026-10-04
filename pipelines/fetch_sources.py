@@ -27,6 +27,17 @@ SOURCES = {
     "partial-g": ("20130010991", "Microgravity vs Martian gravity vs NASA-STD-6001 Test 1"),
     "luci": ("20250010653", "Lunar-gravity flammability from a rotating sounding rocket"),
     "exploration-atmosphere": ("20220009546", "Source for the 56.5 kPa, 34 % O2 exploration cabin atmosphere scenario"),
+    "ea-alt": ("20240013238", "Exploration Atmosphere Tests 3 and 4: the alternate 66.2 kPa, 28.5 % O2 cabin atmosphere"),
+    "fm2-plan": ("20240008623", "FM2: planned lunar-surface burns of SIBAL fabric and PMMA rods, and what they will measure"),
+    "fm2-atmospheres": ("20240015307", "FM2: planned atmospheres, samples, and SIBAL burning downward in lunar gravity"),
+    "ea-6": ("20260003261", "Exploration Atmosphere Test 6: 66.2 kPa, 28.5 % O2 named the proposed Exploration Atmosphere"),
+    # second family and cross-regime evidence (each kept in its own physical regime; see apps/web/lib/ontology.ts)
+    "saffire-1-3": ("20170008805", "Saffire I-III: large-scale flame spread aboard Cygnus"),
+    "saffire-4-5": ("20210017780", "Saffire IV and V: large-scale fire safety implications"),
+    "saffire-6": ("20240002981", "Saffire VI preliminary results (ICES 2024 paper)"),
+    "flex": ("20150023456", "FLEX droplet combustion and extinguishment results (mechanistic evidence only)"),
+    "sofie": ("20200000361", "SoFIE: material flammability under exploration-like oxygen and pressure"),
+    "acme": ("20210015913", "ACME gaseous flames on the ISS (mechanistic evidence only)"),
 }
 
 
@@ -37,6 +48,9 @@ def get_json(url):
 
 def main():
     RAW.mkdir(parents=True, exist_ok=True)
+    old_path = ROOT / "data" / "sources.json"
+    # keep the original retrieval date when the document has not changed
+    previous = {m["source_id"]: m for m in json.loads(old_path.read_text())} if old_path.exists() else {}
     manifest = []
     for source_id, (ntrs_id, used_for) in SOURCES.items():
         meta = get_json(f"{NTRS}/api/citations/{ntrs_id}")
@@ -60,7 +74,7 @@ def main():
             "pdf_url": NTRS + pdf_link if pdf_link else None,
             "copyright": (meta.get("copyright") or {}).get("determinationType"),
             "sha256": hashlib.sha256(pdf.read_bytes()).hexdigest() if pdf_link else None,
-            "retrieved": date.today().isoformat(),
+            "retrieved": (previous.get(source_id, {}).get("retrieved") if previous.get(source_id, {}).get("sha256") == (hashlib.sha256(pdf.read_bytes()).hexdigest() if pdf_link else None) else None) or date.today().isoformat(),
             "used_for": used_for,
             "abstract": (meta.get("abstract") or "").strip() or None,
         })
