@@ -28,8 +28,8 @@ const Y_TICKS = [14, 16, 18, 20];
 
 export function FlowO2Plot({ data, highlight = [], scenario, height = 420, label }: Props) {
   const H = height;
-  const x = (v: number) => PAD.l + ((Math.log(v) - Math.log(X_MIN)) / (Math.log(X_MAX) - Math.log(X_MIN))) * (W - PAD.l - PAD.r);
-  const y = (v: number) => PAD.t + (1 - (v - Y_MIN) / (Y_MAX - Y_MIN)) * (H - PAD.t - PAD.b);
+  const x = (v: number) => Math.round((PAD.l + ((Math.log(v) - Math.log(X_MIN)) / (Math.log(X_MAX) - Math.log(X_MIN))) * (W - PAD.l - PAD.r)) * 1000) / 1000;
+  const y = (v: number) => Math.round((PAD.t + (1 - (v - Y_MIN) / (Y_MAX - Y_MIN)) * (H - PAD.t - PAD.b)) * 1000) / 1000;
   const hi = new Set(highlight);
   const plotted = data.filter((e) => e.flow_initial_cm_s != null && e.oxygen_vol_pct != null);
   // Draw highlighted points last so they sit on top.

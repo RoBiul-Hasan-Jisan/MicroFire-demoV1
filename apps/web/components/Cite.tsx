@@ -1,3 +1,4 @@
+import { KIND_LABEL } from "@/lib/ontology";
 import { getSource, pdfLink } from "@/lib/data";
 import type { Finding } from "@/lib/types";
 
@@ -11,6 +12,16 @@ const SHORT: Record<string, string> = {
   "partial-g": "Microgravity vs Martian gravity",
   luci: "Lunar Combustion Investigation",
   "exploration-atmosphere": "Exploration atmosphere pilot study",
+  "ea-alt": "Exploration Atmosphere Tests 3 and 4",
+  "ea-6": "Exploration Atmosphere Test 6",
+  "fm2-plan": "FM² mission plan",
+  "fm2-atmospheres": "FM² atmospheres and samples",
+  "saffire-1-3": "Saffire I-III results",
+  "saffire-4-5": "Saffire IV and V results",
+  "saffire-6": "Saffire VI results",
+  flex: "FLEX droplet results",
+  sofie: "SoFIE project",
+  acme: "ACME on the ISS",
 };
 
 export const shortName = (sourceId: string) => SHORT[sourceId] ?? sourceId;
@@ -38,7 +49,7 @@ export function Quote({ f, className = "" }: { f: Finding; className?: string })
     <figure className={`m-0 ${className}`}>
       <blockquote className="text-[17px] leading-relaxed text-ink">“{f.quote}”</blockquote>
       <figcaption className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted">
-        <span>{f.kind === "observed" ? "Reported observation" : "Authors' interpretation"}</span>
+        <span>{KIND_LABEL[f.kind]}</span>
         <Cite sourceId={f.source_id} page={f.pdf_page} />
       </figcaption>
     </figure>

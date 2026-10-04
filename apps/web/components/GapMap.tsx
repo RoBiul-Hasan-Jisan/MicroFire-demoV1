@@ -26,7 +26,7 @@ export function GapMap() {
   const rows = [...grid.keys()].reverse(); // high oxygen at the top
 
   return (
-    <div className="grid gap-10 xl:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+    <div className="frontier-workspace grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
       <div>
         <label className="inline-flex items-center gap-3 text-sm">
           <span className="text-muted">Material</span>
@@ -38,7 +38,7 @@ export function GapMap() {
           </select>
         </label>
 
-        <div className="mt-5 overflow-x-auto">
+        <div data-guide="grid" className="frontier-grid instrument-panel mt-5 overflow-x-auto">
           <table className="border-separate border-spacing-1 num">
             <caption className="sr-only">Number of NASA tests in each oxygen and airflow range. Select a cell for details.</caption>
             <thead>
@@ -64,6 +64,7 @@ export function GapMap() {
                     return (
                       <td key={j} className="p-0">
                         <button
+                          data-quest="gap-cell"
                           onClick={() => setSel([i, j])}
                           aria-pressed={active}
                           aria-label={`${binLabel(c.o2, " % oxygen")}, ${binLabel(c.flow, " cm/s")}: ${c.tests.length} tests, ${ZONE[c.zone].label}`}
@@ -93,7 +94,8 @@ export function GapMap() {
         </p>
       </div>
 
-      <section aria-live="polite" className="bg-panel border border-rule rounded-sm p-6 self-start">
+      <section aria-live="polite" className="evidence-drawer p-6 self-start">
+        <p className="text-signal text-sm mb-3">Your selected region</p>
         <h2 className="font-semibold">
           {binLabel(cell.o2, " % oxygen")}, airflow {binLabel(cell.flow, " cm/s")}
         </h2>
