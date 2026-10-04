@@ -76,8 +76,38 @@ export type Finding = {
   in: "pdf" | "abstract";
   quote: string;
   topics: string[];
-  kind: "observed" | "interpretation";
+  kind: "observed" | "interpretation" | "context";
   experiments?: string[] | string;
   experiments_basis?: string;
   pdf_page?: number;
+};
+
+/** A Saffire run: a large-scale fire in an uncrewed Cygnus vehicle. Its own schema, never merged into BASS-II rows. */
+export type SaffireRun = {
+  id: string;
+  family: "saffire";
+  flight: string;
+  sample: string;
+  material: string;
+  material_verbatim: string;
+  geometry: string;
+  thickness_mm: number | null;
+  width_cm: number | null;
+  length_cm: number | null;
+  flow_cm_s: number | null;
+  flow_direction: string | null;
+  pressure_kpa: number | null;
+  o2_pct: number | null;
+  o2_basis: string | null;
+  burn_duration_s: number | null;
+  burn_length_verbatim: string | null;
+  spread_rate_mm_s: number | null;
+  heat_release_avg_w: number | null;
+  heat_release_peak_w: number | null;
+  one_g: { burn_length: string; spread: string } | null;
+  outcome_group: OutcomeGroup;
+  outcome_label: string;
+  gravity_regime: string;
+  provenance: { conditions: Citation | null; results: Citation | null; outcome: Citation | null; thickness: Citation | null };
+  notes: string[];
 };

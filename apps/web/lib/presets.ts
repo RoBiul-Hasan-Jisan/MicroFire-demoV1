@@ -100,6 +100,47 @@ export const PRESETS: Preset[] = [
     gaps: ["Nomex thickness is not stated in the table.", "PMMA was tested in opposed flow, the others in concurrent flow."],
     findings: [],
   },
+  {
+    id: "saffire-habitat-air",
+    title: "Same fabric, sea-level air vs Moon-like air",
+    question: "When Saffire lowered the pressure and raised the oxygen, how did the same fabric's recorded burn differ?",
+    ids: ["saffire-iv-1", "saffire-vi-2"],
+    varies: "Pressure and oxygen, together",
+    observed: [
+      "Both are 50-cm SIBAL fabric samples in 20 cm/s concurrent flow, burned inside an uncrewed Cygnus cargo ship.",
+      "IV-1 ran at 100.0 kPa and 22.0 % oxygen. NASA's Table 2 gives a 130 s burn and a 3,150 W average heat release (fuel-consumption calorimetry).",
+      "VI-2 ran at 54.1 kPa and 31.0 % oxygen. Table 2 gives a 112 s burn, a 3,650 W average and a 3,217 W peak. NASA: “The SIBAL sample (left image) achieved a steady size and spread rate quite rapidly”.",
+    ],
+    interpretation:
+      "In the lower-pressure, higher-oxygen air the same fabric burned for a shorter time with a higher average heat release. Pressure and oxygen changed together, so this pair cannot separate their effects, and one run at each atmosphere cannot show scatter.",
+    gaps: [
+      "Pressure and oxygen changed at the same time.",
+      "IV-1 has no oxygen-consumption calorimetry, so peak heat release cannot be compared.",
+      "Both ran in microgravity; neither speaks to lunar gravity.",
+    ],
+    findings: ["saffire-practical-scale-kw", "saffire-smoke-main-hazard"],
+  },
+  {
+    id: "fabric-three-sizes",
+    title: "Same fabric, three sizes, two experiments",
+    question: "What changes when the same cotton-fiberglass fabric burns as a narrow strip, a small card and a wide sheet?",
+    ids: ["sibal-GMT222-T11", "saffire-2-5", "saffire-1-1"],
+    varies: "Sample size, duct and experiment",
+    observed: [
+      "All three are the SIBAL cotton-fiberglass fabric in concurrent flow near 20 cm/s and 21 to 22 % oxygen.",
+      "BASS-II GMT222-T11: a 12 mm wide strip in the glovebox duct at 19 cm/s and 21.0 % oxygen; NASA's table records it burned (final outcome not stated).",
+      "Saffire 2-5: 5 cm wide and 29 cm long at 20 cm/s and about 22.1 % oxygen; it burned the full 29 cm at 2.1 mm/s.",
+      "Saffire 1-1: 40.6 by 94 cm at 20 cm/s and 21.7 % oxygen; average spread 1.8 mm/s through the 420 s test.",
+    ],
+    interpretation:
+      "NASA notes the 5 cm sample spread marginally faster than the 40.6 cm sheet, partly because of its slightly higher starting oxygen and possibly because of side entrainment. Sample size, duct and vehicle all changed between these runs, so they illuminate related behaviour; they are not replicas of each other.",
+    gaps: [
+      "The BASS-II strip has no spread rate in its table.",
+      "Different ducts, sample holders and vehicles.",
+      "Oxygen differs slightly (21.0 to about 22.1 %).",
+    ],
+    findings: ["saffire-steady-wide-flame", "saffire-confined-slower"],
+  },
 ];
 
 export const getPreset = (id: string) => PRESETS.find((p) => p.id === id);

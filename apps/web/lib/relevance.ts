@@ -98,12 +98,16 @@ export function flowRange(e: Experiment): [number, number] | null {
 
 const near = (d: number, scale: number) => Math.exp(-Math.abs(d) / scale);
 
-export function rank(exps: Experiment[], s: Scenario): Ranked[] {
+/** The project choices inside the score. Ranking robustness (robustness.ts) varies them. */
+export type RankParams = { weights: Record<keyof typeof WEIGHTS, number>; pressureScaleKpa: number; classCredit: number };
+export const RANK_DEFAULTS: RankParams = { weights: WEIGHTS, pressureScaleKpa: PRESSURE_SCALE_KPA, classCredit: SAME_CLASS_CREDIT };
+
+export function rank(exps: Experiment[], s: Scenario, prm: RankParams = RANK_DEFAULTS): Ranked[] {
   const sc = scalesFrom(exps);
   const out = exps.map((e) => {
     const terms: Term[] = [];
     const add = (key: keyof Scenario, sim: number | null, testValue: string) =>
-      terms.push({ key, label: LABELS[key], weight: WEIGHTS[key], sim, testValue });
+      terms.push({ key, label: LABELS[key], weight: prm.weights[key], sim, testValue });
 
     if (s.oxygen != null)
       add("oxygen", e.oxygen_vol_pct == null ? null : near(e.oxygen_vol_pct - s.oxygen, sc.oxygen), `${e.oxygen_vol_pct ?? "—"} %`);
@@ -115,14 +119,14 @@ export function rank(exps: Experiment[], s: Scenario): Ranked[] {
     if (s.pressureKpa != null) {
       const p = e.pressure_kpa != null ? [e.pressure_kpa, e.pressure_kpa] : e.pressure_kpa_range ?? null;
       const d = p == null ? null : s.pressureKpa < p[0] ? p[0] - s.pressureKpa : s.pressureKpa > p[1] ? s.pressureKpa - p[1] : 0;
-      add("pressureKpa", d == null ? null : near(d, PRESSURE_SCALE_KPA), p == null ? "—" : p[0] === p[1] ? `${p[0]} kPa` : `${p[0]}–${p[1]} kPa`);
+      add("pressureKpa", d == null ? null : near(d, prm.pressureScaleKpa), p == null ? "—" : p[0] === p[1] ? `${p[0]} kPa` : `${p[0]}–${p[1]} kPa`);
     }
     if (s.gravity != null)
       add("gravity", (s.gravity === "microgravity") === isMicrogravity(e) ? 1 : 0, isMicrogravity(e) ? "microgravity" : e.gravity_regime);
     if (s.material != null) {
       const same = e.material === s.material;
       const cls = MATERIAL_CLASS[e.material] && MATERIAL_CLASS[e.material] === MATERIAL_CLASS[s.material];
-      add("material", same ? 1 : cls ? SAME_CLASS_CREDIT : 0, e.material);
+      add("material", same ? 1 : cls ? prm.classCredit : 0, e.material);
     }
     if (s.flowDirection != null) add("flowDirection", e.flow_direction === s.flowDirection ? 1 : 0, e.flow_direction);
     if (s.thicknessMm != null)

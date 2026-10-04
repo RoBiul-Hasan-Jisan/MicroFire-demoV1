@@ -1,17 +1,24 @@
 import experimentsJson from "@/data/experiments.json";
 import sourcesJson from "@/data/sources.json";
 import findingsJson from "@/data/findings.json";
-import type { Experiment, Finding, OutcomeGroup, Source } from "./types";
+import saffireJson from "@/data/saffire.json";
+import type { Experiment, Finding, OutcomeGroup, SaffireRun, Source } from "./types";
+import { fromBass, fromSaffire } from "./ontology";
 
 export const experiments = experimentsJson as unknown as Experiment[];
 export const sources = sourcesJson as unknown as Source[];
 export const findings = findingsJson as unknown as Finding[];
+export const saffireRuns = saffireJson as unknown as SaffireRun[];
 
 const byId = new Map(experiments.map((e) => [e.id, e]));
 const sourceById = new Map(sources.map((s) => [s.source_id, s]));
 
 export const getExperiment = (id: string) => byId.get(id);
 export const getSource = (id: string) => sourceById.get(id);
+const saffireById = new Map(saffireRuns.map((r) => [r.id, r]));
+export const getSaffire = (id: string) => saffireById.get(id);
+/** Every test record, from every family, seen through the ontology's shared dimensions. */
+export const evidenceRecords = [...experiments.map(fromBass), ...saffireRuns.map(fromSaffire)];
 
 export const families = [...new Set(experiments.map((e) => e.family))];
 

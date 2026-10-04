@@ -71,7 +71,7 @@ export const PREDICTIONS: Prediction[] = [
       { label: "Shrinks and goes out", correct: true },
       { label: "Nothing changes", correct: false },
     ],
-    reveal: "As the flow faded, the flame shrank and quenched. NASA's report describes this low-flow regime: spread slows as the flow drops, until the flame goes out.",
+    reveal: "After a long burn with the fan turned down, the flame quenched. NASA's report describes this low-flow regime: spread slows as the flow drops, until the flame goes out.",
     finding: "radiative-regime",
     scene: { o2: 16.5, flow: 3, material: "PMMA", before: "burning", after: "quench", afterFlow: 0.6 },
   },
@@ -124,3 +124,26 @@ export const BADGES: Badge[] = [
   { id: "caller", name: "Evidence caller", earned: "Called every flame test the way NASA recorded it" },
   { id: "edge", name: "Edge finder", earned: "Recognised where the evidence stops" },
 ];
+
+/** Fabric chapter: the six SIBAL fabric tests recorded as quenched (oxygen %, flow when it went out). Checked in game.test.ts. */
+export const FABRIC_QUENCH = [
+  { id: "sibal-GMT45-T4", test: "GMT45-T4", o2: 18.7, quench: 2.2 },
+  { id: "sibal-GMT100-T13", test: "GMT100-T13", o2: 17.5, quench: 2.2 },
+  { id: "sibal-GMT175-T18", test: "GMT175-T18", o2: 17.4, quench: 2.6 },
+  { id: "sibal-GMT190-T20", test: "GMT190-T20", o2: 17.2, quench: 3 },
+  { id: "sibal-GMT190-T22", test: "GMT190-T22", o2: 17.1, quench: 5 },
+  { id: "sibal-GMT178-T14", test: "GMT178-T14", o2: 16.9, quench: 2.8 },
+];
+
+/** Crew-log evidence board: a kid headline for each real note (the note itself is shown verbatim). */
+export const LOG_CLUES = [
+  { id: "bass2-B1", headline: "Fan off: out in a flash" },
+  { id: "bass2-B9", headline: "Steady, until the air slowed" },
+  { id: "bass2-B16", headline: "A long burn, then it quenched" },
+  { id: "bass2-B19", headline: "Blown out!" },
+  { id: "bass2-F1", headline: "Lit, but it wouldn't spread" },
+  { id: "sibal-GMT45-T4", headline: "Fabric: quenched" },
+];
+
+/** NASA's proposed exploration atmosphere (finding exploration-atmosphere): a proposal, not a test. */
+export const MOON_AIR = { o2: 34, kpa: 56.5 };
