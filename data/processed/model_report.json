@@ -1,0 +1,118 @@
+{
+ "n_rows": 49,
+ "n_sustained": 17,
+ "n_not_sustained": 32,
+ "n_series": 8,
+ "cv": "leave-one-series-out",
+ "models": {
+  "baseline_series_prior": {
+   "accuracy": 0.653,
+   "balanced_accuracy": 0.5,
+   "brier": 0.251,
+   "log_loss": 0.699
+  },
+  "logistic_oxygen_only": {
+   "accuracy": 0.714,
+   "balanced_accuracy": 0.657,
+   "brier": 0.176,
+   "log_loss": 0.525
+  },
+  "logistic_oxygen_flow_direction_SHIPPED": {
+   "accuracy": 0.776,
+   "balanced_accuracy": 0.745,
+   "brier": 0.181,
+   "log_loss": 0.55
+  },
+  "logistic_all_features_with_material": {
+   "accuracy": 0.612,
+   "balanced_accuracy": 0.648,
+   "brier": 0.206,
+   "log_loss": 0.582
+  },
+  "logistic_no_material_leave_one_material_out": {
+   "accuracy": 0.592,
+   "balanced_accuracy": 0.508,
+   "brier": 0.255,
+   "log_loss": 0.847
+  }
+ },
+ "coefficients_standardised": {
+  "o2_pct": 0.807,
+  "log_flow": 0.685,
+  "opposed": 0.227
+ },
+ "ranking": [
+  {
+   "material": "Cotton jersey",
+   "n_tests": 1,
+   "sustained": 1,
+   "sustained_rate": 1.0,
+   "rate_ci95": [
+    0.207,
+    1.0
+   ],
+   "lowest_o2_sustained": 26.2,
+   "highest_o2_not_sustained": null
+  },
+  {
+   "material": "PMMA",
+   "n_tests": 19,
+   "sustained": 8,
+   "sustained_rate": 0.421,
+   "rate_ci95": [
+    0.231,
+    0.637
+   ],
+   "lowest_o2_sustained": 16.5,
+   "highest_o2_not_sustained": 20.1
+  },
+  {
+   "material": "SIBAL fabric",
+   "n_tests": 21,
+   "sustained": 8,
+   "sustained_rate": 0.381,
+   "rate_ci95": [
+    0.208,
+    0.591
+   ],
+   "lowest_o2_sustained": 16.9,
+   "highest_o2_not_sustained": 20.7
+  },
+  {
+   "material": "Nomex",
+   "n_tests": 4,
+   "sustained": 0,
+   "sustained_rate": 0.0,
+   "rate_ci95": [
+    0.0,
+    0.49
+   ],
+   "lowest_o2_sustained": null,
+   "highest_o2_not_sustained": 22.1
+  },
+  {
+   "material": "Silicone",
+   "n_tests": 4,
+   "sustained": 0,
+   "sustained_rate": 0.0,
+   "rate_ci95": [
+    0.0,
+    0.49
+   ],
+   "lowest_o2_sustained": null,
+   "highest_o2_not_sustained": 22.1
+  }
+ ],
+ "spread_rate": {
+  "n_measured": 4,
+  "note": "Only 4 runs report a spread rate; too few to train a regressor. Shown as raw values."
+ },
+ "caveats": [
+  "All tests are ISS microgravity; 5 materials, ~50 labelled rows.",
+  "BASS-II outcomes depend on how the crew stepped the flow down, so low flow is partly an experiment-protocol effect.",
+  "22 BASS-II rows with no stated outcome and 7 rows where flow was shut off by the crew are excluded.",
+  "Pressure is mostly unstated and is not used as a feature. Material and thickness did not improve cross-validated scores, so the shipped model uses oxygen, flow speed and flow direction only; materials are compared in the ranking table.",
+  "The shipped feature set was chosen using the same cross-validation it is scored on, so its scores are slightly optimistic. With ~49 rows, differences of a few points between models are within noise.",
+  "Not validated for Moon or Mars gravity, or for materials outside the five listed."
+ ]
+}
