@@ -25,6 +25,15 @@ hawk:
       - /sources
       - /ask
       - /story
+      - /expedition
+      - /saffire
+      - /tour
+      - /compare?preset=fabric-three-sizes
+      - /mission?context=moon-base
+      - /downloads/evidence-graph.json
+      - /downloads/bass2-tests.csv
+      - /analyze
+      - /analyze/saffire-vi-pmma
 tags:
   - name: _STACKHAWK_AGENT
     value: ${HAWK_AGENT:none}
