@@ -10,10 +10,10 @@ import type { Ranked } from "@/lib/relevance";
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
 /** Ease a set of numbers toward their targets; jumps straight there for reduced motion. */
-function useSmooth(target: number[], k = 0.12) {
+export function useSmooth(target: number[], k = 0.12) {
   const [v, setV] = useState(target);
   const t = useRef(target);
-  t.current = target;
+  useEffect(() => { t.current = target; });
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let raf = 0;

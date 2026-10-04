@@ -24,8 +24,13 @@ export function ExperimentDrawer({ ranked, onClose }: { ranked: Ranked | null; o
       if (!items.length) return;
       const first = items[0];
       const last = items[items.length - 1];
-      if (ev.shiftKey && document.activeElement === first) (ev.preventDefault(), last.focus());
-      else if (!ev.shiftKey && document.activeElement === last) (ev.preventDefault(), first.focus());
+      if (ev.shiftKey && document.activeElement === first) {
+        ev.preventDefault();
+        last.focus();
+      } else if (!ev.shiftKey && document.activeElement === last) {
+        ev.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => {

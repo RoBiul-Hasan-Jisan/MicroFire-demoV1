@@ -8,6 +8,9 @@ import { CONTEXTS } from "@/components/MissionLab";
 import { FlameChamber, FlameShape } from "@/components/lab/FlameChamber";
 import { ExperimentDrawer } from "@/components/lab/ExperimentDrawer";
 import { LabGuide, type GuideTip } from "@/components/lab/LabGuide";
+import { KidZone } from "@/components/lab/KidZone";
+import { KidLab } from "@/components/lab/KidLab";
+import { kidWords } from "@/lib/kid-words";
 import { experiments, findings } from "@/lib/data";
 import { confidence } from "@/lib/relevance";
 import {
@@ -17,6 +20,7 @@ import {
 } from "@/lib/lab-model";
 
 const KEY = "microfire-lab-v1";
+const MODE_KEY = "microfire-lab-mode-v1";
 const GRAVITY_TO_WORLD = { microgravity: "micro", lunar: "moon", martian: "mars" } as const;
 const TESTED = testedRanges(experiments);
 
@@ -39,6 +43,7 @@ export function FlameLab() {
   const [scId, setScId] = useState(SAFETY[0].id);
   const [picked, setPicked] = useState<{ sc: string; action: string } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  const [kid, setKid] = useState(true);
   const replayTimer = useRef<number | undefined>(undefined);
   const prevBadges = useRef<string[] | null>(null);
 
@@ -49,8 +54,16 @@ export function FlameLab() {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time restore from storage
       if (raw) setSave({ ...FRESH_SAVE, ...JSON.parse(raw) });
     } catch {}
+    try {
+      if (localStorage.getItem(MODE_KEY) === "science") setKid(false);
+    } catch {}
     setReady(true);
   }, []);
+  const chooseMode = (k: boolean) => {
+    setKid(k);
+    try { localStorage.setItem(MODE_KEY, k ? "kid" : "science"); } catch {}
+    window.scrollTo({ top: 0 });
+  };
   useEffect(() => {
     if (!ready) return;
     try {
@@ -82,7 +95,6 @@ export function FlameLab() {
     prevBadges.current = earned;
     if (fresh.length) {
       const b = BADGES.find((x) => x.id === fresh[0])!;
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- announce a newly earned badge
       setToast(`${b.icon} Badge unlocked: ${b.name}`);
       const t = window.setTimeout(() => setToast(null), 3600);
       return () => window.clearTimeout(t);
@@ -91,6 +103,7 @@ export function FlameLab() {
 
   /* ---------- discovery flags that come from the evidence itself ---------- */
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- record that the person pushed past the tested range
     if (lit && ev.verdict.reason === "outside" && !save.pushedLimits) mark((s) => ({ ...s, pushedLimits: true }));
   }, [lit, ev.verdict.reason, save.pushedLimits, mark]);
   useEffect(() => () => window.clearTimeout(replayTimer.current), []);
@@ -210,8 +223,30 @@ export function FlameLab() {
   const leanWord = look.lean < 0.12 ? "upright" : look.lean < 0.4 ? "leaning slightly" : "leaning hard";
   const status = replay ? "REPLAY" : lit ? "IGNITED" : "STANDBY";
 
+  const modeBar = (
+    <div className="kid-modebar" role="group" aria-label="Lab mode">
+      <button className="kid-mode" aria-pressed={kid} onClick={() => chooseMode(true)}>Kid Explorer</button>
+      <button className="kid-mode" aria-pressed={!kid} onClick={() => chooseMode(false)}>Scientist</button>
+    </div>
+  );
+
+  if (kid) {
+    return (
+      <div className="lab lab-kid" id="lab-top">
+        {modeBar}
+        <header className="kid-hero">
+          <h1 className="display">The Space Flame Lab</h1>
+          <p>Change gravity, air and wind, then watch what a flame does. Every discovery is written into your experiment log.</p>
+        </header>
+        <KidLab st={st} patch={patch} visited={save.worlds} verdict={ev.verdict.kind} onScience={() => chooseMode(false)} />
+        <KidZone world={st.world} onWorld={(w) => patch({ world: w }, "gravity")} />
+      </div>
+    );
+  }
+
   return (
     <div className="lab" id="lab-top">
+      {modeBar}
       {/* ---------------- mission rail ---------------- */}
       <nav className="lab-rail" aria-label="Mission progress">
         <ol>
@@ -248,6 +283,7 @@ export function FlameLab() {
         ) : (
           <p className="mt-6 text-sm text-muted">{ready ? `${earned.length} of ${BADGES.length} badges · ${STEPS.filter((s) => progress[s.id]).length} of ${STEPS.length} steps` : "\u00a0"}</p>
         )}
+        <button className="kid-btn mt-5" onClick={() => scrollTo("lab-kids")}>Try the air-supply challenge</button>
       </header>
 
       {/* ---------------- chamber + controls ---------------- */}
@@ -335,11 +371,18 @@ export function FlameLab() {
         </div>
       </section>
 
+      {/* ---------------- air-supply challenge ---------------- */}
+      <KidZone world={st.world} onWorld={(w) => patch({ world: w }, "gravity")} />
+
       {/* ---------------- insight + prediction ---------------- */}
       <section id="lab-insight" className="lab-two">
         <div className="lab-panel" aria-live="polite">
           <h2 className="lab-h">Insight</h2>
           <p className="lab-sub">Read from NASA&apos;s recorded tests and verified quotes, step by step.</p>
+          <div className="kid-words">
+            <p className="kid-words-k">In kid words</p>
+            <ul>{kidWords(st, ev.verdict.kind).map((l) => <li key={l}>{l}</li>)}</ul>
+          </div>
           {lit ? (
             <ol key={`${stateKey}${igniteKey}`} className="lab-chain">
               <li className="lab-link lab-link-1">
