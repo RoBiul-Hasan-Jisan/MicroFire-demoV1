@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { FlowO2Plot } from "@/components/FlowO2Plot";
-import { ScrollStory } from "@/components/ScrollStory";
-import { Ember } from "@/components/game/Ember";
+import { SparkJourney } from "@/components/world/CinematicWorld";
+import { RealFlameReveal } from "@/components/world/RealFlameReveal";
+import { HomePaths } from "@/components/HomePaths";
 import { Legend } from "@/components/Outcome";
 import { Cite, Quote } from "@/components/Cite";
-import { experiments, findings, sources } from "@/lib/data";
+import { evidenceRecords, experiments, findings, saffireRuns, sources } from "@/lib/data";
 
 const FATES = ["bass2-B16", "bass2-B20", "bass2-B19"];
 const WHY = ["low-flow-sensitivity", "dim-blue-low-flow", "tiny-flame-undetected", "low-g-burns-lower-o2"];
@@ -19,8 +20,8 @@ const STEPS = [
     body: "Units are converted by tested code. Every quoted finding is matched against the source text at build time and fails the build if it isn't there.",
   },
   {
-    title: "Rank tests against your scenario",
-    body: "Mission Lab scores how close each test is to the oxygen, airflow and material you describe, and shows the arithmetic.",
+    title: "Sort the evidence for your mission",
+    body: "Mission Evidence places every test on the Evidence Ladder (direct, analogous or mechanistic) and names what is missing.",
   },
   {
     title: "Interpret with citations",
@@ -30,61 +31,30 @@ const STEPS = [
 
 export default function Home() {
   const why = WHY.map((id) => findings.find((f) => f.id === id)!);
-  const materials = new Set(experiments.map((e) => e.material)).size;
+  const materials = new Set(evidenceRecords.map((r) => r.material)).size;
 
   return (
     <>
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 story-stars" aria-hidden="true" />
-        <div className="absolute -right-48 -top-24 w-[720px] h-[720px] rounded-full story-orb" aria-hidden="true" />
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 pt-16 pb-20 grid gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center min-h-[calc(100vh-3.5rem)]">
-          <div>
-            <p className="text-signal text-sm font-semibold">NASA Space Apps 2026, Flame in Freefall</p>
-            <h1 className="display text-5xl sm:text-6xl lg:text-[4.6rem] max-w-[13ch] mt-3">Fire behaves differently when gravity disappears</h1>
-            <p className="mt-6 text-lg text-muted max-w-[52ch]">
-              MicroFire Atlas turns NASA&apos;s space-station fire experiments into something you can explore, build and play,
-              with every number traced to NASA&apos;s own pages.
-            </p>
-            <div className="mt-9 flex flex-wrap items-center gap-3">
-              <Link href="/lab" className="story-cta">
-                Enter the Flame Lab
-              </Link>
-              <Link href="/story" className="border border-rule-strong px-5 py-3 rounded-full hover:border-signal">
-                Play Mission Freefall
-              </Link>
-              <Link href="/mission" className="border border-rule-strong px-5 py-3 rounded-full hover:border-signal">
-                Run a mission scenario
-              </Link>
-              <a href="#scroll-story" className="px-3 py-3 text-muted hover:text-ink">
-                Scroll the story ↓
-              </a>
-            </div>
-            <dl className="mt-12 grid grid-cols-3 gap-6 max-w-lg">
-              <div><dt className="text-xs text-muted">Real ISS tests</dt><dd className="display text-3xl num">{experiments.length}</dd></div>
-              <div><dt className="text-xs text-muted">Verified NASA quotes</dt><dd className="display text-3xl num">{findings.length}</dd></div>
-              <div><dt className="text-xs text-muted">NASA documents</dt><dd className="display text-3xl num">{sources.length}</dd></div>
-            </dl>
-          </div>
-          <div className="flex flex-col items-center gap-5">
-            <Ember form="earth" mood="happy" size={260} />
-            <div className="ember-bubble max-w-xs">
-              <p className="text-[11px] font-semibold text-signal">Ember, your flame guide</p>
-              <p className="mt-1">Scroll down and watch what happens to me when gravity switches off.</p>
-            </div>
-          </div>
+      <SparkJourney />
+      <HomePaths />
+      <RealFlameReveal />
+      <section className="home-learn mx-auto max-w-7xl px-5 py-10" aria-labelledby="learn-teaser">
+        <div>
+          <h2 id="learn-teaser" className="display text-2xl sm:text-3xl">Why does a flame change shape in space?</h2>
+          <p className="text-muted mt-2 max-w-[60ch]">Flip gravity off yourself, then scroll through three real tests where only the airflow changed.</p>
+        </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <Link href="/learn" className="story-cta inline-flex">Explore the science</Link>
+          <Link href="/lab" className="border border-rule-strong px-5 py-3 rounded-full hover:border-signal">Enter the Flame Lab</Link>
         </div>
       </section>
-
-      <div id="scroll-story">
-        <ScrollStory />
-      </div>
 
       <section className="border-b border-rule">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 py-16 grid gap-10 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:items-center">
           <div>
             <h2 className="display text-2xl sm:text-3xl">Every test on one map</h2>
             <p className="mt-3 text-muted">
-              Each dot is a real burn aboard the ISS, placed by its oxygen level and airflow and coloured by what NASA
+              Each dot is a real test aboard the ISS, placed by its oxygen level and airflow and coloured by what NASA
               recorded. Select any dot to open its record.
             </p>
             <p className="mt-4 text-sm text-muted">
@@ -100,6 +70,9 @@ export default function Home() {
               label="Every NASA test in the atlas, plotted by oxygen and airflow. Tests B16, B20 and B19 are highlighted."
             />
             <Legend className="mt-3 px-1" />
+            <p className="mt-3 px-1 text-xs text-faint">
+              “Burned, end state not stated” means NASA&apos;s test table lists the run but not how it ended. The atlas shows that gap instead of guessing.
+            </p>
           </div>
         </div>
       </section>
@@ -119,8 +92,9 @@ export default function Home() {
         <div>
           <h2 className="display text-2xl sm:text-3xl">How the atlas works</h2>
           <p className="mt-4 text-muted">
-            {experiments.length} test records across {materials} materials, drawn from {sources.length} NASA documents, with{" "}
-            {findings.length} quoted findings checked against the original text.
+            {evidenceRecords.length} test records ({experiments.length} BASS and BASS-II, {saffireRuns.length} Saffire
+            {evidenceRecords.length > experiments.length + saffireRuns.length ? `, ${evidenceRecords.length - experiments.length - saffireRuns.length} LUCI lunar-gravity` : ""}) across {materials} materials, drawn from {sources.length} NASA
+            documents, with {findings.length} quoted findings checked against the original text.
           </p>
         </div>
         <ol className="grid gap-8 sm:grid-cols-2">
@@ -134,19 +108,18 @@ export default function Home() {
         </ol>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="border border-rule-strong rounded-sm p-8 sm:p-10 grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
-          <div>
-            <h2 className="display text-2xl">Moon and Mars are where the evidence thins out</h2>
-            <p className="mt-3 text-muted max-w-[70ch]">
-              Every test in this atlas was run in orbit. Partial-gravity data exists but is scarce: NASA describes its LUCI
-              sounding-rocket experiment as the first combustion tests longer than 25 seconds in simulated lunar gravity.{" "}
-              <Cite sourceId="luci" />
-            </p>
+      <section className="home-thesis" aria-labelledby="thesis">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 py-20 text-center">
+          <p className="text-signal text-sm">Where the evidence stops</p>
+          <h2 id="thesis" className="display text-4xl sm:text-5xl mt-3">Good science does not hide what it doesn&apos;t know.</h2>
+          <p className="mt-5 text-lg text-muted max-w-[62ch] mx-auto">
+            Every test row in this atlas ran in microgravity. No test reached the 34 % oxygen NASA proposes for Moon and Mars habitats, and long
+            burns at lunar gravity are only beginning. MicroFire Atlas shows that gap instead of guessing across it. <Cite sourceId="luci" />
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link href="/mission?context=moon-base" className="story-cta">Explore the evidence</Link>
+            <Link href="/gaps" className="border border-rule-strong px-5 py-3 rounded-sm hover:border-signal">See the Research Frontier</Link>
           </div>
-          <Link href="/gaps" className="border border-rule-strong px-5 py-3 rounded-sm hover:border-signal whitespace-nowrap">
-            See the evidence gaps
-          </Link>
         </div>
       </section>
     </>

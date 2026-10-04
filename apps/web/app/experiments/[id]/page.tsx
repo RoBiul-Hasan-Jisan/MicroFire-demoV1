@@ -79,7 +79,7 @@ export default async function ExperimentPage({ params }: PageProps<"/experiments
   const gases = e.co2_vol_pct && e.co2_vol_pct.some((v) => v != null);
 
   return (
-    <article className="mx-auto max-w-7xl px-4 sm:px-6 py-12">
+    <article className="explorer-page experiment-page mx-auto max-w-7xl px-4 sm:px-6 py-12">
       <p className="text-sm text-muted">
         <Link href="/atlas" className="link">
           Atlas
@@ -104,7 +104,7 @@ export default async function ExperimentPage({ params }: PageProps<"/experiments
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
         <div className="space-y-12">
-          <section aria-labelledby="conditions">
+          <section data-guide="conditions" aria-labelledby="conditions">
             <h2 id="conditions" className="display text-xl">
               Conditions and sample
             </h2>
@@ -126,7 +126,7 @@ export default async function ExperimentPage({ params }: PageProps<"/experiments
             </dl>
           </section>
 
-          <section aria-labelledby="notes">
+          <section data-guide="notes" aria-labelledby="notes">
             <h2 id="notes" className="display text-xl">
               What the crew and ground team wrote
             </h2>
@@ -220,7 +220,7 @@ export default async function ExperimentPage({ params }: PageProps<"/experiments
             </p>
           </section>
 
-          <section aria-labelledby="confidence">
+          <section data-guide="confidence" aria-labelledby="confidence">
             <h2 id="confidence" className="font-semibold">
               Evidence confidence: {conf.level}
             </h2>
