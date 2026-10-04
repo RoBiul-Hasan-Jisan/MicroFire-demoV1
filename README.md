@@ -1,5 +1,5 @@
-# MicroFire Atlas
 
+<<<<<<< HEAD
 Data-first fire-safety insights from NASA microgravity combustion experiments (NASA Space Apps 2026, *Flame in Freefall*).
 
 ## What is in the project
@@ -22,3 +22,5 @@ python3 -m unittest tests.test_model
 cd apps/web && npm install && npm test && npm run typecheck && npm run dev
 ```
 (`tests/test_build_dataset.py` needs the raw NASA PDFs from `pipelines/fetch_sources.py`.)
+=======
+>>>>>>> dd3a6114f54a1926d6aaca5e024515fb20996f0b
