@@ -1,0 +1,973 @@
+[
+ {
+  "id": "saffire-1-1",
+  "family": "saffire",
+  "flight": "Saffire-1",
+  "sample": "1-1",
+  "material": "SIBAL fabric",
+  "material_verbatim": "Cotton-Fiberglass",
+  "geometry": "fabric",
+  "thickness_mm": 0.37,
+  "width_cm": 40.6,
+  "length_cm": 94.0,
+  "flow_cm_s": 20.0,
+  "flow_direction": "concurrent",
+  "pressure_kpa": null,
+  "o2_pct": 21.7,
+  "o2_basis": "range",
+  "burn_duration_s": 420.0,
+  "burn_length_verbatim": "~ 84 cm",
+  "spread_rate_mm_s": 1.8,
+  "heat_release_avg_w": null,
+  "heat_release_peak_w": null,
+  "one_g": {
+   "burn_length": "Complete",
+   "spread": "Acceleratory"
+  },
+  "outcome_group": "sustained",
+  "outcome_label": "Burned until the airflow was shut off",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I",
+    "quote": "1-1 Cotton-Fiberglass 40.6 cm 0.37 mm 94 cm 20 cm/s Concurrent 21.7 to 21.5"
+   },
+   "results": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I (continued)",
+    "quote": "1-1 182 W 8s 420 s ~ 84 cm 1.8 mm/s Complete Acceleratory"
+   },
+   "outcome": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 16,
+    "quote": "The flame burned the entire allotted test time of about 7 min. at which point the air flow was shut off and the flame immediately extinguished"
+   },
+   "thickness": null
+  },
+  "notes": [
+   "Table I lists 182 W ignition power; an earlier slide in the same presentation gives 165 W for Saffire 1. The table value is kept.",
+   "Oxygen is the initial value of NASA's Δ%O2 range, derived from measured CO production and referenced to the ISS reading."
+  ]
+ },
+ {
+  "id": "saffire-1-2",
+  "family": "saffire",
+  "flight": "Saffire-1",
+  "sample": "1-2",
+  "material": "SIBAL fabric",
+  "material_verbatim": "Cotton-Fiberglass",
+  "geometry": "fabric",
+  "thickness_mm": 0.37,
+  "width_cm": 40.6,
+  "length_cm": 10.0,
+  "flow_cm_s": 20.0,
+  "flow_direction": "opposed",
+  "pressure_kpa": null,
+  "o2_pct": 21.5,
+  "o2_basis": "approx",
+  "burn_duration_s": 70.0,
+  "burn_length_verbatim": "~ 10 cm",
+  "spread_rate_mm_s": 1.3,
+  "heat_release_avg_w": null,
+  "heat_release_peak_w": null,
+  "one_g": {
+   "burn_length": "~0",
+   "spread": "n/a"
+  },
+  "outcome_group": "sustained",
+  "outcome_label": "Spread against the flow over the remaining fuel",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I",
+    "quote": "1-2 Cotton-Fiberglass 40.6 cm 0.37 mm ~ 10 cm 20 cm/s Opposed ~ 21.5"
+   },
+   "results": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I (continued)",
+    "quote": "1-2 182 W 8s 70 s ~ 10 cm 1.3 mm/s ~0 n/a"
+   },
+   "outcome": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 21,
+    "quote": "The opposed-flow flame average spread rate 1.3 mm/s"
+   },
+   "thickness": null
+  },
+  "notes": [
+   "Oxygen is the initial value of NASA's Δ%O2 range, derived from measured CO production and referenced to the ISS reading."
+  ]
+ },
+ {
+  "id": "saffire-2-1",
+  "family": "saffire",
+  "flight": "Saffire-2",
+  "sample": "2-1",
+  "material": "Silicone",
+  "material_verbatim": "Silicone",
+  "geometry": "sheet",
+  "thickness_mm": 0.27,
+  "width_cm": 5.0,
+  "length_cm": 29.0,
+  "flow_cm_s": 20.0,
+  "flow_direction": "concurrent",
+  "pressure_kpa": null,
+  "o2_pct": 22.1,
+  "o2_basis": "approx",
+  "burn_duration_s": null,
+  "burn_length_verbatim": "~0",
+  "spread_rate_mm_s": null,
+  "heat_release_avg_w": null,
+  "heat_release_peak_w": null,
+  "one_g": {
+   "burn_length": "~ Complete",
+   "spread": "Acceleratory"
+  },
+  "outcome_group": "extinguished",
+  "outcome_label": "Did not spread; the small flame went out after the igniter",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I",
+    "quote": "2-1 Silicone 5 cm 0.27 mm 29 cm 20 cm/s Concurrent ~ 22.1"
+   },
+   "results": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I (continued)",
+    "quote": "2-1 80 W 9.2 s Insignificant ~0 n/a ~ Complete Acceleratory"
+   },
+   "outcome": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 12,
+    "quote": "When the igniter was powered off, a tiny gas phase flame remained but did not spread and quickly extinguished"
+   },
+   "thickness": null
+  },
+  "notes": [
+   "Oxygen is the initial value of NASA's Δ%O2 range, derived from measured CO production and referenced to the ISS reading."
+  ]
+ },
+ {
+  "id": "saffire-2-2",
+  "family": "saffire",
+  "flight": "Saffire-2",
+  "sample": "2-2",
+  "material": "Silicone",
+  "material_verbatim": "Silicone",
+  "geometry": "sheet",
+  "thickness_mm": 0.61,
+  "width_cm": 5.0,
+  "length_cm": 29.0,
+  "flow_cm_s": 20.0,
+  "flow_direction": "concurrent",
+  "pressure_kpa": null,
+  "o2_pct": 22.1,
+  "o2_basis": "approx",
+  "burn_duration_s": null,
+  "burn_length_verbatim": "~0",
+  "spread_rate_mm_s": null,
+  "heat_release_avg_w": null,
+  "heat_release_peak_w": null,
+  "one_g": {
+   "burn_length": "7.6 cm",
+   "spread": "1.2 mm/s"
+  },
+  "outcome_group": "extinguished",
+  "outcome_label": "Did not spread; the small flame went out after the igniter",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I",
+    "quote": "2-2 Silicone 5 cm 0.61 mm 29 cm 20 cm/s Concurrent ~ 22.1"
+   },
+   "results": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I (continued)",
+    "quote": "2-2 80 W 9.2 s Insignificant ~0 n/a 7.6 cm 1.2 mm/s"
+   },
+   "outcome": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 12,
+    "quote": "When the igniter was powered off, a tiny gas phase flame remained but did not spread and quickly extinguished"
+   },
+   "thickness": null
+  },
+  "notes": [
+   "Oxygen is the initial value of NASA's Δ%O2 range, derived from measured CO production and referenced to the ISS reading."
+  ]
+ },
+ {
+  "id": "saffire-2-3",
+  "family": "saffire",
+  "flight": "Saffire-2",
+  "sample": "2-3",
+  "material": "Silicone",
+  "material_verbatim": "Silicone",
+  "geometry": "sheet",
+  "thickness_mm": 1.03,
+  "width_cm": 5.0,
+  "length_cm": 29.0,
+  "flow_cm_s": 20.0,
+  "flow_direction": "concurrent",
+  "pressure_kpa": null,
+  "o2_pct": 22.1,
+  "o2_basis": "approx",
+  "burn_duration_s": null,
+  "burn_length_verbatim": "~0",
+  "spread_rate_mm_s": null,
+  "heat_release_avg_w": null,
+  "heat_release_peak_w": null,
+  "one_g": {
+   "burn_length": "~0",
+   "spread": "n/a"
+  },
+  "outcome_group": "extinguished",
+  "outcome_label": "Did not spread; the small flame went out after the igniter",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I",
+    "quote": "2-3 Silicone 5 cm 1.03 mm 29 cm 20 cm/s Concurrent ~ 22.1"
+   },
+   "results": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I (continued)",
+    "quote": "2-3 80 W 9.2 s Insignificant ~0 n/a ~0 n/a"
+   },
+   "outcome": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 12,
+    "quote": "When the igniter was powered off, a tiny gas phase flame remained but did not spread and quickly extinguished"
+   },
+   "thickness": null
+  },
+  "notes": [
+   "Oxygen is the initial value of NASA's Δ%O2 range, derived from measured CO production and referenced to the ISS reading."
+  ]
+ },
+ {
+  "id": "saffire-2-4",
+  "family": "saffire",
+  "flight": "Saffire-2",
+  "sample": "2-4",
+  "material": "Silicone",
+  "material_verbatim": "Silicone",
+  "geometry": "sheet",
+  "thickness_mm": 0.37,
+  "width_cm": 5.0,
+  "length_cm": 29.0,
+  "flow_cm_s": 20.0,
+  "flow_direction": "opposed",
+  "pressure_kpa": null,
+  "o2_pct": 22.1,
+  "o2_basis": "approx",
+  "burn_duration_s": null,
+  "burn_length_verbatim": "~0",
+  "spread_rate_mm_s": null,
+  "heat_release_avg_w": null,
+  "heat_release_peak_w": null,
+  "one_g": {
+   "burn_length": "Complete",
+   "spread": "0.6 mm/s"
+  },
+  "outcome_group": "extinguished",
+  "outcome_label": "Did not spread; the small flame went out after the igniter",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I",
+    "quote": "2-4 Silicone 5 cm 0.37 mm 29 cm 20 cm/s Opposed ~ 22.1"
+   },
+   "results": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I (continued)",
+    "quote": "2-4 80 W 9.2 s Insignificant ~0 n/a Complete 0.6 mm/s"
+   },
+   "outcome": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 12,
+    "quote": "When the igniter was powered off, a tiny gas phase flame remained but did not spread and quickly extinguished"
+   },
+   "thickness": null
+  },
+  "notes": [
+   "Oxygen is the initial value of NASA's Δ%O2 range, derived from measured CO production and referenced to the ISS reading."
+  ]
+ },
+ {
+  "id": "saffire-2-5",
+  "family": "saffire",
+  "flight": "Saffire-2",
+  "sample": "2-5",
+  "material": "SIBAL fabric",
+  "material_verbatim": "Cotton-Fiberglass",
+  "geometry": "fabric",
+  "thickness_mm": 0.37,
+  "width_cm": 5.0,
+  "length_cm": 29.0,
+  "flow_cm_s": 20.0,
+  "flow_direction": "concurrent",
+  "pressure_kpa": null,
+  "o2_pct": 22.1,
+  "o2_basis": "approx",
+  "burn_duration_s": 145.0,
+  "burn_length_verbatim": "29 cm",
+  "spread_rate_mm_s": 2.1,
+  "heat_release_avg_w": null,
+  "heat_release_peak_w": null,
+  "one_g": {
+   "burn_length": "Complete",
+   "spread": "Acceleratory"
+  },
+  "outcome_group": "sustained",
+  "outcome_label": "Burned the full sample length",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I",
+    "quote": "2-5 Cotton-Fiberglass 5 cm 0.37 mm 29 cm 20 cm/s Concurrent ~ 22.1"
+   },
+   "results": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I (continued)",
+    "quote": "2-5 80 W 9.2 s 145 s 29 cm 2.1 mm/s Complete Acceleratory"
+   },
+   "outcome": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 21,
+    "quote": "The flame spread rate for the 5-cm-wide sample is marginally faster compared to the spread rate for the 40.6-cm-wide sample for the same flow speed of 20 cm/s (2.1 compared to 1.8 mm/s)"
+   },
+   "thickness": null
+  },
+  "notes": [
+   "Oxygen is the initial value of NASA's Δ%O2 range, derived from measured CO production and referenced to the ISS reading."
+  ]
+ },
+ {
+  "id": "saffire-2-6",
+  "family": "saffire",
+  "flight": "Saffire-2",
+  "sample": "2-6",
+  "material": "SIBAL fabric",
+  "material_verbatim": "Cotton-Fiberglass",
+  "geometry": "fabric",
+  "thickness_mm": 0.37,
+  "width_cm": 5.0,
+  "length_cm": 29.0,
+  "flow_cm_s": 25.0,
+  "flow_direction": "concurrent",
+  "pressure_kpa": null,
+  "o2_pct": 22.1,
+  "o2_basis": "approx",
+  "burn_duration_s": 115.0,
+  "burn_length_verbatim": "29 cm",
+  "spread_rate_mm_s": 2.6,
+  "heat_release_avg_w": null,
+  "heat_release_peak_w": null,
+  "one_g": {
+   "burn_length": "Complete",
+   "spread": "Acceleratory"
+  },
+  "outcome_group": "sustained",
+  "outcome_label": "Burned the full sample length",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I",
+    "quote": "2-6 Cotton-Fiberglass 5 cm 0.37 mm 29 cm 25 cm/s Concurrent ~ 22.1"
+   },
+   "results": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I (continued)",
+    "quote": "2-6 80 W 9.2 s 115 s 29 cm 2.6 mm/s Complete Acceleratory"
+   },
+   "outcome": null,
+   "thickness": null
+  },
+  "notes": [
+   "Oxygen is the initial value of NASA's Δ%O2 range, derived from measured CO production and referenced to the ISS reading."
+  ]
+ },
+ {
+  "id": "saffire-2-7",
+  "family": "saffire",
+  "flight": "Saffire-2",
+  "sample": "2-7",
+  "material": "Nomex",
+  "material_verbatim": "PMMA & Nomex",
+  "geometry": "composite",
+  "thickness_mm": 0.37,
+  "width_cm": 5.0,
+  "length_cm": 24.0,
+  "flow_cm_s": 20.0,
+  "flow_direction": "concurrent",
+  "pressure_kpa": null,
+  "o2_pct": 22.1,
+  "o2_basis": "approx",
+  "burn_duration_s": 140.0,
+  "burn_length_verbatim": "5 cm & 0",
+  "spread_rate_mm_s": null,
+  "heat_release_avg_w": null,
+  "heat_release_peak_w": null,
+  "one_g": {
+   "burn_length": "~ 0 (Nomex)",
+   "spread": "n/a (Nomex)"
+  },
+  "outcome_group": "not_ignited",
+  "outcome_label": "The PMMA lead-in burned away, but the Nomex did not ignite",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I",
+    "quote": "2-7 PMMA & Nomex 5 cm 0.85 & 0.37 mm 5 & 24 cm 20 cm/s Concurrent ~ 22.1"
+   },
+   "results": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I (continued)",
+    "quote": "2-7 80 W 9.2 s 140 s 5 cm & 0 ii n/a (Nomex) ~ 0 (Nomex) n/a (Nomex)"
+   },
+   "outcome": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "quote": "ii The PMMA portion was completely consumed but the Nomex was not ignited."
+   },
+   "thickness": null
+  },
+  "notes": [
+   "Composite sample: a 5 cm, 0.85 mm PMMA lead-in followed by 24 cm of Nomex HT90-40 (0.37 mm). Values here describe the Nomex part.",
+   "Oxygen is the initial value of NASA's Δ%O2 range, derived from measured CO production and referenced to the ISS reading."
+  ]
+ },
+ {
+  "id": "saffire-2-8",
+  "family": "saffire",
+  "flight": "Saffire-2",
+  "sample": "2-8",
+  "material": "PMMA",
+  "material_verbatim": "PMMA",
+  "geometry": "slab",
+  "thickness_mm": null,
+  "width_cm": 5.0,
+  "length_cm": 29.0,
+  "flow_cm_s": 20.0,
+  "flow_direction": "concurrent",
+  "pressure_kpa": null,
+  "o2_pct": 22.1,
+  "o2_basis": "range",
+  "burn_duration_s": 600.0,
+  "burn_length_verbatim": "~ 10 cm",
+  "spread_rate_mm_s": null,
+  "heat_release_avg_w": null,
+  "heat_release_peak_w": null,
+  "one_g": {
+   "burn_length": "Complete",
+   "spread": "Acceleratory"
+  },
+  "outcome_group": "sustained",
+  "outcome_label": "Burned anchored at the leading edge, without spreading",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I",
+    "quote": "2-8 PMMA 5 cm See Fig. 5 29 cm 20 cm/s Concurrent 22.1 to 22.0"
+   },
+   "results": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I (continued)",
+    "quote": "2-8 97 W 30 s 600 s ~ 10 cm iii Note (iv) Complete Acceleratory"
+   },
+   "outcome": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "quote": "iv The flames remain anchored at the base of the sample which has a very slow regression rate (0.01 to 0.04 mm/s)."
+   },
+   "thickness": null
+  },
+  "notes": [
+   "Grooved slab; its cross-section is given in a figure, so no single thickness is recorded.",
+   "Oxygen is the initial value of NASA's Δ%O2 range, derived from measured CO production and referenced to the ISS reading."
+  ]
+ },
+ {
+  "id": "saffire-2-9",
+  "family": "saffire",
+  "flight": "Saffire-2",
+  "sample": "2-9",
+  "material": "PMMA",
+  "material_verbatim": "PMMA",
+  "geometry": "slab",
+  "thickness_mm": 10.0,
+  "width_cm": 5.0,
+  "length_cm": 29.0,
+  "flow_cm_s": 20.0,
+  "flow_direction": "concurrent",
+  "pressure_kpa": null,
+  "o2_pct": 22.0,
+  "o2_basis": "range",
+  "burn_duration_s": 900.0,
+  "burn_length_verbatim": "~ 10 cm",
+  "spread_rate_mm_s": null,
+  "heat_release_avg_w": null,
+  "heat_release_peak_w": null,
+  "one_g": {
+   "burn_length": "Complete",
+   "spread": "Acceleratory"
+  },
+  "outcome_group": "sustained",
+  "outcome_label": "Burned anchored at the leading edge, without spreading",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I",
+    "quote": "2-9 PMMA 5 cm 1 cm 29 cm 20 cm/s Concurrent 22.0 to 21.9"
+   },
+   "results": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "table": "Table I (continued)",
+    "quote": "2-9 97 W 30 s 900 s ~ 10 cm iii Note (iv) Complete Acceleratory"
+   },
+   "outcome": {
+    "source_id": "saffire-1-3",
+    "pdf_page": 29,
+    "quote": "iv The flames remain anchored at the base of the sample which has a very slow regression rate (0.01 to 0.04 mm/s)."
+   },
+   "thickness": null
+  },
+  "notes": [
+   "Oxygen is the initial value of NASA's Δ%O2 range, derived from measured CO production and referenced to the ISS reading."
+  ]
+ },
+ {
+  "id": "saffire-iv-1",
+  "family": "saffire",
+  "flight": "Saffire-IV",
+  "sample": "IV-1",
+  "material": "SIBAL fabric",
+  "material_verbatim": "SIBAL Cloth",
+  "geometry": "fabric",
+  "thickness_mm": null,
+  "width_cm": null,
+  "length_cm": 50.0,
+  "flow_cm_s": 20.0,
+  "flow_direction": "concurrent",
+  "pressure_kpa": 100.0,
+  "o2_pct": 22.0,
+  "o2_basis": "recorded",
+  "burn_duration_s": 130.0,
+  "burn_length_verbatim": null,
+  "spread_rate_mm_s": null,
+  "heat_release_avg_w": 3150.0,
+  "heat_release_peak_w": null,
+  "one_g": null,
+  "outcome_group": "sustained",
+  "outcome_label": "Burned for 130 s",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": {
+    "source_id": "saffire-4-5",
+    "pdf_page": 5,
+    "table": "Test matrix",
+    "quote": "Ambient Pressure (kPa) 100.0 100.0 70.7 71.3 72.6 / Oxygen Concentration 22.0 22.0 26.2 25.4 25.7 / Length (cm) 50 18 50 18 20 / Air Flow Rate (cm/s) 20 20 20 20 20"
+   },
+   "results": {
+    "source_id": "saffire-6",
+    "pdf_page": 6,
+    "table": "Table 2",
+    "quote": "IV-1 SIBAL 130 3,150 409 45 25 1390 1.03 80"
+   },
+   "outcome": null,
+   "thickness": null
+  },
+  "notes": []
+ },
+ {
+  "id": "saffire-iv-2",
+  "family": "saffire",
+  "flight": "Saffire-IV",
+  "sample": "IV-2",
+  "material": "PMMA",
+  "material_verbatim": "2-sided PMMA",
+  "geometry": "slab",
+  "thickness_mm": 10.0,
+  "width_cm": null,
+  "length_cm": 18.0,
+  "flow_cm_s": 20.0,
+  "flow_direction": "concurrent",
+  "pressure_kpa": 100.0,
+  "o2_pct": 22.0,
+  "o2_basis": "recorded",
+  "burn_duration_s": null,
+  "burn_length_verbatim": null,
+  "spread_rate_mm_s": null,
+  "heat_release_avg_w": null,
+  "heat_release_peak_w": null,
+  "one_g": null,
+  "outcome_group": "unknown",
+  "outcome_label": "Outcome not stated per sample in these sources",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": {
+    "source_id": "saffire-4-5",
+    "pdf_page": 5,
+    "table": "Test matrix",
+    "quote": "Ambient Pressure (kPa) 100.0 100.0 70.7 71.3 72.6 / Oxygen Concentration 22.0 22.0 26.2 25.4 25.7 / Length (cm) 50 18 50 18 20 / Air Flow Rate (cm/s) 20 20 20 20 20"
+   },
+   "results": null,
+   "outcome": null,
+   "thickness": {
+    "source_id": "saffire-4-5",
+    "pdf_page": 6,
+    "quote": "2-sided PMMA (1 cm thick.)"
+   }
+  },
+  "notes": [
+   "Thick-fuel flames in concurrent flow 'did not spread and were instead pinned to the leading edge' (overview statement, not tied to this sample)."
+  ]
+ },
+ {
+  "id": "saffire-v-2",
+  "family": "saffire",
+  "flight": "Saffire-V",
+  "sample": "V-2",
+  "material": "Cotton jersey",
+  "material_verbatim": "Cotton Jersey",
+  "geometry": "fabric",
+  "thickness_mm": null,
+  "width_cm": null,
+  "length_cm": 50.0,
+  "flow_cm_s": 20.0,
+  "flow_direction": "concurrent",
+  "pressure_kpa": 70.7,
+  "o2_pct": 26.2,
+  "o2_basis": "recorded",
+  "burn_duration_s": 200.0,
+  "burn_length_verbatim": null,
+  "spread_rate_mm_s": null,
+  "heat_release_avg_w": 2800.0,
+  "heat_release_peak_w": null,
+  "one_g": null,
+  "outcome_group": "sustained",
+  "outcome_label": "Burned for 200 s",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": {
+    "source_id": "saffire-4-5",
+    "pdf_page": 5,
+    "table": "Test matrix",
+    "quote": "Ambient Pressure (kPa) 100.0 100.0 70.7 71.3 72.6 / Oxygen Concentration 22.0 22.0 26.2 25.4 25.7 / Length (cm) 50 18 50 18 20 / Air Flow Rate (cm/s) 20 20 20 20 20"
+   },
+   "results": {
+    "source_id": "saffire-6",
+    "pdf_page": 6,
+    "table": "Table 2",
+    "quote": "V-2 Cotton 200 2,800 560 46 23 2360 1.26 83"
+   },
+   "outcome": null,
+   "thickness": null
+  },
+  "notes": []
+ },
+ {
+  "id": "saffire-v-3",
+  "family": "saffire",
+  "flight": "Saffire-V",
+  "sample": "V-3",
+  "material": "PMMA",
+  "material_verbatim": "1 sided PMMA",
+  "geometry": "slab",
+  "thickness_mm": 5.0,
+  "width_cm": null,
+  "length_cm": 18.0,
+  "flow_cm_s": 20.0,
+  "flow_direction": "concurrent",
+  "pressure_kpa": 71.3,
+  "o2_pct": 25.4,
+  "o2_basis": "recorded",
+  "burn_duration_s": null,
+  "burn_length_verbatim": null,
+  "spread_rate_mm_s": null,
+  "heat_release_avg_w": null,
+  "heat_release_peak_w": null,
+  "one_g": null,
+  "outcome_group": "unknown",
+  "outcome_label": "Outcome not stated per sample in these sources",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": {
+    "source_id": "saffire-4-5",
+    "pdf_page": 5,
+    "table": "Test matrix",
+    "quote": "Ambient Pressure (kPa) 100.0 100.0 70.7 71.3 72.6 / Oxygen Concentration 22.0 22.0 26.2 25.4 25.7 / Length (cm) 50 18 50 18 20 / Air Flow Rate (cm/s) 20 20 20 20 20"
+   },
+   "results": null,
+   "outcome": null,
+   "thickness": {
+    "source_id": "saffire-4-5",
+    "pdf_page": 6,
+    "quote": "1-sided PMMA (0.5 cm thick.)"
+   }
+  },
+  "notes": []
+ },
+ {
+  "id": "saffire-v-4",
+  "family": "saffire",
+  "flight": "Saffire-V",
+  "sample": "V-4",
+  "material": "PMMA",
+  "material_verbatim": "Structured PMMA",
+  "geometry": "slab",
+  "thickness_mm": 10.0,
+  "width_cm": null,
+  "length_cm": 20.0,
+  "flow_cm_s": 20.0,
+  "flow_direction": "opposed",
+  "pressure_kpa": 72.6,
+  "o2_pct": 25.7,
+  "o2_basis": "recorded",
+  "burn_duration_s": null,
+  "burn_length_verbatim": null,
+  "spread_rate_mm_s": null,
+  "heat_release_avg_w": null,
+  "heat_release_peak_w": null,
+  "one_g": null,
+  "outcome_group": "unknown",
+  "outcome_label": "Outcome not stated per sample in these sources",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": {
+    "source_id": "saffire-4-5",
+    "pdf_page": 5,
+    "table": "Test matrix",
+    "quote": "Ambient Pressure (kPa) 100.0 100.0 70.7 71.3 72.6 / Oxygen Concentration 22.0 22.0 26.2 25.4 25.7 / Length (cm) 50 18 50 18 20 / Air Flow Rate (cm/s) 20 20 20 20 20"
+   },
+   "results": null,
+   "outcome": null,
+   "thickness": {
+    "source_id": "saffire-4-5",
+    "pdf_page": 6,
+    "quote": "Structured PMMA (1 cm thick.)"
+   }
+  },
+  "notes": []
+ },
+ {
+  "id": "saffire-vi-1",
+  "family": "saffire",
+  "flight": "Saffire-VI",
+  "sample": "VI-1",
+  "material": "Nomex",
+  "material_verbatim": "Nomex Fabric",
+  "geometry": "fabric",
+  "thickness_mm": null,
+  "width_cm": null,
+  "length_cm": null,
+  "flow_cm_s": null,
+  "flow_direction": null,
+  "pressure_kpa": null,
+  "o2_pct": null,
+  "o2_basis": null,
+  "burn_duration_s": null,
+  "burn_length_verbatim": null,
+  "spread_rate_mm_s": null,
+  "heat_release_avg_w": null,
+  "heat_release_peak_w": null,
+  "one_g": null,
+  "outcome_group": "not_ignited",
+  "outcome_label": "Did not ignite",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": null,
+   "results": null,
+   "outcome": {
+    "source_id": "saffire-6",
+    "pdf_page": 4,
+    "quote": "The Nomex sample did not ignite"
+   },
+   "thickness": null
+  },
+  "notes": []
+ },
+ {
+  "id": "saffire-vi-2",
+  "family": "saffire",
+  "flight": "Saffire-VI",
+  "sample": "VI-2",
+  "material": "SIBAL fabric",
+  "material_verbatim": "SIBAL Cloth",
+  "geometry": "fabric",
+  "thickness_mm": null,
+  "width_cm": null,
+  "length_cm": 50.0,
+  "flow_cm_s": 20.0,
+  "flow_direction": "concurrent",
+  "pressure_kpa": 54.1,
+  "o2_pct": 31.0,
+  "o2_basis": "recorded",
+  "burn_duration_s": 112.0,
+  "burn_length_verbatim": null,
+  "spread_rate_mm_s": null,
+  "heat_release_avg_w": 3650.0,
+  "heat_release_peak_w": 3217.0,
+  "one_g": null,
+  "outcome_group": "sustained",
+  "outcome_label": "Reached a steady size and spread rate quickly",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": {
+    "source_id": "saffire-6",
+    "pdf_page": 3,
+    "table": "Test matrix",
+    "quote": "Ambient Pressure (kPa) 100.0 70.7 54.1 54.6 55.2 / Oxygen Concentration (mol 22.0 26.2 31.0 30.3 28.8 / Length (cm) 50 50 50 18 18 / Air Flow Rate (cm/s) 20 20 20 20 20"
+   },
+   "results": {
+    "source_id": "saffire-6",
+    "pdf_page": 6,
+    "table": "Table 2",
+    "quote": "VI-2 SIBAL 112 3217 580 3,650 409 48 20 2800 1.15 120"
+   },
+   "outcome": {
+    "source_id": "saffire-6",
+    "pdf_page": 4,
+    "quote": "The SIBAL sample (left image) achieved a steady size and spread rate quite rapidly"
+   },
+   "thickness": null
+  },
+  "notes": []
+ },
+ {
+  "id": "saffire-vi-3",
+  "family": "saffire",
+  "flight": "Saffire-VI",
+  "sample": "VI-3",
+  "material": "PMMA",
+  "material_verbatim": "Two-Sided PMMA",
+  "geometry": "slab",
+  "thickness_mm": 10.0,
+  "width_cm": null,
+  "length_cm": 18.0,
+  "flow_cm_s": 20.0,
+  "flow_direction": "concurrent",
+  "pressure_kpa": 54.6,
+  "o2_pct": 30.3,
+  "o2_basis": "recorded",
+  "burn_duration_s": 780.0,
+  "burn_length_verbatim": null,
+  "spread_rate_mm_s": null,
+  "heat_release_avg_w": null,
+  "heat_release_peak_w": 3080.0,
+  "one_g": null,
+  "outcome_group": "sustained",
+  "outcome_label": "Grew continuously until the flow was reduced",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": {
+    "source_id": "saffire-6",
+    "pdf_page": 3,
+    "table": "Test matrix",
+    "quote": "Ambient Pressure (kPa) 100.0 70.7 54.1 54.6 55.2 / Oxygen Concentration (mol 22.0 26.2 31.0 30.3 28.8 / Length (cm) 50 50 50 18 18 / Air Flow Rate (cm/s) 20 20 20 20 20"
+   },
+   "results": {
+    "source_id": "saffire-6",
+    "pdf_page": 6,
+    "table": "Table 2",
+    "quote": "VI-3 2-sided 780 3080 1280 77 21 8539 3.51 308"
+   },
+   "outcome": {
+    "source_id": "saffire-6",
+    "pdf_page": 4,
+    "quote": "the two PMMA samples grew continuously until the flow speed was reduced"
+   },
+   "thickness": {
+    "source_id": "saffire-6",
+    "pdf_page": 4,
+    "quote": "flat, cast, polymethyl methacrylate (PMMA) (either one-sided 5 mm thick or two-sided (10 mm thick)"
+   }
+  },
+  "notes": []
+ },
+ {
+  "id": "saffire-vi-4",
+  "family": "saffire",
+  "flight": "Saffire-VI",
+  "sample": "VI-4",
+  "material": "PMMA",
+  "material_verbatim": "One-Sided PMMA",
+  "geometry": "slab",
+  "thickness_mm": 5.0,
+  "width_cm": null,
+  "length_cm": 18.0,
+  "flow_cm_s": 20.0,
+  "flow_direction": "concurrent",
+  "pressure_kpa": 55.2,
+  "o2_pct": 28.8,
+  "o2_basis": "recorded",
+  "burn_duration_s": 1200.0,
+  "burn_length_verbatim": null,
+  "spread_rate_mm_s": null,
+  "heat_release_avg_w": null,
+  "heat_release_peak_w": 1507.0,
+  "one_g": null,
+  "outcome_group": "sustained",
+  "outcome_label": "Grew continuously until the flow was reduced",
+  "gravity_regime": "microgravity (uncrewed Cygnus vehicle in orbit)",
+  "provenance": {
+   "conditions": {
+    "source_id": "saffire-6",
+    "pdf_page": 3,
+    "table": "Test matrix",
+    "quote": "Ambient Pressure (kPa) 100.0 70.7 54.1 54.6 55.2 / Oxygen Concentration (mol 22.0 26.2 31.0 30.3 28.8 / Length (cm) 50 50 50 18 18 / Air Flow Rate (cm/s) 20 20 20 20 20"
+   },
+   "results": {
+    "source_id": "saffire-6",
+    "pdf_page": 6,
+    "table": "Table 2",
+    "quote": "VI-4 1-sided 1200 1507 830 57 21 8117 3.37 320"
+   },
+   "outcome": {
+    "source_id": "saffire-6",
+    "pdf_page": 4,
+    "quote": "the two PMMA samples grew continuously until the flow speed was reduced"
+   },
+   "thickness": {
+    "source_id": "saffire-6",
+    "pdf_page": 4,
+    "quote": "flat, cast, polymethyl methacrylate (PMMA) (either one-sided 5 mm thick or two-sided (10 mm thick)"
+   }
+  },
+  "notes": []
+ }
+]
