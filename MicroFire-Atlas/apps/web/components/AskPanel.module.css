@@ -1,0 +1,62 @@
+.found { margin-bottom: 26px; padding: 16px 18px; border: 1px solid var(--rule-strong); border-radius: 16px; background: radial-gradient(ellipse at 0% 0%, #17305a55, transparent 60%), var(--panel); animation: rise .45s ease both; }
+.foundKicker { font-size: 12px; font-weight: 700; color: var(--signal); }
+.counts { display: grid; gap: 8px; margin-top: 10px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); }
+.counts li { font-size: 14px; color: var(--muted); }
+.counts strong { display: block; font-size: 26px; line-height: 1.1; color: var(--ink); font-family: var(--font-fredoka, inherit); }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.fam { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 8px; border-radius: 10px; color: #0b1222; background: #8eeaf5; }
+.fam[data-family="saffire"] { background: #ffcf6b; }
+.fam[data-family="luci"], .fam[data-family="partial-g"] { background: #c7b8ff; }
+.fam[data-family="sofie"] { background: #9be7b4; }
+.fam[data-family="flex"], .fam[data-family="acme"], .fam[data-family="context"] { background: #b9c6dc; }
+.gaps { margin-top: 12px; padding: 10px 12px; border-radius: 10px; border: 1px dashed #ffcf6b88; background: #ffcf6b0d; }
+.gaps p { font-size: 13px; font-weight: 700; color: #ffe2ac; }
+.gaps ul { margin-top: 4px; padding-left: 18px; list-style: disc; font-size: 13.5px; color: var(--ink); }
+.claims { margin-top: 18px; display: grid; gap: 12px; }
+.claim { padding: 14px 16px; border: 1px solid var(--rule); border-left: 3px solid var(--rule-strong); border-radius: 0 12px 12px 0; background: #0a1120; animation: rise .4s ease both; }
+.claim[data-verified="false"] { border-left-color: var(--flame); }
+.claim:nth-child(2) { animation-delay: .06s; } .claim:nth-child(3) { animation-delay: .12s; } .claim:nth-child(4) { animation-delay: .18s; } .claim:nth-child(5) { animation-delay: .24s; } .claim:nth-child(6) { animation-delay: .3s; }
+.claimHead { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.check { font-size: 12px; color: var(--muted); }
+.claim[data-verified="false"] .check { color: var(--flame); }
+.citeRow { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+.citeChip { min-height: 32px; padding: 3px 10px; border-radius: 16px; font-size: 12.5px; font-weight: 600; color: #0b1222; background: #8eeaf5; border: 0; cursor: pointer; }
+.citeChip[data-family="saffire"] { background: #ffcf6b; }
+.citeChip[data-family="luci"], .citeChip[data-family="partial-g"] { background: #c7b8ff; }
+.citeChip[data-family="sofie"] { background: #9be7b4; }
+.citeChip[data-family="flex"], .citeChip[data-family="acme"], .citeChip[data-family="context"] { background: #b9c6dc; }
+.citeChip[aria-expanded="true"] { outline: 2px solid var(--ink); outline-offset: 2px; }
+.citeDetail { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: #0d1830; border: 1px solid var(--signal); font-size: 13.5px; line-height: 1.5; display: grid; gap: 6px; animation: rise .25s ease both; }
+.citeMeta { font-size: 12px; font-weight: 700; color: var(--signal); }
+.rungHead { font-size: 15px; font-weight: 700; }
+.rungHead span { font-size: 12px; font-weight: 400; color: var(--muted); margin-left: 6px; }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+@media (prefers-reduced-motion: reduce) { .found, .claim, .citeDetail { animation: none; } }
+:global(html[data-motion="gentle"]) .found, :global(html[data-motion="gentle"]) .claim, :global(html[data-motion="gentle"]) .citeDetail { animation: none; }
+.soon { padding: 18px 20px; border: 1px solid #c7b8ff66; border-radius: 18px; background: radial-gradient(ellipse at 100% 0%, #6f5ad433, transparent 60%), radial-gradient(ellipse at 0% 100%, #17305a66, transparent 55%), var(--panel); animation: rise .45s ease both; }
+.soonHead { display: flex; gap: 16px; align-items: center; }
+.soonPix { width: 92px; height: auto; flex-shrink: 0; filter: drop-shadow(0 10px 20px #000a); animation: bob 3.2s ease-in-out infinite alternate; }
+.soonKicker { font-size: 12px; font-weight: 700; color: #c7b8ff; }
+.steps { margin-top: 16px; display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); }
+.steps li { position: relative; display: grid; gap: 2px; padding: 12px 12px 10px 46px; border-radius: 12px; border: 1px dashed #c7b8ff55; background: #0a1120; }
+.steps li[data-live="true"] { border-style: solid; border-color: #9be7b4aa; background: #9be7b40f; }
+.stepDot { position: absolute; left: 12px; top: 12px; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; font-size: 12px; font-weight: 800; color: #0b1222; background: #c7b8ff; }
+.steps li[data-live="true"] .stepDot { background: #9be7b4; }
+.steps strong { font-size: 14px; }
+.steps small { font-size: 12px; color: var(--muted); line-height: 1.4; }
+.steps em { font-style: normal; font-size: 11px; font-weight: 700; color: #c7b8ff; margin-top: 4px; }
+.steps li[data-live="true"] em { color: #9be7b4; }
+.ghosts { margin-top: 14px; display: grid; gap: 8px; }
+.ghost { display: grid; gap: 7px; padding: 12px 14px; border-left: 3px solid #c7b8ff55; border-radius: 0 10px 10px 0; background: #0a1120; }
+.ghost span { justify-self: start; font-size: 11px; font-weight: 700; color: #c7b8ff; border: 1px solid #c7b8ff55; border-radius: 6px; padding: 1px 6px; }
+.ghost i { display: block; height: 9px; border-radius: 5px; background: linear-gradient(90deg, #1b2740 0%, #2c3c62 40%, #1b2740 80%); background-size: 220% 100%; animation: shimmer 1.8s linear infinite; }
+.ghost i + i { width: 62%; }
+@keyframes shimmer { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+@keyframes bob { to { transform: translateY(-8px) rotate(3deg); } }
+@media (prefers-reduced-motion: reduce) { .soon, .soonPix, .ghost i { animation: none; } }
+:global(html[data-motion="gentle"]) .soon, :global(html[data-motion="gentle"]) .soonPix, :global(html[data-motion="gentle"]) .ghost i { animation: none; }
+@media (max-width: 640px) {
+  .soonHead { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .soonPix { width: 72px; }
+  .soon { padding: 16px; }
+}

@@ -1,0 +1,32 @@
+test_number,width_cm,flow_cm_s,o2_vol_pct,o2_note,comment
+GMT45-T1,2.2,10,18.5,O2 reading in these two tests might be inaccurate.,
+GMT45-T2,2.2,10 to 5,18.5,O2 reading in these two tests might be inaccurate.,
+GMT45-T4,2.2,10 to 2.2,18.7,,Quenched
+GMT45-T15,2.2,10 to 29,18.7,,No blowoff
+GMT100-T5,2.2,10 to 2.4,18.8,,
+GMT100-T6,2.2,4.5 to 2.6,18.8,,
+GMT100-T13,2.2,4 to 2.2,17.5,,Quenched
+GMT100-T16,2.2,4 to 3,17.6,,
+GMT175-T9,2.2,10,16.4,,No ignition
+GMT175-T10,2.2,5,16.4,,No ignition
+GMT175-T18,2.2,5 to 2.6,17.4,,Quenched
+GMT178-T11,2.2,4,17.1,,
+GMT178-T12,2.2,5,16.8,,No ignition
+GMT178-T14,2.2,4 to 2.8,16.9,,Quenched
+GMT178-T17,2.2,6 to 53,16.9,,No blowoff
+GMT190-T19,1.2,11,17.2,,
+GMT190-T20,1.2,11 to 3,17.2,,Quenched
+GMT190-T21,1.2,11 to 47,17.2,,Blow-off
+GMT190-T22,1.2,10.5 to 5,17.1,,Quenched
+GMT190-T23,2.2,10,17.2,,"Reused, did not ignite"
+GMT190-T24,2.2,10,18.2,,"Reused, one-sided flame"
+GMT216-T25,2.2,5 to 2.5,20.8,,"Reused, ignited"
+GMT216-T26,2.2,5 to 2.5,20.8,,"Reused, ignited"
+GMT216-T27,1.2,5 to 2,20.7,,"Reused, ignited"
+GMT216-T28a,1.2,5,20.7,,"Reused, did not ignite"
+GMT216-T28b,1.2,5,20.7,,"Reused, did not ignite"
+GMT216-T29,1.2,5 to 2,20.7,,"Reused, ignited"
+GMT96-T8,2.2,5,21,,BASS
+GMT96-T7,2.2,10,21,,BASS
+GMT131-T10,1.2,11,21,,BASS
+GMT222-T11,1.2,19,21,,BASS

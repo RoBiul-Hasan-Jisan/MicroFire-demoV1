@@ -1,0 +1,4 @@
+test_number,date,sample_number,material,igniter,flow_configuration,fan_display,air_display,o2_initial_vol_pct,o2_final_vol_pct,notes
+F1,2014-02-19,227,Nomex natural (Nomex III),Integral,Concurrent,82,9.5,22.2,22.2,Ignited briefly but did not spread at all and extinguished while the igniter was still on
+F2,2014-07-28,228m,Nomex natural (Nomex III),Integral,Concurrent,92,15,21,21.0,"Tried to ignite, flame would not sustain"
+F3,2014-08-01,229m,Nomex natural (Nomex III),Integral,Concurrent,61,8,21.7,,"Brief ignition flash, no sustained flame; no postburn sensor readings taken"

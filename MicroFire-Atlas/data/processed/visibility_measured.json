@@ -1,0 +1,69 @@
+{
+ "version": "visibility-measured-1.0",
+ "items": [
+  {
+   "slug": "bass-cassidy-2013",
+   "frames": 1,
+   "frames_with_flame": 1,
+   "share_frames_with_flame": 1.0,
+   "luminous_share_of_flame_px": 0.0,
+   "blue_share_of_flame_px": 1.0,
+   "share_frames_overexposed": 0.0,
+   "share_frames_weak_or_none": 0.0,
+   "blue_detection_note": null,
+   "flow_cm_s": null,
+   "o2_pct": null,
+   "citation": null,
+   "in_curve": false
+  },
+  {
+   "slug": "bass2-reduced-o2-gmt213",
+   "frames": 1,
+   "frames_with_flame": 1,
+   "share_frames_with_flame": 1.0,
+   "luminous_share_of_flame_px": 0.119,
+   "blue_share_of_flame_px": 0.881,
+   "share_frames_overexposed": 0.0,
+   "share_frames_weak_or_none": 0.0,
+   "blue_detection_note": null,
+   "flow_cm_s": null,
+   "o2_pct": null,
+   "citation": null,
+   "in_curve": false
+  },
+  {
+   "slug": "saffire-v-ribs",
+   "frames": 380,
+   "frames_with_flame": 329,
+   "share_frames_with_flame": 0.866,
+   "luminous_share_of_flame_px": 1.0,
+   "blue_share_of_flame_px": 0.0,
+   "share_frames_overexposed": 0.855,
+   "share_frames_weak_or_none": 0.182,
+   "blue_detection_note": "Blue-flame detection off: green illumination makes bubbly burnt PMMA look blue.",
+   "flow_cm_s": null,
+   "o2_pct": null,
+   "citation": null,
+   "in_curve": false
+  },
+  {
+   "slug": "saffire-vi-pmma",
+   "frames": 302,
+   "frames_with_flame": 301,
+   "share_frames_with_flame": 0.997,
+   "luminous_share_of_flame_px": 0.937,
+   "blue_share_of_flame_px": 0.063,
+   "share_frames_overexposed": 0.738,
+   "share_frames_weak_or_none": 0.003,
+   "blue_detection_note": null,
+   "flow_cm_s": null,
+   "o2_pct": null,
+   "citation": null,
+   "in_curve": false
+  }
+ ],
+ "curve_points": [],
+ "curve_available": false,
+ "status": "No curve yet: 0 of the 4 analysed NASA media items have a cited airflow, and at least 4 are needed. The media records in the atlas do not state airflow, so none were filled in.",
+ "how_to_extend": "Add NASA media (especially BASS runs below 5 cm/s) to data/media.json, run pipelines/flame_vision.py, fill their conditions and citations in data/curated/visibility_manifest.json, then run this script."
+}

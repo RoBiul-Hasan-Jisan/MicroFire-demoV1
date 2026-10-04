@@ -1,0 +1,44 @@
+.play { display: grid; gap: 14px; padding: 18px 20px; border-radius: 18px; border: 1px solid #8eeaf544; background: radial-gradient(ellipse at 100% 0%, #8eeaf514, transparent 60%), #0a1326; }
+.playQ { font-size: 15px; }
+.playNote { font-size: 14px; color: var(--muted); }
+.knobs { display: grid; gap: 12px 20px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); align-items: end; }
+.knob { display: grid; gap: 6px; font-size: 13.5px; color: var(--muted); }
+.knob b { color: #ffe2ac; font-variant-numeric: tabular-nums; }
+.knob input { width: 100%; accent-color: #ffb347; }
+.resetBtn { justify-self: start; font-size: 13px; color: var(--signal); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.rankList { display: grid; gap: 6px; }
+.rankList li { display: grid; grid-template-columns: 30px 90px minmax(0, 1fr) 40px 44px; gap: 10px; align-items: center; padding: 8px 12px; border-radius: 12px; background: #ffffff07; font-size: 14px; animation: slide .35s ease both; }
+.rankNo { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; font-weight: 800; font-size: 13px; color: #20160a; background: #ffcf6b; }
+.rankMeta { font-size: 12.5px; color: var(--muted); }
+.rankScore { font-variant-numeric: tabular-nums; text-align: right; }
+.move { font-size: 12.5px; font-weight: 800; text-align: center; border-radius: 8px; padding: 2px 0; }
+.move[data-dir="up"] { color: #9df0c8; background: #3ddc9722; }
+.move[data-dir="down"] { color: #ffc3a8; background: #ff8a5a22; }
+.move[data-dir="new"] { color: #ddd4ff; background: #c7b8ff22; }
+.move[data-dir="same"] { color: var(--faint); }
+.claims { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
+.claims li { display: grid; gap: 8px; align-content: start; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--rule-strong); background: #0d1830; transition: border-color .25s, background .25s; }
+.claims li[data-state="right"] { border-color: #3ddc97; background: #3ddc970f; }
+.claims li[data-state="wrong"] { border-color: #ff8a5a; background: #ff8a5a0f; animation: shake .4s ease both; }
+.claimText { font-size: 15px; }
+.claimText small { display: inline-block; margin-left: 4px; font-size: 12px; padding: 1px 7px; border-radius: 8px; background: #ffffff10; color: var(--muted); }
+.claimBtns { display: flex; flex-wrap: wrap; gap: 6px; }
+.claimBtns button { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--rule-strong); background: #0a1326; color: var(--ink); font-size: 13px; cursor: pointer; }
+.claimBtns button:hover, .claimBtns button:focus-visible { border-color: var(--signal); }
+.verdict { display: grid; gap: 3px; font-size: 13.5px; }
+.verdict em { font-style: normal; }
+.verdict b { color: #ffe2ac; }
+.verdict span { color: var(--muted); font-size: 12.5px; }
+/* the pipeline hero */
+.pipeline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; counter-reset: step; }
+.pipeline a { position: relative; display: grid; gap: 6px; align-content: start; padding: 16px 14px 16px 16px; text-decoration: none; color: var(--ink); border-top: 3px solid #ffcf6b55; transition: border-color .2s, background .2s; }
+.pipeline a:hover, .pipeline a:focus-visible { border-top-color: #ffcf6b; background: #ffcf6b0d; }
+.pipeline a::before { counter-increment: step; content: counter(step); position: absolute; top: -15px; left: 12px; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; font-size: 13px; font-weight: 800; color: #20160a; background: #ffcf6b; box-shadow: 0 0 14px -2px #ffb347; }
+.pipeline strong { font-size: 15px; margin-top: 6px; }
+.pipeline span { font-size: 13px; color: var(--muted); }
+.pipeline b { font-family: var(--font-display, inherit); font-size: 26px; color: #ffe2ac; line-height: 1; }
+@keyframes slide { from { opacity: 0; transform: translateX(-6px); } }
+@keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+@media (max-width: 860px) { .pipeline { grid-template-columns: 1fr; gap: 18px; } .rankList li { grid-template-columns: 30px 70px minmax(0, 1fr) 44px; } .rankScore { display: none; } }
+@media (prefers-reduced-motion: reduce) { .play *, .pipeline * { animation: none !important; transition: none !important; } }
+:global(html[data-motion="gentle"]) .play * { animation: none !important; }

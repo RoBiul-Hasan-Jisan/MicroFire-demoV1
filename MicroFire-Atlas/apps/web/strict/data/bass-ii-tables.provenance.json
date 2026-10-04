@@ -1,0 +1,45 @@
+{
+  "title": "BASS-II summary report: fabric, Nomex and extinction-speed tables",
+  "investigation": "PSI-25 (BASS-II), with four BASS (PSI-26) rows in Table 7.1",
+  "version": "FlameScope transcription 1",
+  "accessed": "2026-09-24",
+  "source": "https://ntrs.nasa.gov/citations/20210011385",
+  "pdf": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf",
+  "dataset": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-25",
+  "doi": "10.60555/4qc4-de67",
+  "method": "Transcribed by Claude Code from the report's text layer as NTRS serves it (TM-20210011385.pdf.txt). Printed pages come from the report's page markers and table of contents. Comments and notes are copied word for word; a '-----' comment becomes a blank.",
+  "verification": "Claude Code checked every row against the PDF page images (printed pp. 28, 96 and 105) on 2026-09-24. A second-person check is still pending. The Nomex O2 values also match NASA's PSI-25 experimental table.",
+  "tables": {
+    "data/bass-fabric.csv": {
+      "location": "Table 7.1, printed p. 96: test summary of flat SIBAL fabrics in concurrent flow (BASS and BASS-II)",
+      "notes": [
+        "SIBAL (Solid Inflammability Boundary at Low Speeds) is the report's 'cotton-fiberglass fabric blend'.",
+        "The flow ran with the flame (concurrent), unlike the opposed-flow acrylic sheets of Table 5.1.",
+        "'10 to 5' means the flow started at 10 cm/s and ended at 5 cm/s. The report says the rate of change varied from test to test.",
+        "Footnote b, on tests GMT45-T1 and T2: 'O2 reading in these two tests might be inaccurate.'",
+        "The report says reused samples 'provided less quantitative data, thus will not be discussed', so the loader leaves them out of verdicts.",
+        "A blank comment, or 'BASS', is read as a sample that ignited and burned with no event noted. The report's text counts 'six quenching tests, three nonignited tests, and one blowoff test' among the 27 BASS-II tests."
+      ]
+    },
+    "data/bass-nomex.csv": {
+      "location": "Section 3.1.1, printed p. 46 ('The three Nomex samples did not ignite'), and Table A.2, Ferkul test matrix, printed p. 105",
+      "notes": [
+        "The notes column is Table A.2's comment for each test, word for word.",
+        "O2 values are the calibrated initial and final O2 from NASA's PSI-25 experimental table, which match Table A.2. For F3, Table A.2 prints a calibrated final O2 of 0.9, but its own note says 'no postburn sensor readings taken' and PSI-25 leaves the cell empty, so it stays missing.",
+        "Table A.2 prints the flow configuration ('Concurrent') under a column headed 'Sample distance'.",
+        "Fan and air values are instrument display readings. The report gives no airflow velocity for these tests, so they are never used as cm/s."
+      ]
+    },
+    "data/bass-extinction.csv": {
+      "location": "Table 2.1, printed p. 28: comparison of extinction velocity Vg,cr for thin PMMA at 1 atm",
+      "notes": [
+        "The values are opposed-flow velocities in mm/s. The experimental values carry the report's ± uncertainty.",
+        "The report adds that 'the extinction velocity is not a function of fuel thickness'."
+      ]
+    }
+  },
+  "limitations": [
+    "All rows come from one report and are not independent studies.",
+    "Neither Table 7.1 nor Table A.2 gives sample thickness, and neither gives measurement uncertainty."
+  ]
+}

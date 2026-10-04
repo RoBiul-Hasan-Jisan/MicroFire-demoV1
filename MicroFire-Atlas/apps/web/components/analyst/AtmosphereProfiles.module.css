@@ -1,0 +1,27 @@
+.wrap { display: grid; gap: 16px; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: start; }
+.cards { display: grid; gap: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.card { display: grid; grid-template-columns: 54px minmax(0, 1fr); grid-template-rows: auto auto; gap: 2px 12px; align-items: center; text-align: left; padding: 12px 14px; border-radius: 16px; border: 1px solid var(--rule-strong); background: #0a1326; color: var(--ink); cursor: pointer; transition: border-color .2s, transform .15s, box-shadow .2s; }
+.card:hover:not(:disabled), .card:focus-visible { border-color: var(--signal); transform: translateY(-2px); }
+.card[aria-checked="true"] { border-color: #ffcf6b; box-shadow: 0 0 0 1px #ffcf6b66, 0 14px 30px -18px #ffb347; background: #ffcf6b0d; }
+.card:disabled { cursor: default; opacity: .55; }
+.gauge { grid-row: 1 / 3; position: relative; width: 54px; height: 54px; display: grid; place-items: center; }
+.gauge svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+.ring { fill: none; stroke: #16233f; stroke-width: 6; }
+.fillRing { fill: none; stroke: #8eeaf5; stroke-width: 6; stroke-linecap: round; stroke-dasharray: 150.8; transition: stroke-dashoffset .6s; }
+/* arc length = oxygen share of a 40 % full scale */
+.fillRing[data-o2="21"] { stroke-dashoffset: 71.6; }
+.fillRing[data-o2="34"] { stroke-dashoffset: 22.6; stroke: #ffb347; }
+.fillRing[data-o2="28.5"] { stroke-dashoffset: 43.4; stroke: #ffd88a; }
+.fillRing[data-o2="custom"] { stroke-dashoffset: 150.8; }
+.gauge b { position: relative; font-size: 13px; font-weight: 800; letter-spacing: -.02em; }
+.gauge small { font-size: 12px; color: var(--muted); }
+.name { font-weight: 700; font-size: 14.5px; line-height: 1.2; }
+.short { font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.info { padding: 14px 18px; border-radius: 16px; border-left: 3px solid #ffcf6b; background: #0d1830; display: grid; gap: 8px; font-size: 14px; }
+.status { font-weight: 700; color: #ffe2ac; }
+.why { color: var(--ink); }
+.quote { font-size: 13px; color: var(--muted); }
+.caveat { font-size: 12.5px; color: #ffc3a8; }
+@media (max-width: 900px) { .wrap { grid-template-columns: 1fr; } }
+@media (max-width: 420px) { .cards { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .wrap * { transition: none !important; } }

@@ -1,0 +1,662 @@
+{
+ "version": "loc-curve-1.0",
+ "o2_tested_range": [
+  14.1,
+  31.0
+ ],
+ "flow_tested_range": [
+  2.0,
+  24.999999999999996
+ ],
+ "limits": [
+  "The model is logistic in log airflow, so the curve can only fall as airflow rises. It cannot show a turnover or minimum if the real boundary has one.",
+  "No test is below 2 cm/s, so the left edge of the chart is the edge of the data, not of the physics.",
+  "Material is not a model input; the overlap between 'burned' and 'went out' in the observed bins partly reflects different materials."
+ ],
+ "definition": "Oxygen (vol %) at which the model gives a 50 % chance that the flame is sustained, at each airflow. Not NASA's measured limiting oxygen concentration.",
+ "curves": {
+  "concurrent": [
+   {
+    "flow": 2,
+    "o2_p05": 23.94655315896778,
+    "o2_p50": 30.773116519347916,
+    "o2_p95": 43.31301515832716,
+    "n_models": 199,
+    "inside_tested_o2": true,
+    "band_inside_tested_o2": false
+   },
+   {
+    "flow": 3,
+    "o2_p05": 23.485189781351043,
+    "o2_p50": 29.104702397210833,
+    "o2_p95": 38.91308474881492,
+    "n_models": 199,
+    "inside_tested_o2": true,
+    "band_inside_tested_o2": false
+   },
+   {
+    "flow": 4,
+    "o2_p05": 23.13528405578549,
+    "o2_p50": 27.89735579691382,
+    "o2_p95": 35.8546535168469,
+    "n_models": 199,
+    "inside_tested_o2": true,
+    "band_inside_tested_o2": false
+   },
+   {
+    "flow": 5,
+    "o2_p05": 22.896338664480375,
+    "o2_p50": 26.867954337353208,
+    "o2_p95": 33.553839970406216,
+    "n_models": 199,
+    "inside_tested_o2": true,
+    "band_inside_tested_o2": false
+   },
+   {
+    "flow": 7,
+    "o2_p05": 22.35517019857938,
+    "o2_p50": 25.415807755398866,
+    "o2_p95": 30.72495441848292,
+    "n_models": 199,
+    "inside_tested_o2": true,
+    "band_inside_tested_o2": true
+   },
+   {
+    "flow": 10,
+    "o2_p05": 21.20636730635097,
+    "o2_p50": 24.013430975579183,
+    "o2_p95": 27.97628101809278,
+    "n_models": 199,
+    "inside_tested_o2": true,
+    "band_inside_tested_o2": true
+   },
+   {
+    "flow": 15,
+    "o2_p05": 19.339826003728422,
+    "o2_p50": 22.099921915154088,
+    "o2_p95": 25.140604558268524,
+    "n_models": 199,
+    "inside_tested_o2": true,
+    "band_inside_tested_o2": true
+   },
+   {
+    "flow": 20,
+    "o2_p05": 16.841338073050363,
+    "o2_p50": 20.704484788151767,
+    "o2_p95": 24.429468951283706,
+    "n_models": 199,
+    "inside_tested_o2": true,
+    "band_inside_tested_o2": true
+   },
+   {
+    "flow": 25,
+    "o2_p05": 14.747802577426969,
+    "o2_p50": 19.66508861746337,
+    "o2_p95": 23.324218417617562,
+    "n_models": 199,
+    "inside_tested_o2": true,
+    "band_inside_tested_o2": true
+   }
+  ],
+  "opposed": [
+   {
+    "flow": 2,
+    "o2_p05": 22.331757663657026,
+    "o2_p50": 28.134742759138746,
+    "o2_p95": 43.04594723890572,
+    "n_models": 199,
+    "inside_tested_o2": true,
+    "band_inside_tested_o2": false
+   },
+   {
+    "flow": 3,
+    "o2_p05": 21.450343553084867,
+    "o2_p50": 26.479021427673622,
+    "o2_p95": 39.53638992946223,
+    "n_models": 199,
+    "inside_tested_o2": true,
+    "band_inside_tested_o2": false
+   },
+   {
+    "flow": 4,
+    "o2_p05": 20.802494432154457,
+    "o2_p50": 25.212775406171524,
+    "o2_p95": 36.84139658953302,
+    "n_models": 199,
+    "inside_tested_o2": true,
+    "band_inside_tested_o2": false
+   },
+   {
+    "flow": 5,
+    "o2_p05": 20.4099496004758,
+    "o2_p50": 24.32237186409681,
+    "o2_p95": 34.20210031678107,
+    "n_models": 199,
+    "inside_tested_o2": true,
+    "band_inside_tested_o2": false
+   },
+   {
+    "flow": 7,
+    "o2_p05": 19.271645271021928,
+    "o2_p50": 22.80767146358493,
+    "o2_p95": 31.30806884399401,
+    "n_models": 199,
+    "inside_tested_o2": true,
+    "band_inside_tested_o2": false
+   },
+   {
+    "flow": 10,
+    "o2_p05": 17.304703034829156,
+    "o2_p50": 21.581896057513998,
+    "o2_p95": 27.260464838982607,
+    "n_models": 199,
+    "inside_tested_o2": true,
+    "band_inside_tested_o2": true
+   },
+   {
+    "flow": 15,
+    "o2_p05": 14.208162502118546,
+    "o2_p50": 20.070646181867833,
+    "o2_p95": 24.775077179999215,
+    "n_models": 199,
+    "inside_tested_o2": true,
+    "band_inside_tested_o2": true
+   },
+   {
+    "flow": 20,
+    "o2_p05": 11.772085695745984,
+    "o2_p50": 18.761186845472558,
+    "o2_p95": 23.226078867325516,
+    "n_models": 199,
+    "inside_tested_o2": true,
+    "band_inside_tested_o2": false
+   },
+   {
+    "flow": 25,
+    "o2_p05": 9.828116426451933,
+    "o2_p50": 17.535055759647985,
+    "o2_p95": 22.472275751600897,
+    "n_models": 199,
+    "inside_tested_o2": true,
+    "band_inside_tested_o2": false
+   }
+  ]
+ },
+ "points": [
+  {
+   "id": "sibal-GMT45-T4",
+   "material": "SIBAL fabric",
+   "o2": 18.7,
+   "flow": 2.2,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "BASS-II|SIBAL fabric"
+  },
+  {
+   "id": "sibal-GMT45-T15",
+   "material": "SIBAL fabric",
+   "o2": 18.7,
+   "flow": 10.0,
+   "direction": "concurrent",
+   "sustained": 1,
+   "series": "BASS-II|SIBAL fabric"
+  },
+  {
+   "id": "sibal-GMT100-T13",
+   "material": "SIBAL fabric",
+   "o2": 17.5,
+   "flow": 2.2,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "BASS-II|SIBAL fabric"
+  },
+  {
+   "id": "sibal-GMT175-T9",
+   "material": "SIBAL fabric",
+   "o2": 16.4,
+   "flow": 10.0,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "BASS-II|SIBAL fabric"
+  },
+  {
+   "id": "sibal-GMT175-T10",
+   "material": "SIBAL fabric",
+   "o2": 16.4,
+   "flow": 5.0,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "BASS-II|SIBAL fabric"
+  },
+  {
+   "id": "sibal-GMT175-T18",
+   "material": "SIBAL fabric",
+   "o2": 17.4,
+   "flow": 2.6,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "BASS-II|SIBAL fabric"
+  },
+  {
+   "id": "sibal-GMT178-T12",
+   "material": "SIBAL fabric",
+   "o2": 16.8,
+   "flow": 5.0,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "BASS-II|SIBAL fabric"
+  },
+  {
+   "id": "sibal-GMT178-T14",
+   "material": "SIBAL fabric",
+   "o2": 16.9,
+   "flow": 2.8,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "BASS-II|SIBAL fabric"
+  },
+  {
+   "id": "sibal-GMT178-T17",
+   "material": "SIBAL fabric",
+   "o2": 16.9,
+   "flow": 6.0,
+   "direction": "concurrent",
+   "sustained": 1,
+   "series": "BASS-II|SIBAL fabric"
+  },
+  {
+   "id": "sibal-GMT190-T20",
+   "material": "SIBAL fabric",
+   "o2": 17.2,
+   "flow": 3.0,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "BASS-II|SIBAL fabric"
+  },
+  {
+   "id": "sibal-GMT190-T21",
+   "material": "SIBAL fabric",
+   "o2": 17.2,
+   "flow": 11.0,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "BASS-II|SIBAL fabric"
+  },
+  {
+   "id": "sibal-GMT190-T22",
+   "material": "SIBAL fabric",
+   "o2": 17.1,
+   "flow": 5.0,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "BASS-II|SIBAL fabric"
+  },
+  {
+   "id": "sibal-GMT190-T23",
+   "material": "SIBAL fabric",
+   "o2": 17.2,
+   "flow": 10.0,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "BASS-II|SIBAL fabric"
+  },
+  {
+   "id": "sibal-GMT216-T28a",
+   "material": "SIBAL fabric",
+   "o2": 20.7,
+   "flow": 5.0,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "BASS-II|SIBAL fabric"
+  },
+  {
+   "id": "sibal-GMT216-T28b",
+   "material": "SIBAL fabric",
+   "o2": 20.7,
+   "flow": 5.0,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "BASS-II|SIBAL fabric"
+  },
+  {
+   "id": "bass2-B6",
+   "material": "PMMA",
+   "o2": 20.1,
+   "flow": 3.0,
+   "direction": "opposed",
+   "sustained": 1,
+   "series": "BASS-II|PMMA"
+  },
+  {
+   "id": "bass2-B8",
+   "material": "PMMA",
+   "o2": 20.1,
+   "flow": 10.0,
+   "direction": "opposed",
+   "sustained": 1,
+   "series": "BASS-II|PMMA"
+  },
+  {
+   "id": "bass2-B9",
+   "material": "PMMA",
+   "o2": 20.1,
+   "flow": 2.0,
+   "direction": "opposed",
+   "sustained": 0,
+   "series": "BASS-II|PMMA"
+  },
+  {
+   "id": "bass2-B10",
+   "material": "PMMA",
+   "o2": 20.1,
+   "flow": 5.0,
+   "direction": "opposed",
+   "sustained": 0,
+   "series": "BASS-II|PMMA"
+  },
+  {
+   "id": "bass2-B11",
+   "material": "PMMA",
+   "o2": 20.1,
+   "flow": 5.0,
+   "direction": "opposed",
+   "sustained": 0,
+   "series": "BASS-II|PMMA"
+  },
+  {
+   "id": "bass2-B13",
+   "material": "PMMA",
+   "o2": 20.1,
+   "flow": 10.0,
+   "direction": "opposed",
+   "sustained": 0,
+   "series": "BASS-II|PMMA"
+  },
+  {
+   "id": "bass2-B14",
+   "material": "PMMA",
+   "o2": 14.1,
+   "flow": 5.0,
+   "direction": "opposed",
+   "sustained": 0,
+   "series": "BASS-II|PMMA"
+  },
+  {
+   "id": "bass2-B15",
+   "material": "PMMA",
+   "o2": 20.1,
+   "flow": 10.0,
+   "direction": "opposed",
+   "sustained": 1,
+   "series": "BASS-II|PMMA"
+  },
+  {
+   "id": "bass2-B16",
+   "material": "PMMA",
+   "o2": 16.5,
+   "flow": 3.0,
+   "direction": "opposed",
+   "sustained": 0,
+   "series": "BASS-II|PMMA"
+  },
+  {
+   "id": "bass2-B17",
+   "material": "PMMA",
+   "o2": 16.6,
+   "flow": 5.0,
+   "direction": "opposed",
+   "sustained": 0,
+   "series": "BASS-II|PMMA"
+  },
+  {
+   "id": "bass2-B18",
+   "material": "PMMA",
+   "o2": 16.5,
+   "flow": 10.0,
+   "direction": "opposed",
+   "sustained": 0,
+   "series": "BASS-II|PMMA"
+  },
+  {
+   "id": "bass2-B19",
+   "material": "PMMA",
+   "o2": 16.4,
+   "flow": 10.0,
+   "direction": "opposed",
+   "sustained": 0,
+   "series": "BASS-II|PMMA"
+  },
+  {
+   "id": "bass2-B20",
+   "material": "PMMA",
+   "o2": 16.5,
+   "flow": 5.0,
+   "direction": "opposed",
+   "sustained": 1,
+   "series": "BASS-II|PMMA"
+  },
+  {
+   "id": "bass2-B21",
+   "material": "PMMA",
+   "o2": 19.8,
+   "flow": 5.0,
+   "direction": "opposed",
+   "sustained": 0,
+   "series": "BASS-II|PMMA"
+  },
+  {
+   "id": "bass2-B22",
+   "material": "PMMA",
+   "o2": 19.8,
+   "flow": 5.0,
+   "direction": "opposed",
+   "sustained": 0,
+   "series": "BASS-II|PMMA"
+  },
+  {
+   "id": "bass2-F1",
+   "material": "Nomex",
+   "o2": 20.6,
+   "flow": 9.5,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "BASS-II|Nomex"
+  },
+  {
+   "id": "bass2-F2",
+   "material": "Nomex",
+   "o2": 21.0,
+   "flow": 15.0,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "BASS-II|Nomex"
+  },
+  {
+   "id": "bass2-F3",
+   "material": "Nomex",
+   "o2": 20.8,
+   "flow": 8.0,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "BASS-II|Nomex"
+  },
+  {
+   "id": "saffire-1-1",
+   "material": "SIBAL fabric",
+   "o2": 21.7,
+   "flow": 20.0,
+   "direction": "concurrent",
+   "sustained": 1,
+   "series": "Saffire|Saffire-1"
+  },
+  {
+   "id": "saffire-1-2",
+   "material": "SIBAL fabric",
+   "o2": 21.5,
+   "flow": 20.0,
+   "direction": "opposed",
+   "sustained": 1,
+   "series": "Saffire|Saffire-1"
+  },
+  {
+   "id": "saffire-2-1",
+   "material": "Silicone",
+   "o2": 22.1,
+   "flow": 20.0,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "Saffire|Saffire-2"
+  },
+  {
+   "id": "saffire-2-2",
+   "material": "Silicone",
+   "o2": 22.1,
+   "flow": 20.0,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "Saffire|Saffire-2"
+  },
+  {
+   "id": "saffire-2-3",
+   "material": "Silicone",
+   "o2": 22.1,
+   "flow": 20.0,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "Saffire|Saffire-2"
+  },
+  {
+   "id": "saffire-2-4",
+   "material": "Silicone",
+   "o2": 22.1,
+   "flow": 20.0,
+   "direction": "opposed",
+   "sustained": 0,
+   "series": "Saffire|Saffire-2"
+  },
+  {
+   "id": "saffire-2-5",
+   "material": "SIBAL fabric",
+   "o2": 22.1,
+   "flow": 20.0,
+   "direction": "concurrent",
+   "sustained": 1,
+   "series": "Saffire|Saffire-2"
+  },
+  {
+   "id": "saffire-2-6",
+   "material": "SIBAL fabric",
+   "o2": 22.1,
+   "flow": 25.0,
+   "direction": "concurrent",
+   "sustained": 1,
+   "series": "Saffire|Saffire-2"
+  },
+  {
+   "id": "saffire-2-7",
+   "material": "Nomex",
+   "o2": 22.1,
+   "flow": 20.0,
+   "direction": "concurrent",
+   "sustained": 0,
+   "series": "Saffire|Saffire-2"
+  },
+  {
+   "id": "saffire-2-8",
+   "material": "PMMA",
+   "o2": 22.1,
+   "flow": 20.0,
+   "direction": "concurrent",
+   "sustained": 1,
+   "series": "Saffire|Saffire-2"
+  },
+  {
+   "id": "saffire-2-9",
+   "material": "PMMA",
+   "o2": 22.0,
+   "flow": 20.0,
+   "direction": "concurrent",
+   "sustained": 1,
+   "series": "Saffire|Saffire-2"
+  },
+  {
+   "id": "saffire-iv-1",
+   "material": "SIBAL fabric",
+   "o2": 22.0,
+   "flow": 20.0,
+   "direction": "concurrent",
+   "sustained": 1,
+   "series": "Saffire|Saffire-IV"
+  },
+  {
+   "id": "saffire-v-2",
+   "material": "Cotton jersey",
+   "o2": 26.2,
+   "flow": 20.0,
+   "direction": "concurrent",
+   "sustained": 1,
+   "series": "Saffire|Saffire-V"
+  },
+  {
+   "id": "saffire-vi-2",
+   "material": "SIBAL fabric",
+   "o2": 31.0,
+   "flow": 20.0,
+   "direction": "concurrent",
+   "sustained": 1,
+   "series": "Saffire|Saffire-VI"
+  },
+  {
+   "id": "saffire-vi-3",
+   "material": "PMMA",
+   "o2": 30.3,
+   "flow": 20.0,
+   "direction": "concurrent",
+   "sustained": 1,
+   "series": "Saffire|Saffire-VI"
+  },
+  {
+   "id": "saffire-vi-4",
+   "material": "PMMA",
+   "o2": 28.8,
+   "flow": 20.0,
+   "direction": "concurrent",
+   "sustained": 1,
+   "series": "Saffire|Saffire-VI"
+  }
+ ],
+ "observed_by_flow_bin": [
+  {
+   "flow_from": 2,
+   "flow_to": 3,
+   "n": 5,
+   "lowest_o2_that_burned": null,
+   "highest_o2_that_went_out": 20.1,
+   "overlap": false
+  },
+  {
+   "flow_from": 3,
+   "flow_to": 5,
+   "n": 3,
+   "lowest_o2_that_burned": 20.1,
+   "highest_o2_that_went_out": 17.2,
+   "overlap": false
+  },
+  {
+   "flow_from": 5,
+   "flow_to": 10,
+   "n": 15,
+   "lowest_o2_that_burned": 16.5,
+   "highest_o2_that_went_out": 20.8,
+   "overlap": true
+  },
+  {
+   "flow_from": 10,
+   "flow_to": 25,
+   "n": 26,
+   "lowest_o2_that_burned": 18.7,
+   "highest_o2_that_went_out": 22.1,
+   "overlap": true
+  }
+ ]
+}

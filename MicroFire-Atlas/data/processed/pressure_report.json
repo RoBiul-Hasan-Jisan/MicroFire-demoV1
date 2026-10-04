@@ -1,0 +1,62 @@
+{
+ "version": "pressure-check-1.0",
+ "n_with_pressure": 20,
+ "n_usable_total": 49,
+ "n_series": 4,
+ "series": [
+  "BASS-II|SIBAL fabric",
+  "Saffire|Saffire-IV",
+  "Saffire|Saffire-V",
+  "Saffire|Saffire-VI"
+ ],
+ "sustained_rate": 0.35,
+ "distinct_pressures_kpa": [
+  54.1,
+  54.6,
+  55.2,
+  70.7,
+  100.0,
+  101.3
+ ],
+ "variants": {
+  "no_skill_baseline": {
+   "accuracy": 0.1,
+   "balanced_accuracy": 0.143,
+   "brier": 0.785,
+   "log_loss": 9.312
+  },
+  "oxygen_only": {
+   "accuracy": 0.3,
+   "balanced_accuracy": 0.429,
+   "brier": 0.672,
+   "log_loss": 9.051
+  },
+  "oxygen_flow_direction": {
+   "accuracy": 0.35,
+   "balanced_accuracy": 0.5,
+   "brier": 0.656,
+   "log_loss": 9.013
+  },
+  "oxygen_flow_direction_plus_pressure": {
+   "accuracy": 0.35,
+   "balanced_accuracy": 0.5,
+   "brier": 0.659,
+   "log_loss": 9.014
+  },
+  "partial_pressure_o2_flow_direction": {
+   "accuracy": 0.35,
+   "balanced_accuracy": 0.5,
+   "brier": 0.69,
+   "log_loss": 9.106
+  }
+ },
+ "verdict": "cannot_tell",
+ "verdict_text": "Neither pressure nor partial pressure of oxygen improves the score by a margin larger than noise on this subset. With this few rows and series the check cannot tell whether pressure matters.",
+ "caveats": [
+  "Pressure is stated for only 20 of 49 labelled rows; it is never guessed or filled in.",
+  "Most of those rows are at ambient pressure, so the model sees little pressure variation (distinct values: 54.1, 54.6, 55.2, 70.7, 100.0, 101.3 kPa).",
+  "Only 4 series are available, so leave-one-series-out folds are few and the comparison is noisy.",
+  "Every variant, including the no-skill baseline, scores badly here (Brier above 0.65): whole series share one outcome, so hiding a series leaves the others unrepresentative. The numbers are shown for transparency and should not be read as evidence for or against pressure.",
+  "The limiting factor is data, not method: entering the stated BASS chamber pressures from the NASA reports would fix this (see docs/TODO_REAL_DATA.md)."
+ ]
+}

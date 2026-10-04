@@ -1,0 +1,20 @@
+{
+  "title": "BASS-II PMMA sheets • curated report subset",
+  "investigation": "PSI-25",
+  "version": "FlameScope transcription 1",
+  "accessed": "2026-09-20",
+  "source": "https://ntrs.nasa.gov/citations/20210011385",
+  "pdf": "https://ntrs.nasa.gov/api/citations/20210011385/downloads/TM-20210011385.pdf?attachment=true",
+  "location": "NASA/TM-20210011385, Table 5.1, printed p. 57; experimental setup §5.3, printed p. 56",
+  "dataset": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-25",
+  "doi": "10.60555/4qc4-de67",
+  "method": "Manually transcribed from NASA NTRS indexed Table 5.1. Semicolon arrays preserve the published velocity/spread pairing and order. Blank spread cells mean Not tracked, not zero. Material and opposed-flow geometry derive from section 5.3. No raw-video-derived measurements.",
+  "verification": "Checked against NASA indexed table text. The 40 initial and final O2 values also match NASA's own PSI-25 experimental table (demo_fixtures/psi-25-experimental-table.json, checked by test/psi.test.mjs). Independent scientific review and PDF visual verification of the other columns are pending.",
+  "limitations": [
+    "All 20 rows belong to one investigation and one report; they are not 20 independent studies.",
+    "Initial and final oxygen values describe test endpoints, not constant or per-segment concentrations.",
+    "Measurement uncertainty, pressure, temperature and raw media linkage are not provided by this subset.",
+    "Reported physical velocities are used; instrument display readings are not converted into velocity.",
+    "Dataset DOI identifies PSI-25. These numerical records were transcribed from the cited report, not downloaded from the PSI raw archive."
+  ]
+}

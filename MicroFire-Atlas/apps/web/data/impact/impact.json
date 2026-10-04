@@ -1,0 +1,43 @@
+{
+  "updated": "2026-10-04",
+  "bangladesh": {
+    "year": 2025,
+    "headline": [
+      { "label": "Fires recorded", "value": "27,059", "note": "about 75 a day" },
+      { "label": "People killed", "value": "85", "note": "267 injured; one chart says 88, the release says 85" },
+      { "label": "Leading cause", "value": "34.71%", "note": "electrical faults, 9,392 fires" }
+    ],
+    "places": [
+      { "place": "Residential buildings", "fires": 8705 },
+      { "place": "Straw stacks", "fires": 3922 },
+      { "place": "Shops", "fires": 1800 },
+      { "place": "Markets", "fires": 1067 },
+      { "place": "Garment factories", "fires": 665 },
+      { "place": "Shopping malls", "fires": 617 },
+      { "place": "Non-garment factories", "fires": 615 },
+      { "place": "Restaurants and hotels", "fires": 155 },
+      { "place": "Slums", "fires": 91 },
+      { "place": "Buildings over six storeys", "fires": 71 },
+      { "place": "Public hospitals", "fires": 34 }
+    ],
+    "sources": [
+      { "label": "The Daily Star, reporting the Fire Service and Civil Defence release of 10 Feb 2026", "url": "https://www.thedailystar.net/news/bangladesh/accidents-fires/news/bangladesh-saw-75-fires-day-2025-fire-service-4102796" },
+      { "label": "Bangladesh Post (places)", "url": "https://bangladeshpost.net/posts/fscd-records-over-27-000-fire-incidents-in-2025-166970" },
+      { "label": "Bonik Barta (causes, places)", "url": "https://en.bonikbarta.com/bangladesh/1gaJKyaseexoSHsC" }
+    ],
+    "cases": [
+      { "name": "Bailey Road, 29 Feb 2024", "fact": "46 deaths. Reported findings include blocked stairways and carbon monoxide poisoning.", "url": "https://www.dhakatribune.com/bangladesh/court/412601/bailey-road-fire-case-hakka-dhaka-owner-withdraws" },
+      { "name": "Tazreen Fashions, 24 Nov 2012", "fact": "At least 112 deaths (government figures).", "url": "https://www.europarl.europa.eu/doceo/document/B-7-2013-0020_EN.html" }
+    ]
+  },
+  "study": {
+    "question": "Did NASA test a 1 mm acrylic sheet at 21% oxygen and 5 cm/s of airflow?",
+    "participants": null,
+    "median_seconds_with_nasa_pdfs": null,
+    "median_seconds_with_tool": null,
+    "correct_with_pdfs": null,
+    "correct_with_tool": null,
+    "date": null
+  },
+  "adopters": []
+}

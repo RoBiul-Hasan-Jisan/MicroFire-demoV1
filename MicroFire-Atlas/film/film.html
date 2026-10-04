@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MicroFire Atlas film</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=block" rel="stylesheet">
+<style>
+:root{--void:#070b16;--panel:#0d1424;--panel2:#121b30;--rule:#1e2940;--rule2:#2c3a58;--ink:#e6eaf2;--muted:#8f9ab1;--faint:#5d6880;--signal:#56d4e4;--flame:#f0a044;--quench:#5b8cff;--blowoff:#d6e4ff;--inert:#4a5570}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--void);width:1920px;height:1080px;overflow:hidden}
+body{font-family:Archivo,system-ui,sans-serif;color:var(--ink);font-variation-settings:"wdth" 100;-webkit-font-smoothing:antialiased}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden;
+ background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);background-size:60px 60px;background-position:-1px -1px}
+#stage::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(7,11,22,.55) 0%,rgba(7,11,22,.92) 75%);pointer-events:none}
+.scene{position:absolute;inset:0;z-index:2;opacity:0}
+.abs{position:absolute}
+.display{font-variation-settings:"wdth" 125;font-weight:650;letter-spacing:-.02em;line-height:1.04}
+.cond{font-variation-settings:"wdth" 82}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)} .faint{color:var(--faint)}
+.card{background:var(--panel);border:1px solid var(--rule2);border-radius:4px}
+.badge{display:inline-block;font-size:18px;border:1px solid;border-radius:3px;padding:2px 8px}
+#chrome{position:absolute;inset:0;z-index:5;pointer-events:none}
+#mark{left:80px;top:48px;display:flex;align-items:center;gap:14px;font-size:24px}
+#chapter{right:80px;top:52px;font-size:20px;color:var(--muted)}
+#subs{left:50%;bottom:54px;transform:translateX(-50%);width:1500px;text-align:center;font-size:31px;line-height:1.35;color:var(--ink);text-shadow:0 2px 12px #000}
+#subs span{background:rgba(7,11,22,.72);padding:4px 14px;border-radius:4px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+#progress{left:0;bottom:0;height:3px;background:var(--signal)}
+#ailabel{left:40px;bottom:14px;font-size:19px;color:#aab4c8;background:rgba(7,11,22,.75);padding:3px 10px;border:1px solid var(--rule2);border-radius:3px}
+.quote{font-size:30px;line-height:1.45}
+.cap{font-size:20px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div id="stage">
+ <div id="scenes"></div>
+ <div id="chrome">
+  <div id="mark" class="abs"><svg width="34" height="34" viewBox="0 0 22 22"><circle cx="11" cy="11" r="10" fill="none" stroke="#2c3a58"/><path d="M11 4c3 4 5 6 5 9a5 5 0 0 1-10 0c0-3 2-5 5-9z" fill="#f0a044" opacity=".9"/><ellipse cx="11" cy="14" rx="2.4" ry="3" fill="#5b8cff"/></svg><span class="display">MicroFire Atlas</span></div>
+  <div id="chapter" class="abs"></div>
+  <div id="subs" class="abs"></div>
+  <div id="progress" class="abs"></div>
+  <div id="ailabel" class="abs">Voiceover: AI-generated (text-to-speech)</div>
+ </div>
+</div>
+<script>window.DATA = /*DATA*/null;</script>
+<script>
+const D = window.DATA;
+const $ = (tag, cls, parent, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; if (parent) parent.appendChild(e); return e; };
+const NS = "http://www.w3.org/2000/svg";
+const S = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const ease = (x) => { x = clamp(x); return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+const P = (t, a, d = 0.8) => ease((t - a) / d);
+const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+const COLOR = { sustained_no_blowoff: "#f0a044", burned_entire_sample: "#f0a044", burned_outcome_not_stated: "#f0a044", quenched_low_flow: "#5b8cff", extinguished_flow_off: "#5b8cff", no_sustained_flame: "#5b8cff", blowoff: "#d6e4ff", not_ignited: "#4a5570" };
+const HOLLOW = new Set(["burned_outcome_not_stated", "no_sustained_flame"]);
+
+// Sentence timing: proportional to length within each scene's narration audio.
+for (const sc of D.scenes) {
+  const parts = sc.narration.match(/[^.!?]+[.!?]+/g).map((s) => s.trim());
+  const total = parts.reduce((a, s) => a + s.length, 0);
+  let at = sc.audioAt;
+  sc.sent = parts.map((s) => { const d = sc.audio * s.length / total; const r = { text: s, start: at, end: at + d }; at += d; return r; });
+}
+const SC = Object.fromEntries(D.scenes.map((s) => [s.id, s]));
+const st = (id, i) => SC[id].sent[i].start; // local start time of sentence i
+
+const scenesEl = document.getElementById("scenes");
+const R = {}; // id -> render(lt)
+const ROOT = {};
+function scene(id, chapter, build) { const root = $("div", "scene", scenesEl); ROOT[id] = root; root.dataset.chapter = chapter; R[id] = build(root); }
+
+/* ---------- flame illustrations ---------- */
+function flame(parent, x, y, kind) {
+  const g = S("g", { transform: `translate(${x},${y})` }, parent);
+  const glow = S("ellipse", { cx: 0, cy: 0, rx: 120, ry: 120, fill: kind === "earth" ? "#f0a044" : "#5b8cff", opacity: .12 }, g);
+  const outer = S("path", { fill: kind === "earth" ? "#f0a044" : "#3e63c8", opacity: .9 }, g);
+  const inner = S("path", { fill: kind === "earth" ? "#ffd27a" : "#8fb0ff", opacity: .85 }, g);
+  if (kind === "earth") S("ellipse", { cx: 0, cy: 40, rx: 14, ry: 18, fill: "#2a3550" }, g);
+  return (t, s = 1) => {
+    if (kind === "earth") {
+      const w = Math.sin(t * 9) * 6 + Math.sin(t * 5.3) * 4, h = 190 + Math.sin(t * 7) * 12;
+      outer.setAttribute("d", `M0 ${-h} C ${40 + w} ${-h * .55}, 70 ${-10}, 60 30 A 60 60 0 0 1 -60 30 C -70 -10, ${-40 + w} ${-h * .55}, 0 ${-h} Z`);
+      inner.setAttribute("d", `M0 ${-h * .62} C ${22 + w * .6} ${-h * .3}, 36 0, 30 30 A 30 30 0 0 1 -30 30 C -36 0, ${-22 + w * .6} ${-h * .3}, 0 ${-h * .62} Z`);
+    } else {
+      const r = 72 + Math.sin(t * 1.4) * 3;
+      outer.setAttribute("d", `M ${-r} 20 A ${r} ${r * .92} 0 1 1 ${r} 20 A ${r} ${r * .92} 0 1 1 ${-r} 20 Z`);
+      const r2 = r * .55;
+      inner.setAttribute("d", `M ${-r2} 22 A ${r2} ${r2 * .9} 0 1 1 ${r2} 22 A ${r2} ${r2 * .9} 0 1 1 ${-r2} 22 Z`);
+      outer.setAttribute("opacity", .55 + Math.sin(t * 1.4) * .05);
+    }
+    g.setAttribute("transform", `translate(${x},${y}) scale(${s})`);
+  };
+}
+
+/* ---------- 1. intro ---------- */
+scene("intro", "", (root) => {
+  const title = $("div", "abs display", root, "MicroFire Atlas"); Object.assign(title.style, { left: 0, right: 0, top: "390px", textAlign: "center", fontSize: "132px" });
+  const sub = $("div", "abs muted", root, "From NASA flame data to mission-relevant fire-safety evidence"); Object.assign(sub.style, { left: 0, right: 0, top: "560px", textAlign: "center", fontSize: "34px" });
+  const svg = S("svg", { width: 1920, height: 1080, class: "abs" }, root); svg.style.left = 0; svg.style.top = 0;
+  const left = S("g", {}, svg), right = S("g", {}, svg);
+  const fe = flame(left, 640, 560, "earth"), fm = flame(right, 1280, 560, "micro");
+  const arrows = [];
+  for (let i = 0; i < 6; i++) arrows.push(S("path", { d: "M -12 0 L 0 -14 L 12 0", fill: "none", stroke: "#f0a044", "stroke-width": 3, opacity: 0 }, left));
+  const fans = [];
+  for (let i = 0; i < 5; i++) fans.push(S("path", { d: "M 0 0 L 46 0 M 34 -10 L 46 0 L 34 10", fill: "none", stroke: "#56d4e4", "stroke-width": 3, opacity: 0 }, right));
+  const lab = (x, txt, g) => { const t = S("text", { x, y: 820, "text-anchor": "middle", fill: "#e6eaf2", "font-size": 40, "font-weight": 600 }, g); t.textContent = txt; return t; };
+  lab(640, "On Earth", left); lab(1280, "In orbit", right);
+  const sl = S("text", { x: 640, y: 866, "text-anchor": "middle", fill: "#8f9ab1", "font-size": 26 }, left); sl.textContent = "Hot gas rises and draws in fresh air";
+  const sr = S("text", { x: 1280, y: 866, "text-anchor": "middle", fill: "#8f9ab1", "font-size": 26 }, right); sr.textContent = "Fed only by the ventilation flow";
+  const note = $("div", "abs faint", root, "Illustration, not a simulation"); Object.assign(note.style, { left: 0, right: 0, top: "930px", textAlign: "center", fontSize: "20px" });
+  return (t) => {
+    const tOut = P(t, 3.2, 1);
+    title.style.opacity = P(t, .2, 1.2) * (1 - tOut); sub.style.opacity = P(t, .9, 1.2) * (1 - tOut);
+    title.style.transform = `translateY(${-30 * tOut}px)`;
+    left.setAttribute("opacity", P(t, st("intro", 0) - .5, 1)); right.setAttribute("opacity", P(t, st("intro", 2) - .3, 1));
+    note.style.opacity = P(t, st("intro", 0), 1);
+    fe(t, 1); fm(t, 1);
+    arrows.forEach((a, i) => { const c = ((t * .6 + i / 6) % 1); a.setAttribute("transform", `translate(${640 + (i % 2 ? 150 : -150)}, ${700 - c * 420})`); a.setAttribute("opacity", P(t, st("intro", 1), 1) * Math.sin(c * Math.PI) * .9); });
+    fans.forEach((a, i) => { const c = ((t * .35 + i / 5) % 1); a.setAttribute("transform", `translate(${1020 + c * 120}, ${470 + i * 40})`); a.setAttribute("opacity", P(t, st("intro", 3), 1) * Math.sin(c * Math.PI) * .9); });
+  };
+});
+
+/* ---------- 2. challenge ---------- */
+scene("challenge", "The challenge", (root) => {
+  const h = $("div", "abs display", root, "Decades of experiments, scattered across reports"); Object.assign(h.style, { left: "120px", top: "150px", fontSize: "60px", width: "1500px" });
+  const cards = D.sources.slice(0, 8).map((s, i) => {
+    const c = $("div", "abs card", root, `<div class="cap">${esc((s.type || "").toLowerCase().replace(/_/g, " "))} &nbsp;NTRS ${s.ntrs}</div><div style="font-size:23px;margin-top:8px;line-height:1.3">${esc(s.title)}</div>`);
+    Object.assign(c.style, { left: `${120 + (i % 4) * 430}px`, top: `${290 + Math.floor(i / 4) * 210}px`, width: "400px", height: "180px", padding: "18px 20px", overflow: "hidden" });
+    return c;
+  });
+  const brief = $("div", "abs", root, `<div class="cap">2026 challenge brief</div><div class="display" style="font-size:52px;margin-top:10px;line-height:1.15">“an interactive, AI-powered dashboard that <span style="color:var(--signal)">summarizes, ranks, and interprets</span> those findings”</div>`);
+  Object.assign(brief.style, { left: "120px", top: "750px", width: "1680px" });
+  return (t) => {
+    h.style.opacity = P(t, .2);
+    cards.forEach((c, i) => { const p = P(t, st("challenge", 0) + .3 + i * .35, .9); c.style.opacity = p * (1 - .55 * P(t, st("challenge", 2), 1)); c.style.transform = `translateY(${(1 - p) * 40}px) rotate(${(1 - p) * (i % 2 ? 2 : -2)}deg)`; });
+    brief.style.opacity = P(t, st("challenge", 2), 1); brief.style.transform = `translateY(${(1 - P(t, st("challenge", 2), 1)) * 30}px)`;
+  };
+});
+
+/* ---------- 3. data ---------- */
+scene("data", "From PDF to data", (root) => {
+  const r = D.b19row;
+  const h = $("div", "abs display", root, "Every value traced to a NASA page"); Object.assign(h.style, { left: "120px", top: "150px", fontSize: "60px" });
+  const raw = $("div", "abs card cond", root, `<div class="cap">BASS-II Summary Report, Table A.1, PDF p. 111</div>
+   <div style="font-size:24px;line-height:1.7;margin-top:14px;color:#c9d1e3">
+   Test B19 &nbsp; as-run 52 &nbsp; sample 151m<br>${esc(r.material_verbatim)} &nbsp; Opposed<br>
+   Air display: “${esc(r.flow_verbatim)}”<br>Calibrated O₂: ${r.oxygen_vol_pct} → ${r.oxygen_final_vol_pct} %<br>
+   CO₂: ${r.co2_vol_pct[0]} → ${r.co2_vol_pct[1]} % &nbsp; CO: ${r.co_ppm[0]} → ${r.co_ppm[1]} ppm<br>“${esc(r.observations_verbatim)}”</div>`);
+  Object.assign(raw.style, { left: "120px", top: "280px", width: "720px", padding: "26px 30px" });
+  const arrow = S("svg", { width: 120, height: 60, class: "abs" }, root); Object.assign(arrow.style, { left: "870px", top: "470px" });
+  S("path", { d: "M 0 30 L 100 30 M 82 14 L 100 30 L 82 46", stroke: "#56d4e4", "stroke-width": 4, fill: "none" }, arrow);
+  const B = { rec: ["Recorded for this test", "#f0a044"], ser: ["Stated for the series", "#5b8cff"], der: ["Derived by MicroFire Atlas", "#56d4e4"] };
+  const rows = [["Oxygen", "16.4 %", "rec"], ["Thickness", "0.1 mm", "rec"], ["Width", "20 mm", "rec"], ["Pressure", "99.2–99.5 kPa", "ser"], ["Starting airflow", "10 cm/s", "der"], ["Outcome", "Blew off at high flow", "der"]];
+  const box = $("div", "abs card", root); Object.assign(box.style, { left: "1020px", top: "280px", width: "780px", padding: "22px 30px" });
+  const rowEls = rows.map(([k, v, b]) => $("div", "", box, `<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--rule)"><span class="muted" style="font-size:24px">${k}</span><span style="font-size:27px" class="num">${v} &nbsp;<span class="badge" style="color:${B[b][1]};border-color:${B[b][1]}">${B[b][0]}</span></span></div>`));
+  const q = D.quotes.spread;
+  const ver = $("div", "abs card", root, `<div class="quote" style="font-size:27px">“${esc(q.quote)}”</div><div style="margin-top:14px;font-size:24px;color:var(--signal)" class="ok">✓ Found word for word on PDF page ${q.page}. If it were not, the build would fail.</div>`);
+  Object.assign(ver.style, { left: "120px", top: "780px", width: "1680px", padding: "24px 30px" });
+  const scan = $("div", "abs", ver); Object.assign(scan.style, { top: 0, bottom: 0, width: "6px", background: "var(--signal)", opacity: .6 });
+  const ok = ver.querySelector(".ok");
+  return (t) => {
+    h.style.opacity = P(t, .2);
+    raw.style.opacity = P(t, st("data", 0) + .5, 1);
+    arrow.style.opacity = P(t, st("data", 1), .8);
+    rowEls.forEach((e, i) => { e.style.opacity = P(t, st("data", 2) + i * .5, .6); });
+    box.style.opacity = P(t, st("data", 1) + .6, .6);
+    const v0 = st("data", 3);
+    ver.style.opacity = P(t, v0 - .3, .8);
+    const sp = clamp((t - v0) / 2.6); scan.style.left = `${sp * 1640}px`; scan.style.opacity = sp > 0 && sp < 1 ? .6 : 0;
+    ok.style.opacity = P(t, v0 + 2.6, .6);
+  };
+});
+
+/* ---------- 4. map ---------- */
+scene("map", "Every test on one map", (root) => {
+  const W = 1180, H = 720, X0 = 110, Y0 = 200, pl = 70, pb = 60;
+  const svg = S("svg", { width: W + 40, height: H + 40, class: "abs" }, root); Object.assign(svg.style, { left: `${X0}px`, top: `${Y0}px` });
+  const x = (v) => pl + (Math.log(v) - Math.log(1)) / (Math.log(60) - Math.log(1)) * (W - pl - 20);
+  const y = (v) => 20 + (1 - (v - 13.5) / 8) * (H - pb - 20);
+  [14, 16, 18, 20].forEach((v) => { S("line", { x1: pl, x2: W - 20, y1: y(v), y2: y(v), stroke: "#1e2940" }, svg); const tx = S("text", { x: pl - 12, y: y(v) + 7, "text-anchor": "end", fill: "#5d6880", "font-size": 20 }, svg); tx.textContent = v + "%"; });
+  [1, 2, 5, 10, 20, 50].forEach((v) => { S("line", { x1: x(v), x2: x(v), y1: 20, y2: H - pb, stroke: "#1e2940" }, svg); const tx = S("text", { x: x(v), y: H - pb + 30, "text-anchor": "middle", fill: "#5d6880", "font-size": 20 }, svg); tx.textContent = v; });
+  const xl = S("text", { x: (pl + W) / 2, y: H + 10, "text-anchor": "middle", fill: "#8f9ab1", "font-size": 22 }, svg); xl.textContent = "Airflow, cm/s (log scale)";
+  const yl = S("text", { transform: `translate(18 ${(H - pb) / 2}) rotate(-90)`, "text-anchor": "middle", fill: "#8f9ab1", "font-size": 22 }, svg); yl.textContent = "Oxygen, % by volume";
+  const pts = D.points.filter((p) => p.f0 != null && p.o2 != null).sort((a, b) => b.o2 - a.o2).map((p, i) => {
+    const g = S("g", {}, svg); const end = p.f1 ?? p.f0; const c = COLOR[p.outcome];
+    if (p.f1 != null && p.f1 !== p.f0) S("line", { x1: x(p.f0), x2: x(end), y1: y(p.o2), y2: y(p.o2), stroke: c, "stroke-opacity": .4, "stroke-width": 2 }, g);
+    const dot = S("circle", { cx: x(end), cy: y(p.o2), r: 7, fill: HOLLOW.has(p.outcome) ? "#070b16" : c, stroke: c, "stroke-width": HOLLOW.has(p.outcome) ? 2.5 : 0 }, g);
+    return { p, g, dot, i, fate: D.fates.findIndex((f) => f.id === p.id) };
+  });
+  const legend = [["#f0a044", "Kept burning", 1], ["#5b8cff", "Went out at low flow", 2], ["#d6e4ff", "Blown out at high flow", 3]].map(([c, l, s], i) => {
+    const e = $("div", "abs", root, `<span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:${c};margin-right:12px;vertical-align:-2px"></span>${l}`);
+    Object.assign(e.style, { left: `${X0 + 80 + i * 360}px`, top: "150px", fontSize: "26px" }); e.dataset.s = s; return e;
+  });
+  const callouts = D.fates.map((f, i) => {
+    const e = $("div", "abs card", root, `<div style="display:flex;justify-content:space-between;align-items:baseline"><span class="display" style="font-size:44px">${f.test}</span><span class="muted" style="font-size:24px">${f.o2}% oxygen</span></div>
+      <div style="font-size:26px;margin-top:10px;color:${COLOR[f.outcome]};font-weight:600">${esc(f.label)}</div>
+      <div class="muted" style="font-size:21px;margin-top:8px">Airflow in NASA's table: “${esc(f.flow)}”</div>
+      <div style="font-size:21px;margin-top:8px;color:#c9d1e3">NASA notes: “${esc(f.notes)}”</div>`);
+    Object.assign(e.style, { left: "1340px", top: `${200 + i * 238}px`, width: "500px", padding: "18px 22px" }); return e;
+  });
+  const tag = $("div", "abs display", root, "Same film. Same oxygen. Different airflow."); Object.assign(tag.style, { left: `${X0 + 80}px`, top: "950px", fontSize: "40px", color: "var(--signal)" });
+  const hl = st("map", 4);
+  return (t) => {
+    const n = pts.length;
+    pts.forEach((o) => {
+      const appear = P(t, .3 + o.i / n * (st("map", 1) - .3), .4);
+      const dim = o.fate < 0 ? 1 - .75 * P(t, hl, .8) : 1;
+      o.g.setAttribute("opacity", appear * dim);
+      const lit = o.fate >= 0 && t > st("map", 6 + o.fate);
+      o.dot.setAttribute("r", lit ? 7 + 5 * P(t, st("map", 6 + o.fate), .5) : 7);
+    });
+    legend.forEach((e) => { e.style.opacity = P(t, st("map", +e.dataset.s), .6) * (1 - .6 * P(t, hl, .8)); });
+    callouts.forEach((e, i) => { const p = P(t, st("map", 6 + i), .7); e.style.opacity = p; e.style.transform = `translateX(${(1 - p) * 60}px)`; });
+    tag.style.opacity = P(t, st("map", 9), .8);
+  };
+});
+
+/* ---------- 5. quench ---------- */
+scene("quench", "Fabric: where flames quenched", (root) => {
+  const h = $("div", "abs display", root, "Less oxygen, more airflow needed to stay alight"); Object.assign(h.style, { left: "120px", top: "150px", fontSize: "56px" });
+  const sub = $("div", "abs muted", root, "SIBAL cotton–fiberglass fabric, 2.2 cm wide. The crew turned the flow down until the flame went out."); Object.assign(sub.style, { left: "120px", top: "230px", fontSize: "26px" });
+  const svg = S("svg", { width: 1700, height: 460, class: "abs" }, root); Object.assign(svg.style, { left: "120px", top: "290px" });
+  const x = (v) => 220 + v / 10.5 * 1400;
+  [0, 2, 4, 6, 8, 10].forEach((v) => { S("line", { x1: x(v), x2: x(v), y1: 0, y2: 400, stroke: "#1e2940" }, svg); const tx = S("text", { x: x(v), y: 435, "text-anchor": "middle", fill: "#5d6880", "font-size": 20 }, svg); tx.textContent = v + " cm/s"; });
+  const rows = D.quench.map((q, i) => {
+    const yy = 50 + i * 95;
+    const lab = S("text", { x: 190, y: yy + 9, "text-anchor": "end", fill: "#e6eaf2", "font-size": 30, "font-weight": 600 }, svg); lab.textContent = q.o2 + "% O₂";
+    const track = S("line", { x1: x(q.f0), x2: x(q.f0), y1: yy, y2: yy, stroke: "#5b8cff", "stroke-opacity": .45, "stroke-width": 4 }, svg);
+    const dot = S("circle", { cx: x(q.f0), cy: yy, r: 11, fill: "#f0a044" }, svg);
+    const val = S("text", { x: x(q.f1) - 18, y: yy - 20, "text-anchor": "middle", fill: "#5b8cff", "font-size": 26, "font-weight": 700 }, svg); val.textContent = `went out at ${q.f1}`;
+    return { q, track, dot, val, lab };
+  });
+  const quote = D.quotes.quench;
+  const qe = $("div", "abs card", root, `<div class="quote">“${esc(quote.quote)}”</div><div class="cap" style="margin-top:10px">${esc(quote.source)}, abstract</div>`);
+  Object.assign(qe.style, { left: "120px", top: "800px", width: "1680px", padding: "22px 30px" });
+  return (t) => {
+    h.style.opacity = P(t, .2); sub.style.opacity = P(t, .5);
+    rows.forEach((r, i) => {
+      const a = st("quench", 1) - 1.5 + i * .9, p = P(t, a, 1.6);
+      r.lab.setAttribute("opacity", P(t, a - .4, .5));
+      const cx = x(r.q.f0) + (x(r.q.f1) - x(r.q.f0)) * p;
+      r.dot.setAttribute("cx", cx); r.track.setAttribute("x2", cx);
+      r.dot.setAttribute("fill", p >= 1 ? "#5b8cff" : "#f0a044");
+      r.dot.setAttribute("opacity", P(t, a - .4, .4));
+      r.val.setAttribute("opacity", P(t, a + 1.6, .4));
+    });
+    qe.style.opacity = P(t, st("quench", 2), .8);
+  };
+});
+
+/* ---------- 6. hidden ---------- */
+scene("hidden", "The quiet danger", (root) => {
+  const svg = S("svg", { width: 1920, height: 1080, class: "abs" }, root); svg.style.left = 0; svg.style.top = 0;
+  const f = flame(svg, 420, 520, "micro");
+  const note = $("div", "abs faint", root, "Illustration"); Object.assign(note.style, { left: "330px", top: "700px", fontSize: "20px", width: "180px", textAlign: "center" });
+  const q1 = D.quotes.dim, q2 = D.quotes.tiny;
+  const a = $("div", "abs", root, `<div class="quote">“${esc(q1.quote)}”</div><div class="cap" style="margin-top:10px">${esc(q1.source)}, PDF p. ${q1.page}</div>`);
+  Object.assign(a.style, { left: "760px", top: "250px", width: "1040px" });
+  const b = $("div", "abs", root, `<div class="quote">“${esc(q2.quote)}”</div><div class="cap" style="margin-top:10px">${esc(q2.source)}, abstract. Authors' interpretation.</div>`);
+  Object.assign(b.style, { left: "760px", top: "560px", width: "1040px" });
+  return (t) => {
+    const flare = Math.max(0, Math.sin(clamp((t - (st("hidden", 1) + 6.2)) / 1.6) * Math.PI));
+    f(t, .75 + flare * .45);
+    a.style.opacity = P(t, st("hidden", 0) - .2, .8); b.style.opacity = P(t, st("hidden", 1) - .2, .8);
+    note.style.opacity = P(t, .4, .8);
+  };
+});
+
+/* ---------- 7. mission ---------- */
+scene("mission", "Mission Lab", (root) => {
+  const h = $("div", "abs display", root, "Find the evidence closest to your mission"); Object.assign(h.style, { left: "120px", top: "150px", fontSize: "56px" });
+  const left = $("div", "abs card", root); Object.assign(left.style, { left: "120px", top: "260px", width: "560px", padding: "26px 30px" });
+  const ctx = $("div", "", left, ""); ctx.style.fontSize = "28px"; ctx.style.fontWeight = 600;
+  const sliders = [["Oxygen", "%", 21, 34, 14, 36], ["Airflow", "cm/s", 10, 10, 0, 60], ["Pressure", "kPa", 101.3, 56.5, 50, 102]].map(([k, u, a, b, lo, hi]) => {
+    const w = $("div", "", left, `<div style="display:flex;justify-content:space-between;margin-top:26px;font-size:24px"><span class="muted">${k}</span><span class="num v"></span></div><div style="height:6px;background:var(--rule);border-radius:3px;margin-top:12px;position:relative"><div class="fill" style="height:6px;background:var(--signal);border-radius:3px"></div></div>`);
+    return { k, u, a, b, lo, hi, v: w.querySelector(".v"), fill: w.querySelector(".fill") };
+  });
+  $("div", "", left, `<div style="display:flex;justify-content:space-between;margin-top:26px;font-size:24px"><span class="muted">Gravity</span><span>Microgravity</span></div>`);
+  const formula = $("div", "faint", left, "relevance = Σ wᵢ·simᵢ ⁄ Σ wᵢ<br>missing data counts against a test, never for it"); Object.assign(formula.style, { marginTop: "30px", fontSize: "21px", lineHeight: 1.5 });
+  const right = $("div", "abs", root); Object.assign(right.style, { left: "760px", top: "260px", width: "1040px" });
+  const head = $("div", "display", right, ""); head.style.fontSize = "36px";
+  const list = $("div", "", right, ""); list.style.marginTop = "20px";
+  const rowEls = Array.from({ length: 6 }, () => {
+    const r = $("div", "", list, `<div style="display:grid;grid-template-columns:150px 1fr 460px 60px;gap:18px;align-items:center;padding:12px 0;border-bottom:1px solid var(--rule);font-size:24px"><span class="t" style="color:var(--signal)"></span><span class="m muted"></span><span style="height:8px;background:var(--rule);border-radius:4px"><span class="b" style="display:block;height:8px;border-radius:4px;background:var(--signal)"></span></span><span class="s num" style="text-align:right"></span></div>`);
+    return { t: r.querySelector(".t"), m: r.querySelector(".m"), b: r.querySelector(".b"), s: r.querySelector(".s") };
+  });
+  const warn = $("div", "abs card", root, `<div style="color:var(--flame);font-size:30px;font-weight:600">Direct evidence under these exact conditions is limited</div>${D.mission.explo.outside.map((o) => `<div style="font-size:23px;margin-top:8px">${esc(o)}</div>`).join("")}<div class="muted" style="font-size:21px;margin-top:10px">The tests listed are the nearest evidence, not a prediction.</div>`);
+  Object.assign(warn.style, { left: "760px", top: "770px", width: "1040px", padding: "20px 26px", borderColor: "rgba(240,160,68,.7)" });
+  const sw = st("mission", 3);
+  return (t) => {
+    h.style.opacity = P(t, .2); left.style.opacity = P(t, st("mission", 1) - .3, .8); right.style.opacity = P(t, st("mission", 2) - .4, .8);
+    formula.style.opacity = P(t, st("mission", 2), .8);
+    const k = P(t, sw, 2.2);
+    ctx.textContent = k < .5 ? "ISS cabin, fans running" : "Exploration atmosphere (NASA-recommended)";
+    sliders.forEach((s) => { const v = s.a + (s.b - s.a) * k; s.v.textContent = `${Math.round(v * 10) / 10} ${s.u}`; s.fill.style.width = `${(v - s.lo) / (s.hi - s.lo) * 100}%`; });
+    const set = k < .5 ? D.mission.iss : D.mission.explo;
+    head.innerHTML = `<span style="color:${k < .5 ? "var(--ink)" : "var(--flame)"}">${set.strong}</span> tests score 60 or higher`;
+    const grow = k < .5 ? P(t, st("mission", 2), 1.2) * (1 - P(t, sw, 1.1)) : P(t, sw + 1.1, 1.1);
+    rowEls.forEach((r, i) => { const d = set.top[i]; r.t.textContent = d.test; r.m.textContent = `${d.material}, ${d.o2}% O₂`; r.b.style.width = `${d.score * grow}%`; r.s.textContent = Math.round(d.score * grow); });
+    warn.style.opacity = P(t, st("mission", 4), .8);
+  };
+});
+
+/* ---------- 8. gaps ---------- */
+scene("gaps", "Where the evidence stops", (root) => {
+  const h = $("div", "abs display", root, "Where the evidence stops"); Object.assign(h.style, { left: "120px", top: "150px", fontSize: "56px" });
+  const g = $("div", "abs", root); Object.assign(g.style, { left: "120px", top: "250px" });
+  const n = D.gap.o2.length, cells = [];
+  const fmt = ([a, b], u) => (a === 0 ? `under ${b}${u}` : `${a}–${b}${u}`);
+  const hdr = $("div", "", g, `<div style="display:grid;grid-template-columns:150px repeat(5,140px);gap:8px;font-size:19px" class="muted"><span></span>${D.gap.flow.map((f) => `<span style="text-align:center">${fmt(f, "")}</span>`).join("")}</div>`);
+  for (let r = n - 1; r >= 0; r--) {
+    const row = $("div", "", g, ""); Object.assign(row.style, { display: "grid", gridTemplateColumns: "150px repeat(5,140px)", gap: "8px", marginTop: "8px" });
+    const lab = $("span", "", row, fmt(D.gap.o2[r], " %")); Object.assign(lab.style, { fontSize: "21px", textAlign: "right", paddingRight: "14px", alignSelf: "center", color: D.gap.o2[r][0] >= 22 ? "var(--flame)" : "var(--muted)" });
+    D.gap.grid[r].forEach((c) => {
+      const e = $("span", "num", row, c || ""); const zone = c >= 3 ? 2 : c > 0 ? 1 : 0;
+      Object.assign(e.style, { height: "52px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "22px", borderRadius: "3px",
+        border: zone ? "1px solid rgba(91,140,255,.6)" : "1px dashed var(--rule2)", background: zone === 2 ? "rgba(91,140,255,.35)" : zone === 1 ? "rgba(91,140,255,.12)" : "transparent" });
+      cells.push({ e, r, high: D.gap.o2[r][0] >= 22 });
+    });
+  }
+  const xcap = $("div", "abs muted", root, "Airflow, cm/s"); Object.assign(xcap.style, { left: "400px", top: "222px", fontSize: "20px" });
+  const ex = $("div", "abs", root, `<div style="color:var(--flame);font-size:27px;font-weight:600">← NASA's recommended exploration atmosphere: 34 % O₂</div><div class="muted" style="font-size:22px;margin-top:6px">No test in this atlas reached it.</div>`);
+  Object.assign(ex.style, { left: "1080px", top: "296px", width: "760px" });
+  const q = D.quotes.luci;
+  const qe = $("div", "abs card", root, `<div class="quote" style="font-size:28px">“${esc(q.quote)}”</div><div class="cap" style="margin-top:10px">${esc(q.source)}, abstract</div>`);
+  Object.assign(qe.style, { left: "1080px", top: "560px", width: "740px", padding: "22px 28px" });
+  return (t) => {
+    h.style.opacity = P(t, .2); hdr.style.opacity = P(t, .5); xcap.style.opacity = P(t, .5);
+    cells.forEach((c) => { const a = .5 + ((n - 1) - c.r) * .25; c.e.style.opacity = P(t, a, .5); c.e.style.outline = c.high && t > st("gaps", 1) ? `2px solid rgba(240,160,68,${.8 * P(t, st("gaps", 1), .6)})` : "none"; });
+    ex.style.opacity = P(t, st("gaps", 1), .8); qe.style.opacity = P(t, st("gaps", 3), .8);
+  };
+});
+
+/* ---------- 9. ask ---------- */
+scene("ask", "Ask, with citations checked", (root) => {
+  const h = $("div", "abs display", root, "Answers built only from cited evidence"); Object.assign(h.style, { left: "120px", top: "150px", fontSize: "56px" });
+  const qbox = $("div", "abs card", root, ""); Object.assign(qbox.style, { left: "120px", top: "250px", width: "1680px", padding: "18px 26px", fontSize: "30px" });
+  const ev = $("div", "abs", root, `<div class="cap">Evidence package, retrieved before any AI runs</div>${D.ask.items.slice(0, 7).map((i) => `<div class="it" style="font-size:22px;padding:9px 0;border-bottom:1px solid var(--rule)"><span style="color:var(--signal)">${esc(i.key)}</span> <span class="muted">${esc(i.title)}</span></div>`).join("")}`);
+  Object.assign(ev.style, { left: "120px", top: "360px", width: "760px" });
+  const items = [...ev.querySelectorAll(".it")];
+  const T = { OBSERVED: ["Observed", "#f0a044"], DATA_GAP: ["Data gap", "#5b8cff"] };
+  const col = $("div", "abs", root); Object.assign(col.style, { left: "940px", top: "360px", width: "860px", display: "flex", flexDirection: "column", gap: "14px" });
+  const claims = D.ask.demo.map((c, i) => {
+    const e = $("div", "card", col, `<span class="badge" style="color:${T[c.type][1]};border-color:${T[c.type][1]}">${T[c.type][0]}</span>
+      <div style="font-size:26px;margin-top:10px">${esc(c.text)}</div>
+      <div style="font-size:21px;margin-top:8px;color:${c.verified ? "var(--signal)" : "var(--flame)"}">${c.verified ? "✓ Verified against " + (c.cites.join(", ") || "no cites needed") : "✗ Flagged: " + esc(c.issues.join("; "))}</div>`);
+    Object.assign(e.style, { padding: "14px 22px", borderColor: c.verified ? "var(--rule2)" : "rgba(240,160,68,.7)" });
+    return e;
+  });
+  const note = $("div", "abs faint", root, "Verification demo: test cases from the site's code, not a live model answer."); Object.assign(note.style, { left: "940px", top: "325px", fontSize: "20px" });
+  return (t) => {
+    h.style.opacity = P(t, .2); qbox.style.opacity = P(t, .5);
+    const n = Math.floor(clamp((t - 1) / 2.2) * D.ask.question.length);
+    qbox.innerHTML = `<span class="muted">Question:</span> ${esc(D.ask.question.slice(0, n))}<span style="color:var(--signal)">${n < D.ask.question.length && t > 1 ? "▍" : ""}</span>`;
+    ev.style.opacity = P(t, st("ask", 0) + 1, .6);
+    items.forEach((e, i) => { e.style.opacity = P(t, st("ask", 0) + 1.2 + i * .25, .4); });
+    claims.forEach((e, i) => { const p = P(t, st("ask", 2) + i * 1.3, .6); e.style.opacity = p; e.style.transform = `translateY(${(1 - p) * 20}px)`; });
+    note.style.opacity = P(t, st("ask", 2) + 2, .8);
+  };
+});
+
+/* ---------- 10. close ---------- */
+scene("close", "", (root) => {
+  const a = $("div", "abs display", root, "AI that helps scientists interrogate evidence,<br>not AI that replaces it."); Object.assign(a.style, { left: "120px", top: "250px", fontSize: "62px", width: "1760px" });
+  const stats = $("div", "abs", root, [[D.counts.tests, "NASA test records"], [D.counts.findings, "findings verified word for word"], [D.counts.sources, "NASA source documents"]].map(([n, l]) => `<div><div class="display num" style="font-size:96px;color:var(--signal)">${n}</div><div class="muted" style="font-size:26px">${l}</div></div>`).join(""));
+  Object.assign(stats.style, { left: "120px", top: "540px", display: "flex", gap: "140px" });
+  const end = $("div", "abs", root, `<div style="font-size:40px;font-weight:600">microfire-atlas.vercel.app</div><div class="muted" style="font-size:26px;margin-top:10px">github.com/A-K-M-Asifuzzaman/MicroFire-Atlas</div><div class="faint" style="font-size:22px;margin-top:22px">NASA Space Apps Challenge 2026, Flame in Freefall. Data from the NASA Technical Reports Server. Not affiliated with or endorsed by NASA.</div>`);
+  Object.assign(end.style, { left: "120px", top: "800px", width: "1700px" });
+  return (t) => {
+    a.style.opacity = P(t, st("close", 2) - .5, 1); stats.style.opacity = P(t, .4, 1); end.style.opacity = P(t, st("close", 3), 1);
+  };
+});
+
+/* ---------- timeline ---------- */
+const subs = document.getElementById("subs"), chap = document.getElementById("chapter"), prog = document.getElementById("progress"), mark = document.getElementById("mark");
+const FADE = .6;
+window.renderAt = (T) => {
+  for (const sc of D.scenes) {
+    const lt = T - sc.start, root = ROOT[sc.id];
+    const vis = clamp((lt + FADE) / FADE) * clamp((sc.dur - lt + FADE) / FADE);
+    root.style.opacity = vis;
+    root.style.display = vis > 0 ? "block" : "none";
+    if (vis > 0) R[sc.id](clamp(lt, 0, sc.dur));
+  }
+  const cur = D.scenes.find((s) => T >= s.start && T < s.start + s.dur) || D.scenes[D.scenes.length - 1];
+  const lt = T - cur.start;
+  const idx = D.scenes.indexOf(cur);
+  chap.textContent = ROOT[cur.id].dataset.chapter ? `${String(idx).padStart(2, "0")}  ${ROOT[cur.id].dataset.chapter}` : "";
+  const s = cur.sent.find((x) => lt >= x.start - .15 && lt < x.end + .35);
+  subs.innerHTML = s ? `<span>${esc(s.text)}</span>` : "";
+  prog.style.width = `${(T / D.total) * 100}%`;
+  mark.style.opacity = cur.id === "intro" ? clamp((lt - 4) / 1) : 1;
+  document.body.offsetHeight;
+};
+window.renderAt(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+# HawkScan config for MicroFire Atlas (Next.js site, prerendered pages, no API routes yet).
+# Run locally: start the site (cd apps/web && npm run build && npx next start -p 3417), then
+#   APP_HOST=http://localhost:3417 hawk scan
+# Discovery assumptions (headless): surfaces = server-rendered HTML pages linked from the nav;
+# no auth; one JSON API route (/api/ask) described in openapi.yaml.
+app:
+  applicationId: ${APP_ID:fedde518-fdde-4a48-9ead-dfa6ae2635bc}
+  env: ${APP_ENV:Production}
+  host: ${APP_HOST:http://localhost:3417}
+  openApiConf:
+    filePath: openapi.yaml
+hawk:
+  spider:
+    base: true
+    maxDurationMinutes: 5
+    seedPaths:
+      - /
+      - /atlas
+      - /compare
+      - /compare?preset=pmma-flow-window
+      - /experiments/bass2-B19
+      - /mission
+      - /gaps
+      - /methodology
+      - /sources
+      - /ask
+      - /story
+      - /expedition
+      - /saffire
+      - /tour
+      - /compare?preset=fabric-three-sizes
+      - /mission?context=moon-base
+      - /downloads/evidence-graph.json
+      - /downloads/bass2-tests.csv
+      - /analyze
+      - /analyze/saffire-vi-pmma
+tags:
+  - name: _STACKHAWK_AGENT
+    value: ${HAWK_AGENT:none}
+  - name: _STACKHAWK_GIT_COMMIT_SHA
+    value: ${COMMIT_SHA:none}
+  - name: _STACKHAWK_GIT_BRANCH
+    value: ${BRANCH_NAME:none}
+  - name: git_origin
+    value: a-k-m-asifuzzaman/microfire-atlas

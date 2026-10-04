@@ -1,0 +1,9 @@
+{
+  "about": "Test conditions for each NASA media item, so Flame Vision measurements can be plotted against airflow. A condition may only be filled in with a value and a citation (report, page). Leave null if the media record does not state it. Nothing here is guessed.",
+  "items": [
+    {"slug": "saffire-v-ribs", "flow_cm_s": null, "o2_pct": null, "citation": null},
+    {"slug": "saffire-vi-pmma", "flow_cm_s": null, "o2_pct": null, "citation": null},
+    {"slug": "bass-cassidy-2013", "flow_cm_s": null, "o2_pct": null, "citation": null},
+    {"slug": "bass2-reduced-o2-gmt213", "flow_cm_s": null, "o2_pct": null, "citation": null}
+  ]
+}
