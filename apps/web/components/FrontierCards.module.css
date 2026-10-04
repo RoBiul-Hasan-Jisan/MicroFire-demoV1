@@ -1,0 +1,24 @@
+.grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); }
+.card { position: relative; display: grid; gap: 8px; align-content: start; padding: 20px; border-radius: 20px; border: 1px dashed #ffcf6b77;
+  background: radial-gradient(ellipse at 100% 0%, #ffcf6b14, transparent 55%), var(--panel); }
+.card[data-closed="true"] { border-style: solid; border-color: #9be7b477; background: radial-gradient(ellipse at 100% 0%, #9be7b414, transparent 55%), var(--panel); }
+.top { display: flex; align-items: center; justify-content: space-between; }
+.stars { width: 110px; height: 55px; }
+.line { fill: none; stroke: #8eeaf566; stroke-width: 1.5; stroke-dasharray: 3 4; }
+.star { fill: #fff4d6; filter: drop-shadow(0 0 4px #ffcf6b); }
+.q { fill: #ffcf6b; font: 700 22px var(--font-fredoka, system-ui); animation: pulse 2.2s ease-in-out infinite; }
+.status { font-size: 12px; font-weight: 800; padding: 3px 10px; border-radius: 10px; color: #20160a; background: #ffcf6b; }
+.card[data-closed="true"] .status { background: #9be7b4; }
+.kid { font-size: 14px; color: #ffe2ac; font-weight: 600; }
+.card[data-closed="true"] .kid { color: #c9f3d7; }
+.sections { display: grid; gap: 12px; margin-top: 6px; }
+.sections dt { font-size: 12px; font-weight: 800; color: var(--signal); }
+.sections dd { margin-top: 3px; font-size: 14.5px; line-height: 1.55; }
+.sections ul { display: grid; gap: 4px; padding-left: 18px; list-style: disc; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips span { font-size: 12.5px; font-weight: 700; padding: 2px 10px; border-radius: 10px; border: 1px dashed #ffcf6b; color: #ffcf6b; }
+.next { padding: 10px 12px; border-radius: 12px; border: 1px solid var(--signal); background: #0b1a33; }
+.link { justify-self: start; margin-top: 4px; font-size: 14px; font-weight: 600; color: var(--signal); text-decoration: underline; text-underline-offset: 4px; }
+@keyframes pulse { 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .q { animation: none; } }
+:global(html[data-motion="gentle"]) .q { animation: none; }
