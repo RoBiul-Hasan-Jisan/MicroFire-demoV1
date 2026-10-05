@@ -136,7 +136,7 @@ export function whatIf(s: Snapshot, base: Query, change: Partial<Query>): WhatIf
 export type Evidence = { source_id: string; pdf_page: number; text: string };
 
 export type Lever =
-  | { id: string; label: string; kind: "modelled"; change: Partial<Query>; result: WhatIf }
+  | { id: string; label: string; kind: "modelled"; change: Partial<Query>; result: WhatIf; caveat?: string }
   | { id: string; label: string; kind: "records"; change: Partial<Query>; modified: Side; support: number; established: number; interval: [number, number] | null; why: string }
   | { id: string; label: string; kind: "gap"; why: string; evidence: Evidence[] };
 
@@ -152,6 +152,15 @@ export function interventions(s: Snapshot, base: Query, pressureStated: { n: num
   for (const d of [-4, -2, 2]) {
     const o2 = Math.round((base.o2 + d) * 10) / 10;
     out.push({ id: `o2${d > 0 ? "+" : ""}${d}`, label: `Oxygen ${d > 0 ? "+" : "−"}${Math.abs(d)} pp (${o2} %)`, kind: "modelled", change: { o2 }, result: whatIf(s, base, { o2 }) });
+  }
+  // Material replacement: only materials the model was trained on can be compared. Fabric vs solid PMMA are different sample
+  // types (geometry, thickness, burn-down), so this is a comparison of NASA test samples, not a like-for-like substitution.
+  for (const m of Object.keys(s.domain)) {
+    if (m === base.material) continue;
+    out.push({
+      id: `material-${m}`, label: `Material: ${m}`, kind: "modelled", change: { material: m }, result: whatIf(s, base, { material: m }),
+      caveat: "Different sample types (fabric vs solid): a comparison of NASA test samples, not a like-for-like swap.",
+    });
   }
   for (const [id, label, f] of [["flow-half", "Airflow halved", base.flow / 2], ["flow-double", "Airflow doubled", base.flow * 2]] as const) {
     const flow = Math.round(f * 10) / 10;
@@ -202,4 +211,33 @@ export function coverage(s: Snapshot, material: string, o2Range: [number, number
     cells.push({ o2, flow, support, tier: support >= LOCAL.min ? "supported" : support > 0 ? "sparse" : "empty" });
   }
   return cells;
+}
+
+/* ---------------------------------------------------------------- partial dependence */
+
+export type SweepPoint = { o2: number; status: Status; p: number | null; lo: number | null; hi: number | null; tier: Tier };
+
+/**
+ * Partial dependence on oxygen: the estimate as oxygen alone varies, every other condition held at the query.
+ * A point exists only where the domain gate allows a number; blocked points carry null so a chart leaves a visible break
+ * where the evidence stops instead of drawing a line through it. This is how the MODEL responds, not a physical law.
+ */
+export function sweepO2(s: Snapshot, q: Query, from = 14, to = 31, step = 0.5): SweepPoint[] {
+  const out: SweepPoint[] = [];
+  for (let o2 = from; o2 <= to + 1e-9; o2 += step) {
+    const x = Math.round(o2 * 10) / 10, side = evaluateSide(s, { ...q, o2: x });
+    out.push({ o2: x, status: side.status, p: side.env.p, lo: side.env.lo, hi: side.env.hi, tier: side.env.tier });
+  }
+  return out;
+}
+
+/* ---------------------------------------------------------------- similarity */
+
+/**
+ * Similarity of a NASA test to a query, 0 to 1. A MicroFire heuristic, not a probability and not a NASA measure:
+ * 1 / (1 + distance), where distance is the oxygen and airflow gap in training standard deviations, halved when the
+ * material differs. 100 % means the same material at the same oxygen and airflow.
+ */
+export function similarity(q: Query, n: Neighbor): number {
+  return (n.row.material === q.material ? 1 : 0.5) / (1 + n.distance);
 }

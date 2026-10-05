@@ -44,3 +44,27 @@ export function whyThisTest(s: Step, outOfRangeO2: boolean) {
   bits.push(`The model currently expects ${pct(s.expected_p_sustained)} chance of a sustained flame, range ${pct(s.p90[0])}–${pct(s.p90[1])}.`);
   return bits.join(" ");
 }
+
+/* ------------------------------------------------------------------ cost lens (user-set assumption, no cost data) */
+
+export type CostRow = { gravity: Gravity; o2: number; forced: number; gain: number; cost: number; perCost: number; rank: number; breakEven: number | null };
+
+/**
+ * Re-ranks the best single test per gravity by uncertainty removed per unit cost.
+ * The atlas holds NO cost data, so cost is a single assumption set by the reader: how many times more a partial-gravity
+ * test costs than an ISS test (ratio). At ratio = 1 the order is the planner's own order by gain.
+ * breakEven: the cost ratio at which a partial-gravity test and the best ISS test tie, because gain_p / r = gain_iss.
+ * Below it the partial-gravity test is the better buy on this measure; above it the ISS test is.
+ */
+export function costLens(grid: NextTests["grid"], ratio: number): CostRow[] {
+  if (!(ratio > 0) || !Number.isFinite(ratio)) throw new RangeError("cost ratio must be a positive finite number");
+  const order: Gravity[] = ["microgravity", "lunar", "martian"];
+  const best = order.map((g) => ({ g, b: grid[g].reduce((a, c) => (c.gain > a.gain ? c : a)) }));
+  const iss = best[0].b.gain;
+  const rows = best.map(({ g, b }) => {
+    const cost = g === "microgravity" ? 1 : ratio;
+    return { gravity: g, o2: b.o2, forced: b.forced, gain: b.gain, cost, perCost: b.gain / cost, rank: 0, breakEven: g === "microgravity" || iss <= 0 ? null : b.gain / iss };
+  });
+  [...rows].sort((a, b) => b.perCost - a.perCost || b.gain - a.gain).forEach((r, i) => { r.rank = i + 1; });
+  return rows;
+}

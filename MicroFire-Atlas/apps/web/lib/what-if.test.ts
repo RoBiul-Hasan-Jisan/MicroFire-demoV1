@@ -104,3 +104,40 @@ test("wording: engine strings never call anything safe, unsafe or a risk score",
   const all = JSON.stringify([whatIf(s, q(), { o2: 16 }), whatIf(s, q(), { gravity: "lunar" }), interventions(s, q(), PRESSURE)]);
   assert.doesNotMatch(all, /\b(is safe|is unsafe|risk score|safer|safest|recommend)/i);
 });
+
+test("material replacement is offered only for materials the model was trained on, and carries the sample-type caveat", () => {
+  const L = interventions(s, q(), PRESSURE);
+  const mats = L.filter((l) => l.id.startsWith("material-"));
+  assert.deepEqual(mats.map((l) => l.id), Object.keys(s.domain).filter((m) => m !== "SIBAL fabric").map((m) => `material-${m}`));
+  for (const l of mats) { assert.ok(l.kind === "modelled" && l.caveat && /not a like-for-like/.test(l.caveat)); assert.equal(l.result.modified.q.material, l.id.slice(9)); }
+  assert.ok(!L.some((l) => /Nomex|Silicone|Cotton/.test(l.label)), "no lever for a material without usable tests");
+});
+
+test("sweepO2: points equal the engine, blocked points are null, and the model never falls as oxygen rises", async () => {
+  const { sweepO2 } = await import("./what-if.ts");
+  const pts = sweepO2(s, q());
+  assert.ok(pts.length > 30 && pts[0].o2 === 14 && pts[pts.length - 1].o2 === 31);
+  for (const pt of pts) {
+    const side = evaluateSide(s, q({ o2: pt.o2 }));
+    assert.equal(pt.p, side.env.p); assert.equal(pt.status, side.status);
+    if (pt.p === null) assert.ok(pt.lo === null && pt.hi === null && pt.tier === "blocked");
+    else assert.ok(pt.lo! <= pt.p && pt.p <= pt.hi!);
+  }
+  const live = pts.filter((x) => x.p !== null);
+  assert.ok(live.length > 0 && live.length < pts.length, "some oxygen values are inside the tested range and some are not");
+  for (let i = 1; i < live.length; i++) assert.ok(live[i].p! >= live[i - 1].p! - 1e-12);
+  // far above the tested range must never produce a number
+  assert.ok(pts.filter((x) => x.o2 >= 28).every((x) => x.p === null));
+});
+
+test("similarity: 1 only for the same material at zero distance, falls with distance, halves across materials", async () => {
+  const { similarity } = await import("./what-if.ts");
+  const { nearest } = await import("./model-lab.ts");
+  const base = q();
+  const ns = nearest(s, base, 8);
+  for (const n of ns) { const v = similarity(base, n); assert.ok(v > 0 && v <= 1); }
+  const exact = { row: s.rows.find((r) => r.material === "SIBAL fabric")!, dO2: 0, dFlow: 0, distance: 0 };
+  assert.equal(similarity(base, exact), 1);
+  assert.equal(similarity(base, { ...exact, row: { ...exact.row, material: "PMMA" } }), 0.5);
+  assert.ok(similarity(base, { ...exact, distance: 2 }) < similarity(base, { ...exact, distance: 1 }));
+});

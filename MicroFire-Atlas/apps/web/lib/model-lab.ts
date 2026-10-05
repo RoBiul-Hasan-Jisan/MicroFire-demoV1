@@ -178,8 +178,30 @@ export type Metrics = {
   /** precision / recall / F1 for the minority class, "no flame established" */
   precision: number | null; recall: number; f1: number | null;
   auc: number | null; brier: number; logLoss: number;
+  /** Average precision for the minority class "no flame established". A random ranking scores about noFlameShare. */
+  prAuc: number | null; noFlameShare: number;
   confusion: { tp: number; fn: number; fp: number; tn: number }; // positive = flame established
 };
+/**
+ * Average precision (area under the precision-recall step curve): sum of (recall step × precision) at each distinct score,
+ * highest score first. Tied scores form one step, so the result does not depend on the input order.
+ * Returns null when there is no positive example.
+ */
+export function averagePrecision(score: number[], positive: boolean[]): number | null {
+  const total = positive.filter(Boolean).length;
+  if (!total) return null;
+  const idx = score.map((_, i) => i).sort((a, b) => score[b] - score[a]);
+  let tp = 0, seen = 0, prevRecall = 0, ap = 0;
+  for (let i = 0; i < idx.length; ) {
+    let j = i;
+    while (j < idx.length && score[idx[j]] === score[idx[i]]) { if (positive[idx[j]]) tp++; seen++; j++; }
+    const recall = tp / total;
+    ap += (recall - prevRecall) * (tp / seen);
+    prevRecall = recall; i = j;
+  }
+  return ap;
+}
+
 export function metrics(p: number[], y: number[]): Metrics {
   let tp = 0, fn = 0, fp = 0, tn = 0;
   p.forEach((v, i) => { const hat = v >= 0.5 ? 1 : 0; if (y[i] && hat) tp++; else if (y[i]) fn++; else if (hat) fp++; else tn++; });
@@ -195,7 +217,8 @@ export function metrics(p: number[], y: number[]): Metrics {
   }
   const brier = p.reduce((s, v, i) => s + (v - y[i]) ** 2, 0) / p.length;
   const logLoss = -p.reduce((s, v, i) => { const q = Math.min(1 - 1e-6, Math.max(1e-6, v)); return s + (y[i] ? Math.log(q) : Math.log(1 - q)); }, 0) / p.length;
-  return { n: p.length, accuracy: (tp + tn) / p.length, balancedAccuracy: (tpr + tnr) / 2, precision, recall, f1, auc, brier, logLoss, confusion: { tp, fn, fp, tn } };
+  const prAuc = averagePrecision(p.map((v) => 1 - v), y.map((v) => v === 0));
+  return { n: p.length, accuracy: (tp + tn) / p.length, balancedAccuracy: (tpr + tnr) / 2, precision, recall, f1, auc, brier, logLoss, prAuc, noFlameShare: neg / p.length, confusion: { tp, fn, fp, tn } };
 }
 
 const pct = (xs: number[], q: number) => { const s = [...xs].sort((a, b) => a - b); return s[Math.min(s.length - 1, Math.max(0, Math.round(q * (s.length - 1))))]; };

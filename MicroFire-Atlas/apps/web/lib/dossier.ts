@@ -14,7 +14,7 @@ import { ladder, type Ladder } from "./ontology.ts";
 import type { EvidenceRecord } from "./ontology.ts";
 import type { Finding } from "./types";
 import { LOCAL, STATUS_LABEL, type Query, type Snapshot } from "./model-lab.ts";
-import { coverage, DIM_LABEL, interventions, whatIf, type WhatIf } from "./what-if.ts";
+import { coverage, DIM_LABEL, interventions, similarity, whatIf, type WhatIf } from "./what-if.ts";
 import { describeTest, pct, type NextTests } from "./next-tests.ts";
 
 export const DOSSIER_MATERIALS = ["SIBAL fabric", "PMMA", "Nomex", "Silicone", "Cotton jersey"] as const;
@@ -138,7 +138,7 @@ export function buildDossier(d: DossierData, q: Query, change: Partial<Query>): 
   s1.push(`Domain check: ${STATUS_LABEL[b.status]}. ${b.checks.filter((c) => c.status !== "in").map((c) => `${c.dim}: ${c.text}.`).join(" ") || "Every condition lies inside the tested range."}`);
   if (e.p != null) s1.push(`Estimate: ${pc(e.p)} of comparable NASA tests establish a flame (model interval ${pc(e.modelInterval![0])}–${pc(e.modelInterval![1])}; evidence-weighted envelope ${pc(e.lo!)}–${pc(e.hi!)}). ${e.support} ${q.material} test${e.support === 1 ? "" : "s"} lie nearby, ${e.established} established a flame.`);
   else s1.push("No estimate: these conditions are outside what the NASA tests support. Abstention is a result.");
-  for (const n of b.neighbors.slice(0, 3)) s1.push(`Closest test: ${n.row.test} (${n.row.material}, ${n.row.o2} % O₂, ${n.row.flow} cm/s): ${n.row.y ? "flame established" : "no flame established"} (${n.row.cite.source_id}, PDF p. ${n.row.cite.pdf_page}).`);
+  for (const n of b.neighbors.slice(0, 3)) s1.push(`Closest test: ${n.row.test} (${n.row.material}, ${n.row.o2} % O₂, ${n.row.flow} cm/s): ${n.row.y ? "flame established" : "no flame established"}; similarity ${pc(similarity(q, n))}, a MicroFire heuristic (${n.row.cite.source_id}, PDF p. ${n.row.cite.pdf_page}).`);
   if (lad) s1.push(`Evidence Ladder: ${lad.direct.length} direct and ${lad.analogous.length} analogous test records across BASS-II, Saffire and LUCI.`);
   else s1.push("Evidence Ladder: not computed for Earth gravity, because every NASA record in the atlas is from microgravity or simulated partial gravity.");
   const h1 = e.p != null ? `${pc(e.p)} estimated, ${STATUS_LABEL[b.status].toLowerCase()}` : `No estimate (${STATUS_LABEL[b.status].toLowerCase()})`;
@@ -149,7 +149,7 @@ export function buildDossier(d: DossierData, q: Query, change: Partial<Query>): 
   if (w.delta) for (const f of w.delta.byFeature) s2.push(`${f.feature}: ${f.from} → ${f.to} shifts the log-odds by ${f.logOdds >= 0 ? "+" : "−"}${Math.abs(f.logOdds).toFixed(2)}.`);
   s2.push("One-condition comparison against the starting scenario:");
   for (const l of levers) {
-    if (l.kind === "modelled") s2.push(`${l.label}: ${l.result.delta ? `${pc(l.result.modified.env.p!)} (${l.result.delta.pp >= 0 ? "+" : "−"}${Math.abs(l.result.delta.pp).toFixed(0)} pp${l.result.delta.distinguishable ? "" : ", not distinguishable from the start"})` : `no estimate (${STATUS_LABEL[l.result.modified.status].toLowerCase()})`}.`);
+    if (l.kind === "modelled") s2.push(`${l.label}: ${l.result.delta ? `${pc(l.result.modified.env.p!)} (${l.result.delta.pp >= 0 ? "+" : "−"}${Math.abs(l.result.delta.pp).toFixed(0)} pp${l.result.delta.distinguishable ? "" : ", not distinguishable from the start"})` : `no estimate (${STATUS_LABEL[l.result.modified.status].toLowerCase()})`}.${l.caveat ? ` ${l.caveat}` : ""}`);
     else if (l.kind === "records") s2.push(`${l.label}: ${l.interval ? `${l.established} of ${l.support} nearby tests established a flame (${pc(l.interval[0])}–${pc(l.interval[1])})` : `too few nearby tests (${l.support})`}.`);
     else s2.push(`${l.label}: no NASA solid-fuel evidence in the atlas; nothing estimated.`);
   }

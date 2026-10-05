@@ -86,7 +86,7 @@ export default function ModelLabPage() {
         </p>
         <div className={styles.tableWrap}>
           <table className={styles.table}>
-            <thead><tr><th scope="col">Model</th><th scope="col">Brier score ↓</th><th scope="col">Log loss ↓</th><th scope="col">ROC-AUC</th><th scope="col">Balanced accuracy at 0.5</th><th scope="col">Repeated stratified CV AUC</th></tr></thead>
+            <thead><tr><th scope="col">Model</th><th scope="col">Brier score ↓</th><th scope="col">Log loss ↓</th><th scope="col">ROC-AUC</th><th scope="col">PR-AUC, no-flame class</th><th scope="col">Balanced accuracy at 0.5</th><th scope="col">Repeated stratified CV AUC</th></tr></thead>
             <tbody>
               {evals.map((e) => (
                 <tr key={e.id} data-picked={e.id === pick || undefined}>
@@ -94,6 +94,7 @@ export default function ModelLabPage() {
                   <td className="num">{f(e.grouped.brier, 3)} <small>{ci(e.grouped.ci.brier)}</small></td>
                   <td className="num">{f(e.grouped.logLoss, 3)}</td>
                   <td className="num">{e.grouped.auc == null ? "not meaningful" : <>{f(e.grouped.auc)} <small>{ci(e.grouped.ci.auc)}</small></>}</td>
+                  <td className="num">{e.id === "baseline" || e.grouped.prAuc == null ? "not meaningful" : <>{f(e.grouped.prAuc)} <small>(random ≈ {f(e.grouped.noFlameShare)})</small></>}</td>
                   <td className="num">{f(e.grouped.balancedAccuracy)} <small>{ci(e.grouped.ci.balancedAccuracy)}</small></td>
                   <td className="num">{e.repeated.auc ? <>{f(e.repeated.auc.est)} <small>{ci(e.repeated.auc)}</small></> : "n/a"}</td>
                 </tr>
@@ -109,7 +110,7 @@ export default function ModelLabPage() {
           </div>
           <div>
             <h3 className={styles.h3}>What the numbers really say</h3>
-            <p>The deployed model ranks tests well (AUC {f(deployed?.grouped.auc)}, interval {ci(deployed?.grouped.ci.auc ?? null)}) but its Brier interval overlaps the baseline&apos;s ({ci(base.grouped.ci.brier)}). With {neg} failures, it cannot be shown to be better calibrated than always guessing the base rate. It never outputs “no flame” at a 0.5 cut-off, so balanced accuracy at 0.5 stays at chance.</p>
+            <p>The deployed model ranks tests well (AUC {f(deployed?.grouped.auc)}, interval {ci(deployed?.grouped.ci.auc ?? null)}) but its Brier interval overlaps the baseline&apos;s ({ci(base.grouped.ci.brier)}). On the rare no-flame class its PR-AUC is {f(deployed?.grouped.prAuc)} against about {f(deployed?.grouped.noFlameShare)} for a random ranking, so it finds those tests better than chance, from only {neg} examples. With {neg} failures, it cannot be shown to be better calibrated than always guessing the base rate. It never outputs “no flame” at a 0.5 cut-off, so balanced accuracy at 0.5 stays at chance.</p>
             <p>Repeated stratified CV ({REPEATS} × {FOLDS} folds) looks much better (AUC near {f(deployed?.repeated.auc?.est)}) because tests from one session can land on both sides of a split. We report it, but we trust the session-grouped numbers.</p>
           </div>
         </div>

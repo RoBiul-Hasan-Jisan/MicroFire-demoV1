@@ -186,13 +186,36 @@ A planning document proposed "FLARE-X": a fire-hazard intelligence and counterfa
 | **Intervention comparison** | **New, partial** | Oxygen changes use the model plus record counts. Airflow uses raw record counts only (the deployed model does not use airflow). Suppressant, pressure and compartment isolation are listed as **gaps with no number**. The plan's confidence figures (0.91, 0.87) had no data behind them and were not reproduced. Rows are ordered by evidence, never as advice. |
 | **One-scenario decision dossier** (plan: "Mission safety brief" + "what to do next") | **New** | `/dossier`. Joins the gated estimate, the what-if, the gaps and the next test into one page with a shareable link, Markdown download and print. Not a safety verdict: its fifth answer lists what it does not say. |
 | **Evidence coverage map** | **New** | Oxygen × airflow grid per material using the gate's own window: 3+ tests, 1–2, none. |
-| Fire Safety Gap Finder + next experiment | Already built | `/gaps`, `/next-tests`, `/unseen`. No experimental cost model, so the plan's information-gain ÷ cost ranking is only half there. |
+| Fire Safety Gap Finder + next experiment | Already built | `/gaps`, `/next-tests`, `/unseen`. |
+| **Information gain ÷ cost ranking** | **New, assumption-only** | Cost lens on `/next-tests`. The atlas has no cost data, so cost is one reader-set ratio (partial-gravity test vs ISS test) and the page reports the exact break-even ratio (Moon 0.85×, Mars 0.70×). It is never presented as a NASA cost estimate. |
 | "Find similar fire" by scenario | Already built | Mission Lab ranking and nearest-test lists. |
 | "Find similar fire" by uploaded image or video | **Not done** | Would need server-side vision and a validated similarity measure; the Flame Vision masks are not yet validated against hand annotation. |
 | Video computer vision (area, width, height, motion) | Already built | Flame Vision. Growth appears as area change over time, in image pixels. |
 | Mission-control look | Not changed | The site's illustrated explorer identity is a deliberate choice. |
 | One-click mission safety brief | Already built | `/brief`, `/mission/brief` (an evidence brief, not a safety verdict). The new Scenario Dossier is the integrated version. |
 | Experiment timeline | Already built | Explore page. |
+
+### FIREGUARD-X spec cross-check
+
+A teammate's brief ("FIREGUARD-X") asked for a similar system. Checked section by section against the code:
+
+| Spec section | Status | Notes |
+|---|---|---|
+| 3. Fire Hazard Score (overall 0 to 100, plus ignition, growth, spread, extinction, smoke) | **Different by design** | Not built as a composite score. Only 41 usable BASS-II tests exist, 4 of them no-flame, and spread and smoke have no structured tables. A "82/100" would be exactly the falsely precise output the brief's own section 12 forbids. Built instead: the estimate of one outcome ("flame established"), its envelope and its records. |
+| 4. Evidence-grounded AI with similarity | Built | Closest tests with PDF pages, and a **new** similarity percentage (an open heuristic: 1 ÷ (1 + distance), halved across materials). |
+| 5. Counterfactual "what if?" | Built | `/what-if`. **New:** partial-dependence response curve. |
+| 6. "Make it safer" optimizer | Built, reworded | One-condition comparison with the change in percentage points and an "indistinguishable" flag, not a "risk reduction %" and not advice. **New:** material replacement. Suppressant, pressure and isolation stay as gaps with no number, as the brief itself requires ("do not invent interventions"). |
+| 7. Evidence gap detector | Built | `/gaps`, the coverage map, the Dossier's nearest untested point. |
+| 8. Next best experiment | Built | `/next-tests`, `/unseen`, the cost lens. Described as research support, not a NASA recommendation. |
+| 9. Multimodal analysis | Built, bounded | Flame Vision. Growth is area change in image pixels. Spread rate and extinction time are not claimed: no calibration, no validation. |
+| 10. Find similar fire | Scenario: built. Image upload: **not done** | Needs validated masks first. |
+| 11. Explainability | Built, no SHAP library | Exact log-odds contributions for a linear model, worded as model contribution, never causation. **New:** partial dependence. |
+| 12. Uncertainty and out-of-domain | Built | Domain gate plus envelope. Reported as an envelope and a coverage tier, not "Confidence 91 %": the Model Lab shows the model cannot be demonstrated better calibrated than the base rate with 4 failures. |
+| 13. Unified data model | Built | Typed evidence graph and Evidence Ladder ontology with per-record provenance. |
+| 14. ML architecture | Built, CPU only | Baseline, logistic (two variants), depth-2 tree and a random forest are benchmarked. XGBoost and CatBoost were not added: with 41 rows a boosted ensemble would only overfit. Retrieval is deterministic, with no vector index. |
+| 15. Evaluation | Built | Accuracy, precision, recall, F1, ROC-AUC, Brier, log loss, session-grouped CV, leave-one-material-out, retrieval Precision@K and MRR. **New:** PR-AUC for the no-flame class. No reliability diagram yet. |
+| 16. Eight screens | Built | Overview `/`, simulator `/what-if` and `/lab`, why `/model-lab`, comparison `/what-if`, similar `/mission`, gap `/gaps`, next `/next-tests`, explorer `/explore`. |
+| 17. Mission-control look | Not changed | The site's explorer identity is a deliberate choice. |
 
 ### Change log
 
@@ -213,10 +236,26 @@ A planning document proposed "FLARE-X": a fire-hazard intelligence and counterfa
 - Checks run: 192 TypeScript tests pass; typecheck clean for new files; the page was driven in a headless browser (copy link reads back the exact URL, the Markdown downloads, the form works, Challenge Mode click-through lands on the dossier, the tour page shows nine stops). A full `next build` still could not run here because Google Fonts is unreachable; run it where the network is open.
 - Honest limits: the planner's gain grid is scored against five fixed cabins, so for other scenarios the dossier reports it only as context and relies on its own nearest-untested-neighbourhood computation for the scenario-specific gap.
 
-**Next candidates**: add SAME and SPICE records with citations; validate Flame Vision against hand masks, then consider image similarity; add an experimental-cost field to `/next-tests`; add the What-if Lab and the Scenario Dossier to the methodology page.
+**2026-10-05: Cost lens and methodology (FLARE-X round 3, closing the open list)**
+- Added `costLens()` to `apps/web/lib/next-tests.ts` and `lib/cost-lens.test.ts` (4 tests): at equal cost the order equals the planner's own; the break-even is exact (the two tests tie at it and the order flips on either side); raising a partial-gravity cost never improves its rank; invalid costs are rejected, not defaulted.
+- Added the Cost lens to `/next-tests` (`components/insight/CostLens.tsx`). In the browser the ranking flipped as predicted: at 0.8× the Moon test ranked first, at 0.9× the ISS test did, around the 0.85× break-even.
+- Methodology page: documented the What-if Lab envelope, the Scenario Dossier and the cost lens, and corrected the planner limits paragraph, which had said the planner has no notion of cost.
+- Checks run: 196 TypeScript tests pass; typecheck and lint clean for new files; verified in a headless browser. `next build` still needs a network with Google Fonts.
+
+**2026-10-05: FIREGUARD-X cross-check (FLARE-X round 4)**
+- Model Lab: added `averagePrecision()` and `prAuc` / `noFlameShare` to `metrics()`, plus a PR-AUC column on `/model-lab`. `lib/pr-auc.test.ts` (5 tests): perfect and worst rankings, a hand-computed example, tie handling independent of input order, null when there is no positive example.
+- What-if engine: added `sweepO2` (partial dependence), `similarity`, and a material-replacement lever carrying a sample-type caveat that also travels into the Dossier Markdown. 3 new tests in `what-if.test.ts` and 1 in `dossier.test.ts`: curve points equal the engine, blocked points are null, the model never falls as oxygen rises, nothing is drawn above the tested range, and no lever exists for a material without usable tests.
+- What-if Lab: response-curve chart. A first version drew the supported region as a dark void next to lighter blocked columns, which read backwards; it now hatches the blocked columns and labels them "no estimate".
+- Checks run: 205 TypeScript tests pass; typecheck and lint clean for new files; verified in a headless browser (the curve, the caveat, similarity percentages, the PR-AUC column and prose). `next build` still needs a network with Google Fonts.
+- Read-out of the new numbers: the deployed model's PR-AUC on the no-flame class is 0.45 against about 0.10 for random, from only 4 examples; for fabric the curve exists only between about 16.5 % and 19.5 % oxygen, which shows how thin the evidence is.
+
+**Still open, and why**: (1) SAME and SPICE records: the NASA reports server is unreachable from the build environment, and no record may be invented; add them through `data/curated/extra_runs.csv` (see `docs/ADD_DATA.md`). (2) Image or video similarity search: Flame Vision masks are not yet validated against hand annotation, and pixel units are uncalibrated, so a similarity score would look more meaningful than it is; this needs human-drawn masks first.
 
 ## What we implemented
 
+- **Partial dependence, material replacement and similarity** (`/what-if`, `/dossier`): a response curve shows how the estimate moves with oxygen alone, drawn only where the domain gate allows a number and hatched where the evidence stops. The comparison table gained a material-replacement row (only materials the model was trained on, with a sample-type caveat). Every nearby NASA test now shows a similarity percentage, defined openly as a MicroFire heuristic. `sweepO2`, `similarity` in `lib/what-if.ts`.
+- **PR-AUC for the no-flame class** (`/model-lab`): average precision for the rare class next to its random-guess baseline (deployed model 0.45 vs about 0.10). `averagePrecision` in `lib/model-lab.ts`, 5 tests.
+- **Cost lens** (`/next-tests`): re-ranks the planner's best single test per gravity by uncertainty removed per unit cost, using one reader-set cost ratio because the atlas holds no cost data. Shows the break-even ratio, which is just a ratio of two uncertainty-removed values. Function `costLens` in `lib/next-tests.ts`, 4 tests.
 - **Scenario Dossier** (`/dossier`): one scenario in, five numbered answers out, in the order a mission planner asks them: what NASA's tests say here (domain gate, estimate with evidence-weighted envelope, closest tests, Evidence Ladder counts); what happens if one thing changes (the What-if engine and a one-condition comparison); where the evidence is thin or missing (Ladder gaps plus the nearest untested oxygen and airflow neighbourhood); which new test would help most (that neighbourhood plus the research planner's pick, always labelled as scored against five fixed reference cabins, not the user's scenario); and what the dossier does not say. The scenario lives in the URL, so a link reopens exactly the same dossier, and it can be downloaded as Markdown or printed. The edit form is a plain GET form that works without JavaScript; out-of-range URL values are ignored and reported, never trusted. Engine: `lib/dossier.ts`, 11 tests.
 - **What-if Lab** (`/what-if`): a counterfactual evidence explorer. Set a starting scenario, change one condition, and see both scenarios side by side: the estimate, an evidence-weighted uncertainty envelope, the gate's domain checks, the closest NASA tests with PDF pages, and the exact log-odds shift each changed input caused. A comparison table changes one condition at a time (oxygen with the model, airflow with raw record counts, suppressant, pressure and compartment isolation as visible gaps), and a coverage map shows where NASA tests are thick, thin or absent. When a change leaves the tested conditions the number disappears and the comparison ends. The estimate is the Model Lab's "flame established" outcome, never a fire-risk probability. Engine: `lib/what-if.ts`, 11 tests.
 - **Explore** (`/explore`): one search box over every record and finding that shows matched and missed conditions and the gaps, plus pairs of records that ended differently under near-identical conditions, and a timeline of the NASA sources. Deterministic, no AI.

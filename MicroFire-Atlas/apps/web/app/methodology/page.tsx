@@ -421,7 +421,7 @@ potential direct questions = current direct questions + new unique matches`}</pr
           <p>Board sorts expose separate dimensions: distinct questions, direct count ascending (then analogous support ascending), distinct categories, analogous support, planned overlap, or maximum candidate gap coverage. Descending sorts break ties by stable gap ID. Candidate order uses directly addressable gaps, then affected questions, then stable ID. There is no composite or official NASA priority score.</p>
           <h3 className="text-lg font-semibold">Limits and non-goals</h3>
           <p>Geometry, scale, duration, ignition method, confinement, orientation, hardware and sample history are not jointly represented. LUCI&apos;s lunar gravity is simulated. Even a direct match only covers represented dimensions under project tolerances. Counts depend on a small curated question set and do not measure researcher demand; repeated or selectively added scenarios can bias apparent breadth.</p>
-          <p>The planner does not estimate information entropy, outcome value, experiment cost, hardware feasibility, crew risk, TRL, schedule, program/funding/political priority, safety impact or probability of experiment success. NASA has not validated or endorsed these planning heuristics. Human usability impact study pending; no performance-improvement claim is made.</p>
+          <p>The planner does not estimate information entropy, outcome value, experiment cost (apart from the reader-set lens described below), hardware feasibility, crew risk, TRL, schedule, program/funding/political priority, safety impact or probability of experiment success. NASA has not validated or endorsed these planning heuristics. The atlas holds no experiment-cost data. The optional cost lens on the <Link href="/next-tests" className="link">Next tests</Link> page takes a single reader-set cost ratio between partial-gravity and ISS tests and re-ranks the best single test per gravity by uncertainty removed per unit cost; its break-even ratio is simply the ratio of two uncertainty-removed values. Human usability impact study pending; no performance-improvement claim is made.</p>
           <p><Link href="/gaps#research-planning" className="link">Open the research landscape</Link>. Versioned JSON exports retain corpus identity, assumptions and hypothetical/planned status. Source updates require human review before the evidence layer changes.</p>
         </Section>
 
@@ -440,6 +440,13 @@ potential direct questions = current direct questions + new unique matches`}</pr
             Every query passes a domain gate first: gravity must be microgravity, the material must be in the training data, pressure must be ISS-cabin
             pressure, oxygen and airflow must sit inside each material&apos;s tested range, and at least three similar tests must lie nearby. Otherwise the
             answer is “out of domain” or “insufficient evidence”, and no number is shown. Reproduce it with <code>npm run model-lab</code>.
+          </p>
+          <p>
+            The <Link href="/what-if" className="link">What-if Lab</Link> changes one condition and reports how the estimate and its envelope respond. The envelope is the union of the
+            model&apos;s 90 % bootstrap interval and a 90 % Wilson interval of the raw same-material tests within ±1 pp oxygen and ±3 cm/s, so it is never narrower than either. Airflow
+            changes are shown as raw record counts only, because airflow did not improve held-out scores and is not a model input. The <Link href="/dossier" className="link">Scenario Dossier</Link>{" "}
+            assembles the gated estimate, the what-if, the Evidence Ladder gaps, the nearest untested oxygen and airflow neighbourhood and the planner&apos;s pick into one shareable page.
+            It adds no model and no data, and its last section lists what it does not say.
           </p>
         </Section>
 

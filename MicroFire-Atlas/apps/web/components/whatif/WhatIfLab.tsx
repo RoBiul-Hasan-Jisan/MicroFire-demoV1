@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { STATUS_LABEL, type GravityChoice, type Query, type Snapshot, type Status } from "@/lib/model-lab";
-import { coverage, DIM_LABEL, interventions, whatIf, type Envelope, type Side, type Tier } from "@/lib/what-if";
+import { coverage, DIM_LABEL, interventions, similarity, sweepO2, whatIf, type Envelope, type Side, type Tier } from "@/lib/what-if";
 import styles from "./WhatIf.module.css";
 
 const MATERIALS = ["SIBAL fabric", "PMMA", "Nomex", "Silicone", "Cotton jersey"];
@@ -99,11 +99,11 @@ function ScenarioCard({ title, side }: { title: string; side: Side }) {
       <ul className={styles.checks}>
         {side.checks.map((c) => <li key={c.dim}><span data-status={c.status} aria-label={STATUS_LABEL[c.status]}>{MARK[c.status]}</span><b>{c.dim}</b><span>{c.text}</span></li>)}
       </ul>
-      <p className={styles.small}>Closest NASA tests:</p>
+      <p className={styles.small}>Closest NASA tests (similarity is a MicroFire heuristic, not a probability):</p>
       <ul className={styles.nb}>
         {side.neighbors.slice(0, 3).map((n) => (
           <li key={n.row.id}>
-            <Link className="link" href={`/experiments/${n.row.id}`}>{n.row.test}</Link> · {n.row.material} · {n.row.o2} % O₂, {n.row.flow} cm/s · {n.row.y ? "flame established" : "no flame established"} <small>(PDF p. {n.row.cite.pdf_page})</small>
+            <Link className="link" href={`/experiments/${n.row.id}`}>{n.row.test}</Link> · {n.row.material} · {n.row.o2} % O₂, {n.row.flow} cm/s · {n.row.y ? "flame established" : "no flame established"} <small>(similarity {pc(similarity(side.q, n))}, PDF p. {n.row.cite.pdf_page})</small>
           </li>
         ))}
       </ul>
@@ -139,6 +139,46 @@ function CoverageMap({ snap, base, mod }: { snap: Snapshot; base: Query; mod: Qu
         <span>● start · ○ modified · small rings: NASA tests</span>
       </p>
       {(!inView(base) || !inView(mod)) && <p className={styles.small}>A marker is missing when its oxygen or airflow lies off this map, which is itself outside every NASA test in the training set.</p>}
+    </>
+  );
+}
+
+function ResponseCurve({ snap, base, mod }: { snap: Snapshot; base: Query; mod: Query }) {
+  const pts = useMemo(() => sweepO2(snap, base), [snap, base]);
+  const W = 520, H = 250, L = 44, B = 34, T = 10, R = 10, pw = W - L - R, ph = H - T - B;
+  const x = (o2: number) => L + ((o2 - 14) / 17) * pw, y = (p: number) => T + ph - p * ph;
+  const runs: (typeof pts)[] = [];
+  for (const pt of pts) { if (pt.p == null) { runs.push([]); continue; } if (!runs.length) runs.push([]); runs[runs.length - 1].push(pt); }
+  const live = runs.filter((r) => r.length > 0);
+  const step = pw / 34;
+  return (
+    <>
+      <svg className={styles.curve} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Estimate as oxygen alone changes for ${base.material}; drawn only where the domain gate allows a number`}>
+        <defs><pattern id="wi-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line className={styles.hatch} x1="0" y1="0" x2="0" y2="6" /></pattern></defs>
+        {[0, 0.25, 0.5, 0.75, 1].map((t) => <g key={t}><line className={styles.grid} x1={L} x2={W - R} y1={y(t)} y2={y(t)} /><text x={L - 6} y={y(t) + 4} textAnchor="end">{Math.round(t * 100)}</text></g>)}
+        {pts.filter((p) => p.p == null).map((p) => <rect key={p.o2} className={styles.blk} x={x(p.o2) - step / 2} y={T} width={step} height={ph} />)}
+        {live.map((r, i) => {
+          const up = r.map((p) => `${x(p.o2)},${y(p.hi!)}`), dn = [...r].reverse().map((p) => `${x(p.o2)},${y(p.lo!)}`);
+          return (
+            <g key={i}>
+              {r.length > 1 && <polygon className={styles.band} points={[...up, ...dn].join(" ")} />}
+              {r.length > 1 && <polyline className={styles.ln} points={r.map((p) => `${x(p.o2)},${y(p.p!)}`).join(" ")} />}
+              {r.map((p) => <circle key={p.o2} className={styles.pt} cx={x(p.o2)} cy={y(p.p!)} r={2.5} />)}
+            </g>
+          );
+        })}
+        {live.length > 0 && pts[0].p == null && <text className={styles.nolabel} x={x(14) + 4} y={T + 14}>no estimate</text>}
+        {live.length > 0 && pts[pts.length - 1].p == null && <text className={styles.nolabel} x={W - R - 4} y={T + 14} textAnchor="end">no estimate: outside tested conditions</text>}
+        {base.o2 >= 14 && base.o2 <= 31 && <line className={styles.vl} x1={x(base.o2)} x2={x(base.o2)} y1={T} y2={T + ph} />}
+        {mod.o2 !== base.o2 && mod.o2 >= 14 && mod.o2 <= 31 && <line className={styles.vlm} x1={x(mod.o2)} x2={x(mod.o2)} y1={T} y2={T + ph} />}
+        {[14, 18, 22, 26, 30].map((t) => <text key={t} x={x(t)} y={H - 18} textAnchor="middle">{t}</text>)}
+        <text x={L + pw / 2} y={H - 3} textAnchor="middle">Oxygen (% O₂)</text>
+        <text x={10} y={T + ph / 2} textAnchor="middle" transform={`rotate(-90 10 ${T + ph / 2})`}>Flame established (%)</text>
+      </svg>
+      <p className={styles.small}>
+        {live.length === 0 ? "No oxygen value is inside the tested range for these conditions, so there is no curve." : "The curve and its envelope are drawn only where the domain gate allows a number. Hatched columns are oxygen values with no estimate."}
+        {" "}Dashed lines mark the starting scenario{mod.o2 !== base.o2 ? " and the modified oxygen" : ""}. This is how the model responds to oxygen with everything else held fixed. It describes the model, not a physical law, and the model uses only oxygen and material.
+      </p>
     </>
   );
 }
@@ -220,7 +260,7 @@ export function WhatIfLab({ snap, pressure }: { snap: Snapshot; pressure: { n: n
                       {l.kind === "gap" && "Not estimated"}
                     </td>
                     <td>
-                      {l.kind === "modelled" && `${l.result.modified.env.support} tests nearby`}
+                      {l.kind === "modelled" && <>{l.result.modified.env.support} tests nearby{l.caveat && <small className={styles.caveat}>{l.caveat}</small>}</>}
                       {l.kind === "records" && l.why}
                       {l.kind === "gap" && <>{l.why} {l.evidence.map((e) => <small key={e.source_id}>({e.source_id}, PDF p. {e.pdf_page}) </small>)}</>}
                     </td>
@@ -230,6 +270,12 @@ export function WhatIfLab({ snap, pressure }: { snap: Snapshot; pressure: { n: n
               </tbody>
             </table>
           </div>
+        </section>
+
+        <section>
+          <h2 className={styles.h2}>How the estimate responds to oxygen alone</h2>
+          <p className={styles.sub}>Partial dependence for {base.material}: oxygen sweeps across the plot while material, airflow, pressure and gravity stay at the starting scenario. The curve stops where the NASA tests stop.</p>
+          <ResponseCurve snap={snap} base={base} mod={mod} />
         </section>
 
         <section>

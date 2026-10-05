@@ -112,3 +112,12 @@ test("headlines never contradict the lines under them", () => {
   const dz = buildDossier(data, q(), {});
   if (dz.untested.kind === "nearby" || dz.untested.kind === "here") assert.doesNotMatch(dz.sections[2].headline, /^No gap flagged/);
 });
+
+test("the material-swap caveat travels into the dossier text and Markdown", () => {
+  const dz = buildDossier(data, q(), {});
+  const line = dz.sections[1].lines.find((l) => l.startsWith("Material:"));
+  assert.ok(line, "a material row exists");
+  assert.match(line!, /not a like-for-like swap/);
+  assert.match(dz.markdown, /not a like-for-like swap/);
+  assert.match(dz.sections[0].lines.join(" "), /similarity \d+ %, a MicroFire heuristic/);
+});

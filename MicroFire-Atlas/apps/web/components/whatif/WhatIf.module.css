@@ -81,3 +81,16 @@
 .sw[data-tier="empty"] { background: color-mix(in srgb, var(--faint) 25%, transparent); }
 .links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin-top: 0.75rem; }
 .links a { text-decoration: underline; }
+
+.curve { width: 100%; height: auto; margin-top: 0.75rem; max-width: 46rem; }
+.curve .blk { fill: url(#wi-hatch); }
+.curve .hatch { stroke: color-mix(in srgb, var(--faint) 55%, transparent); stroke-width: 1; }
+.curve .nolabel { font-style: italic; }
+.curve .band { fill: color-mix(in srgb, var(--signal) 24%, transparent); }
+.curve .ln { fill: none; stroke: var(--signal); stroke-width: 2.25; }
+.curve .pt { fill: var(--signal); }
+.curve .vl { stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.curve .vlm { stroke: var(--flame); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.curve .grid { stroke: var(--rule); stroke-width: 1; }
+.curve text { fill: var(--muted); font-size: 11px; }
+.caveat { display: block; margin-top: 0.25rem; color: var(--faint); font-size: 0.8rem; }
