@@ -1,33 +1,27 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { buildDataset } from "@/lib/model-lab";
 import { Cite } from "@/components/Cite";
 import { OutcomeMark } from "@/components/Outcome";
-import { evidenceRecords, experiments, findings, OUTCOME_STYLE, saffireRuns, sources } from "@/lib/data";
+import { evidenceRecords, experiments, findings, luciRuns, OUTCOME_STYLE, saffireRuns, sources } from "@/lib/data";
 import { FAMILIES, ladder, TOLERANCE } from "@/lib/ontology";
 import { FRONTIER } from "@/lib/frontier";
 import { OBSERVED_MIN } from "@/lib/gaps";
 import { LABELS, MATERIAL_CLASS, PRESSURE_SCALE_KPA, rank, SAME_CLASS_CREDIT, scalesFrom, WEIGHTS } from "@/lib/relevance";
 import { ladderRobustness, RANGES, rankRobustness, SAMPLES } from "@/lib/robustness";
-import { runEval, type EvalQuestion } from "@/lib/eval";
+import { runEval, runFindingEval, runFindingEvalV2, type EvalQuestion, type FindingGoldCase } from "@/lib/eval";
+import { TRACEABILITY } from "@/lib/challenge";
 import { FoolTheChecker } from "@/components/method/FoolTheChecker";
 import { WeightPlayground } from "@/components/method/WeightPlayground";
 import { QuestBoard } from "@/components/quest/QuestBoard";
 import mstyles from "@/components/method/Method.module.css";
-import modelJson from "@/data/model.json";
 import evalSet from "@/eval/microfire-eval-v1.json";
 import live from "@/eval/results-live.json";
+import findingLabels from "@/eval/finding-labels-v1.json";
+import findingGold from "@/eval/finding-gold-v2.json";
+import { FINDING_VARIATIONS } from "@/lib/finding-relevance";
 
 export const metadata: Metadata = { title: "Methodology" };
-
-type ModelReport = { n_rows: number; n_sustained: number; n_not_sustained: number; n_series: number; cv: string; models: Record<string, { accuracy: number; balanced_accuracy: number; brier: number; log_loss: number }>; coefficients_standardised: Record<string, number>; caveats: string[] };
-const MODEL_REPORT = (modelJson as unknown as { report: ModelReport }).report;
-const MODEL_NAMES: Record<string, string> = {
-  baseline_series_prior: "No-skill baseline",
-  logistic_oxygen_only: "Oxygen only",
-  logistic_oxygen_flow_direction_SHIPPED: "Oxygen + flow + direction (shipped)",
-  logistic_all_features_with_material: "All features incl. material",
-  logistic_no_material_leave_one_material_out: "Hide a whole material (stress test)",
-};
 
 const OUTCOME_RULES: [string, string][] = [
   ["quenched_low_flow", "NASA notes the flame quenched or went out as the crew turned the flow down."],
@@ -49,6 +43,8 @@ function Section({ id, title, children }: { id: string; title: string; children:
   );
 }
 
+const MODEL_ROWS = buildDataset(experiments);
+
 export default function MethodologyPage() {
   const sc = scalesFrom(experiments);
   const moon = FRONTIER.find((f) => f.id === "moon-base")!;
@@ -57,7 +53,9 @@ export default function MethodologyPage() {
   const demoRank = rank(experiments, demo).slice(0, 5);
   const demoRob = rankRobustness(experiments, demo);
   const moonRob = ladderRobustness(evidenceRecords, findings, moon.q);
-  const ev = runEval(evalSet.questions as EvalQuestion[], experiments, findings, saffireRuns);
+  const ev = runEval(evalSet.questions as EvalQuestion[], experiments, findings, saffireRuns, luciRuns);
+  const fev = runFindingEval(findingLabels.cases, experiments, findings, saffireRuns, luciRuns);
+  const fg = runFindingEvalV2(findingGold.cases as FindingGoldCase[], experiments, findings, saffireRuns, luciRuns);
   const pc = (x: number | null) => (x == null ? "—" : `${Math.round(x * 1000) / 10} %`);
   const lm = live.metrics, lr = live.rescored;
   return (
@@ -65,14 +63,18 @@ export default function MethodologyPage() {
       <nav aria-label="On this page" className="text-sm lg:sticky lg:top-6 lg:self-start">
         <ul className="space-y-2 text-muted">
           {[
+            ["challenge", "How MicroFire answers the challenge"],
             ["data", "Where the data comes from"],
             ["ladder", "The Evidence Ladder"],
             ["labels", "Observed, series, derived"],
             ["outcomes", "Outcome codes"],
             ["relevance", "Mission Relevance"],
+            ["finding-relevance", "How findings are ranked"],
             ["robustness", "Ranking robustness"],
             ["confidence", "Evidence Confidence"],
             ["gaps", "Evidence gaps"],
+            ["research-planning-method", "Research opportunities"],
+            ["model", "Evidence-bounded ML"],
             ["ai", "Where AI is used"],
             ["evaluate", "Evaluate MicroFire AI"],
             ["limits", "Limitations"],
@@ -106,6 +108,22 @@ export default function MethodologyPage() {
           <QuestBoard page="methodology" crew="mei" />
         </header>
 
+        <Section id="challenge" title="How MicroFire answers the challenge">
+          <p>
+            The challenge asks for an interactive, AI-powered dashboard that summarizes, ranks and interprets microgravity combustion
+            findings to deliver fire-safety insights for human space exploration. Each word maps to one place in the product.{" "}
+            <Link href="/challenge" className="link">See all of it answer one mission question</Link>.
+          </p>
+          <ul className="space-y-2">
+            {TRACEABILITY.map((t) => (
+              <li key={t.verb} className="grid gap-1 sm:grid-cols-[11rem_minmax(0,1fr)]">
+                <strong>✓ {t.verb}</strong>
+                <span className="text-muted">{t.what}. <Link href={t.href} className="link">{t.where}</Link></span>
+              </li>
+            ))}
+          </ul>
+        </Section>
+
         <Section id="data" title="Where the data comes from">
           <p>
             The {experiments.length} test records are typed by hand from three tables in NASA&apos;s BASS-II Summary Report:
@@ -116,6 +134,11 @@ export default function MethodologyPage() {
             The transcriptions live in <code>data/curated/*.csv</code> with NASA&apos;s original units and wording. A Python
             build step converts units (cm to mm, µm to mm, atm to kPa), codes outcomes and writes the JSON this site reads.
             Unit tests check the conversions and spot-check values against the PDF.
+          </p>
+          <p>
+            The {luciRuns.length} LUCI burns, in lunar gravity simulated on a spinning New Shepard rocket, come from NASA&apos;s 2025 LUCI
+            results. Every value is stored with the exact sentence and PDF page it came from, and the build fails if that sentence is not on
+            that page or does not contain the value.
           </p>
           <p>
             The {saffireRuns.length} Saffire runs come from the test-matrix and results tables of three NASA Saffire reports.
@@ -145,7 +168,7 @@ export default function MethodologyPage() {
             <dt className="font-semibold">Direct</dt>
             <dd className="text-muted">Same fuel phase, same material and same gravity, with every condition you set within tolerance.</dd>
             <dt className="font-semibold">Analogous</dt>
-            <dd className="text-muted">Solid-fuel tests that differ in named ways, listed on each card. Fewer differences rank higher.</dd>
+            <dd className="text-muted">Solid-fuel tests that differ in named ways, listed on each card. Fewer differences rank higher; a gravity difference counts double, because it is a different physical regime.</dd>
             <dt className="font-semibold">Mechanistic</dt>
             <dd className="text-muted">Other regimes, such as droplets or gas flames. They explain how flames behave, never how a material burns.</dd>
             <dt className="font-semibold">Gap</dt>
@@ -177,7 +200,7 @@ export default function MethodologyPage() {
                       <td className="py-2 pr-4 text-muted">{f.fuel}</td>
                       <td className="py-2 pr-4 text-muted">{f.platform}</td>
                       <td className="py-2">
-                        {f.phase !== "solid" ? "Mechanistic" : f.id === "bass2" || f.id === "saffire" ? "Direct (test rows)" : "Analogous (findings)"}
+                        {f.phase !== "solid" ? "Mechanistic" : f.id === "fm2" ? "None yet (planned)" : f.id === "bass2" || f.id === "saffire" || f.id === "luci" ? "Direct (test rows)" : "Analogous (findings)"}
                       </td>
                     </tr>
                   ))}
@@ -361,6 +384,65 @@ coverage  = Σ wᵢ (reported by the test) / Σ wᵢ`}
           </p>
         </Section>
 
+        <Section id="finding-relevance" title="How findings are ranked">
+          <p>Finding Relevance ranks verified NASA statements for a question; experiment relevance compares individual test conditions. Both are MicroFire heuristics. NASA did not create, validate or endorse this ranking.</p>
+          <p>Requested topics come from the question selector plus explicit triggers: airflow at ≤5 cm/s; oxygen above 21 % or below 19 %; quench below 19 %; pressure below 95 kPa; partial gravity when lunar or Martian gravity is selected. These thresholds organize retrieval; they are not combustion limits.</p>
+          <p><code>Relevance = 100 × (5 × topic recall + 3 × material match + 2 × gravity match) / requested-feature weights.</code> Topic recall is the fraction of requested topics found in the curated tags. Exact material and gravity matches are 1, otherwise 0. Unrequested features leave the denominator; requested features with unknown metadata remain in it and contribute zero. A finding must match a topic or material to enter the list.</p>
+          <p>Evidence type constrains sorting first: direct, analogous, mechanistic, context; only then relevance descending, with finding ID as the stable tie-break. Direct requires an observed finding with explicit row links and all linked rows matching the selected conditions under the existing Evidence Ladder tolerances, without platform caveats. Publication-level solid-fuel findings remain analogous. Liquid/gas evidence stays mechanistic; planned FM² work and background remain context. One exception (ranking v1.1): when no material is named, several topics are requested and no observation addresses all of them, findings that address every requested topic sort first, still in evidence-type order and still labelled. A mission-context question such as “which exploration atmospheres has NASA studied?” then shows the atmosphere studies first. Whenever an observation addresses the whole question, observations stay first.</p>
+          <p>Material comes from explicit row links, material-specific sources, or literal material names in the quote. Gravity comes from linked records or a known experiment family. LUCI always retains its simulated-lunar-gravity limitation. These associations do not establish matched pressure, oxygen, geometry or flow history.</p>
+          <p>Only explicit curated record IDs count as supporting records; a shared family or publication never creates row links. Support count is not a replication count. Coverage is the average fraction of requested condition fields reported in linked rows, not the fraction matching. Publication-level coverage is unknown. Only curated abstract labels establish source role; an unspecified PDF section stays unclassified.</p>
+          <p>For example, weak-flow PMMA questions retrieve low-airflow findings. A lunar question also retrieves partial-gravity findings, with the simulated-platform limitation. A droplet result cannot outrank relevant solid-fuel evidence through topic count alone. A high relevance number can coexist with an analogous rung and unknown coverage.</p>
+          <p>Finding sensitivity uses 200 repeatable variations (seed 19), independently multiplying each weight by a uniform factor from 0.75 to 1.25. Evidence-type ordering stays fixed. Top-3 frequency is reported separately from relevance; it measures sensitivity to project weights, not measurement uncertainty or scientific confidence. Existing experiment sensitivity still uses 1,000 variations.</p>
+          <p>Fire-Safety Insight uses a small set of source-bound interpretation templates. NASA observations retain their exact quotes; MicroFire interpretations are labelled and preserve mismatches. Without a reviewed template, the panel abstains. This is neither mission certification nor a crew procedure.</p>
+        </Section>
+
+        <Section id="research-planning-method" title="How MicroFire identifies research opportunities">
+          <p>Research planning supports spacecraft-fire researchers and early-stage mission evidence analysts before formal engineering assessment. It uses the current curated atlas; it does not determine whether a mission or material is safe.</p>
+          <h3 className="text-lg font-semibold">Mission Scenario Registry</h3>
+          <p>The finite registry reuses eight Mission Analyst presets and three additional Research Frontier questions. The duplicate Moon-base frontier and Challenge questions reuse existing presets. No Cartesian product is generated. Each question retains its origin, rationale, category and source context. Unspecified conditions remain unknown. Questions with identical normalized wording and conditions count once even if repeated under different IDs; distinct questions at identical conditions share one gap.</p>
+          <h3 className="text-lg font-semibold">Gap normalization, deduplication and shared gaps</h3>
+          <p>Normalize material, gravity, oxygen, pressure and airflow into a fixed key order; reject unsupported dimensions, invalid numbers and malformed values. The full canonical condition object determines the stable gap ID. Exact values define identity: 34 and 34.1 % remain different gaps even though they can be close under coverage tolerances. Missing pressure never equals a specified pressure.</p>
+          <p>Run the existing Evidence Ladder for each scenario against completed BASS, Saffire and LUCI records. A direct condition match prevents a coverage-gap entry; all platform caveats still apply. Findings and future FM² plans never become rows. Uncovered scenarios sharing exact conditions merge, retaining distinct scenario links and categories. The missing dimensions and next-experiment text come from the Ladder. A joint-condition gap remains even if each condition was tested separately.</p>
+          <p>Analogous support counts nonmatching rows with the requested material and at most two differing condition dimensions. It is a transparent proximity filter, not evidence strength. Links show the five closest rows even if more distant. Cross-family breadth uses those links and five selected non-context findings; mechanistic support remains a separate count of non-context liquid/gas findings.</p>
+          <h3 className="text-lg font-semibold">Candidate generation and Evidence Gain</h3>
+          <p>Each unresolved condition combination becomes a hypothetical research question. Only exact identical candidate specifications merge; no extra condition is borrowed from an analogue. Candidate objects have no measured outcome, NASA citation or experimental record family, and never enter the evidence corpus.</p>
+          <p>For every candidate–gap pair, reuse the Evidence Ladder&apos;s condition comparison: exact material/gravity, oxygen ±1.5 percentage points, pressure ±10 kPa, airflow ±max(1 cm/s, 50 % of requested flow). Missing requested candidate values fail. All requested dimensions matching means potential direct-condition coverage. Gravity or material mismatch excludes even partial coverage. Partial overlap requires a matched missing dimension (or two matched dimensions for a joint-combination gap); it remains a research lead, never counted as direct coverage or demonstrated gap reduction.</p>
+          <pre className="overflow-x-auto text-sm bg-panel p-4 rounded-lg">{`for each unique curated question:
+  classify current completed records with Evidence Ladder
+  if no direct condition match: group gap by EXACT conditions
+for each unique gap condition object:
+  create hypothetical candidate; keep unknown fields absent
+  compare candidate conditions with every registered gap
+  count matching gaps and UNION their distinct question IDs
+potential direct questions = current direct questions + new unique matches`}</pre>
+          <p>“Evidence Gain” means potential coverage if a valid completed record existed. It is not expected scientific information gain, entropy, Bayesian design, active learning or a prediction of experimental outcome. A broad question can be covered by a more specific candidate, but the reverse fails where required values are missing.</p>
+          <h3 className="text-lg font-semibold">Planned NASA overlap and sorting</h3>
+          <p>Verified FM² plan findings identify lunar-gravity and PMMA/SIBAL material overlap. This deliberately conservative mapping does not infer full atmosphere, flow or geometry compatibility. Plans count only as planned overlap and never increase observed coverage.</p>
+          <p>Board sorts expose separate dimensions: distinct questions, direct count ascending (then analogous support ascending), distinct categories, analogous support, planned overlap, or maximum candidate gap coverage. Descending sorts break ties by stable gap ID. Candidate order uses directly addressable gaps, then affected questions, then stable ID. There is no composite or official NASA priority score.</p>
+          <h3 className="text-lg font-semibold">Limits and non-goals</h3>
+          <p>Geometry, scale, duration, ignition method, confinement, orientation, hardware and sample history are not jointly represented. LUCI&apos;s lunar gravity is simulated. Even a direct match only covers represented dimensions under project tolerances. Counts depend on a small curated question set and do not measure researcher demand; repeated or selectively added scenarios can bias apparent breadth.</p>
+          <p>The planner does not estimate information entropy, outcome value, experiment cost, hardware feasibility, crew risk, TRL, schedule, program/funding/political priority, safety impact or probability of experiment success. NASA has not validated or endorsed these planning heuristics. Human usability impact study pending; no performance-improvement claim is made.</p>
+          <p><Link href="/gaps#research-planning" className="link">Open the research landscape</Link>. Versioned JSON exports retain corpus identity, assumptions and hypothetical/planned status. Source updates require human review before the evidence layer changes.</p>
+        </Section>
+
+        <Section id="model" title="Evidence-bounded machine learning">
+          <p>
+            The <Link href="/model-lab" className="link">AI Model Lab</Link> trains a regularised logistic regression on {MODEL_ROWS.rows.length} BASS-II tests
+            (SIBAL fabric and PMMA; reused samples, suspect oxygen readings and the all-negative Nomex family excluded). It predicts one thing: whether a
+            flame was established after the ignition attempt. Final outcomes are not modelled, because most BASS-II flames were extinguished on purpose
+            by turning the fan down. Saffire and LUCI are not pooled: different scale, different gravity regime.
+          </p>
+          <p>
+            Validation leaves one crew session out at a time, with bootstrap intervals, a repeated stratified check and a leave-one-material-out stress
+            test. Five models are benchmarked against a baseline; the simplest one that beats it on proper scores is deployed.
+          </p>
+          <p>
+            Every query passes a domain gate first: gravity must be microgravity, the material must be in the training data, pressure must be ISS-cabin
+            pressure, oxygen and airflow must sit inside each material&apos;s tested range, and at least three similar tests must lie nearby. Otherwise the
+            answer is “out of domain” or “insufficient evidence”, and no number is shown. Reproduce it with <code>npm run model-lab</code>.
+          </p>
+        </Section>
+
         <Section id="ai" title="Where AI is used">
           <p>
             Ranking, the Evidence Ladder, comparison and the gap map are deterministic code. The Ask page uses a language model
@@ -369,48 +451,17 @@ coverage  = Σ wᵢ (reported by the test) / Σ wᵢ`}
             flags unit mix-ups, microgravity results described as lunar, causal or safety wording, and predictions. Without the
             model, every other page works unchanged.
           </p>
-        </Section>
-
-        <Section id="model" title="Outcome model">
-          <p>
-            The <Link href="/predict" className="link">Outcome Model</Link> estimates the chance that a microgravity flame is sustained, given oxygen,
-            airflow speed and flow direction. It is a regularised logistic regression trained offline by <code>pipelines/train_models.py</code> on{" "}
-            {MODEL_REPORT.n_rows} labelled tests ({MODEL_REPORT.n_sustained} sustained, {MODEL_REPORT.n_not_sustained} went out or never ignited) in{" "}
-            {MODEL_REPORT.n_series} test series. Rows with no stated outcome, and rows where the crew shut the flow off themselves, are excluded.
-            Nothing is filled in: a value the source does not state stays empty.
-          </p>
-          <p>
-            Scores come from {MODEL_REPORT.cv} cross-validation: a whole flight or material group is hidden, then predicted, so near-duplicate tests cannot
-            leak between training and testing. Lower Brier and log loss are better.
-          </p>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="text-muted"><tr><th>Model</th><th>Accuracy</th><th>Balanced acc.</th><th>Brier</th><th>Log loss</th></tr></thead>
-              <tbody>
-                {Object.entries(MODEL_REPORT.models).map(([k, v]) => (
-                  <tr key={k} className="border-t border-rule"><td>{MODEL_NAMES[k] ?? k}</td><td>{v.accuracy}</td><td>{v.balanced_accuracy}</td><td>{v.brier}</td><td>{v.log_loss}</td></tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p>
-            Material and thickness did not improve the cross-validated scores, so the shipped model leaves them out; materials are compared in the observed
-            ranking instead. Each prediction carries a 90 % bootstrap interval (200 refits) and a warning when the inputs are outside the tested range. The
-            feature set was chosen with the same cross-validation it is scored on, so the scores are slightly optimistic, and with this few rows a few points
-            between models is noise. Spread rate has only 4 measured values and is reported, not modelled.
-          </p>
-          <p>
-            On the Ask page the estimate enters the evidence package as one extra item, <code>M:outcome-model</code>, placed after all NASA evidence. It is only
-            added when the question gives both oxygen and airflow, never for lunar or Mars gravity, and the claim checker treats it like any other cited item.
-          </p>
+          <p>The Verified Example on Ask is a saved synthesis rechecked against the current evidence and checker at build/test time; it makes no live request. The checker detects defined citation, numeric, unit and wording errors. It cannot prove full semantic entailment or real-world transfer.</p>
+          <p>Flame Vision is classical OpenCV segmentation, with no trained fire-prediction model. Not yet validated against hand-annotated real frames. Pixel measurements describe the image, not temperature or a calibrated physical flame size.</p>
         </Section>
 
         <Section id="evaluate" title="Evaluate MicroFire AI">
           <p>
-            MicroFire-Eval v1 is {ev.questions} questions written before the measurements and then frozen: direct lookups, numbers,
+            MicroFire-Eval v{evalSet.version} is {ev.questions} questions written before the measurements and then frozen: direct lookups, numbers,
             comparisons, synthesis across reports, mission scenarios, deliberately unanswerable questions and misleading premises.
             Gold answers are NASA record IDs taken from the data, not from the system. When the system failed a question, the
-            system was changed, never the question.{" "}
+            system was changed, never the question. When the evidence itself changed (two LUCI lunar-gravity burns were added), the
+            expectations that depend on it were updated, and each change is listed with its reason in the changelog.{" "}
             <a href="https://github.com/A-K-M-Asifuzzaman/MicroFire-Atlas/blob/main/apps/web/eval/microfire-eval-v1.json" className="link">Read every question</a>
           </p>
           <h3 className="text-lg font-semibold">Play: fool the checker</h3>
@@ -438,11 +489,51 @@ coverage  = Σ wᵢ (reported by the test) / Σ wᵢ`}
             The broken claims cover invented citations, wrong numbers, swapped units, microgravity results told as lunar, causal
             wording, predictions and uncited facts, ten of each. Still failing: {ev.failures.map((f) => `“${f.q}”`).join(" and ")}.
           </p>
-          <h3 className="text-lg font-semibold">With the model: one paid run, {lm.ranAt.slice(0, 10)}</h3>
+          <h3 className="text-lg font-semibold">Finding-ranking extension — provisional source-reading labels</h3>
+          <p>Seven existing benchmark questions have finding-ID labels read from verified quotes, plus six supplemental adversarial questions. These are engineering labels awaiting independent scientific adjudication, not LLM-generated reference answers. They measure the finding ranker using the existing question parser; Mission Analyst uses explicit condition and topic controls.</p>
+          <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div><dt>Gold finding Recall@3 / Recall@5</dt><dd>{pc(fev.recall3)} / {pc(fev.recall5)}</dd></div>
+            <div><dt>Mean reciprocal rank</dt><dd>{fev.mrr?.toFixed(3) ?? "—"}</dd></div>
+            <div><dt>Wrong-regime ordering violations</dt><dd>{fev.wrongRegimePromotions} / {fev.cases} cases</dd></div>
+            <div><dt>Source-role checks</dt><dd>{fev.sourceRoles.correct} / {fev.sourceRoles.n}</dd></div>
+            <div><dt>Adversarial finding-gap handling</dt><dd>{fev.abstention.correct} / {fev.abstention.n}</dd></div>
+            <div><dt>Template-rule unsupported implication rate</dt><dd>{pc(fev.unsupportedMissionImplicationRate)} across {fev.implications} outputs</dd></div>
+            <div><dt>Injected unsafe/directive/probability claims rejected</dt><dd>{fev.adversarialImplications.rejected} / {fev.adversarialImplications.n}</dd></div>
+          </dl>
+          <p className="text-sm text-muted">Wrong-regime checks detect mechanistic findings promoted ahead of relevant solid evidence. Implication checks enforce source-bound templates and reject injected prohibited statements; a zero rate is not an independent semantic or scientific accuracy measurement. Abstention requires a flagged request limitation and no direct finding. Source-role checks include correctly leaving PDF sections unknown. Labels and per-case output are in <code>eval/finding-labels-v1.json</code> and <code>node lib/eval-run.ts</code>.</p>
+          <h3 className="text-lg font-semibold">Finding gold set v2: {fg.cases} hand-labelled cases</h3>
+          <p>
+            Each case names a scenario and topics directly, so this measures the finding ranker itself, not the question parser.
+            Labels were assigned by reading each finding&apos;s quote, kind and topics before running the ranker: a primary answer,
+            other acceptable findings, and findings that must never rank above the primary. {fg.unanswerable} cases are
+            questions NASA evidence cannot answer (safest material, probabilities, proof, predictions).
+          </p>
+          <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div><dt>Recall@1 / @3 / @5 (a primary answer in the top k)</dt><dd>{pc(fg.recall1)} / {pc(fg.recall3)} / {pc(fg.recall5)} of {fg.answerable}</dd></div>
+            <div><dt>Recall@3 counting acceptable findings</dt><dd>{pc(fg.relaxedRecall3)}</dd></div>
+            <div><dt>Mean reciprocal rank</dt><dd>{fg.mrr.toFixed(3)}</dd></div>
+            <div><dt>Forbidden findings ranked above the answer</dt><dd>{fg.forbiddenPromotions} / {fg.answerable}</dd></div>
+            <div><dt>Mechanism-only evidence above a solid-fuel answer</dt><dd>{fg.mechanisticOverSolid.count} / {fg.mechanisticOverSolid.n}</dd></div>
+            <div><dt>Context or planned work above an observation answer</dt><dd>{fg.contextOverObservation.count} / {fg.contextOverObservation.n}</dd></div>
+            <div><dt>Unanswerable questions flagged, with no insight attached</dt><dd>{fg.abstention.correct} / {fg.abstention.n}</dd></div>
+            <div><dt>Unsupported implications</dt><dd>{fg.unsupportedImplications} of {fg.implications}</dd></div>
+            <div><dt>Evidence-rung agreement with the label</dt><dd>{pc(fg.rungAgreement)}</dd></div>
+            <div><dt>Mean top-3 stability of the answer ({FINDING_VARIATIONS} weight variations)</dt><dd>{pc(fg.meanTop3Stability)}</dd></div>
+          </dl>
+          <p className="text-sm text-muted">
+            Still missed in the top 3: {fg.misses.map((m) => `${m.id} (rank ${m.bestPrimaryRank ?? "not ranked"})`).join(", ")}.
+            The first run of this set found that mission-context questions (which exploration atmospheres NASA studied, what FM²
+            will use) buried the context findings that answer them below observations that matched only one topic. Ranking
+            v1.1 lets findings that address every requested topic lead only when no observation does and no material is named;
+            observations otherwise stay first. That lifted Recall@3 from 71 % to {pc(fg.recall3)} with every guardrail above at
+            zero. Labels are engineering labels awaiting independent scientific adjudication. File:{" "}
+            <code>eval/finding-gold-v2.json</code>.
+          </p>
+          <h3 className="text-lg font-semibold">Historical live-model run</h3>
           <p>
             All {lm.questions} questions were sent to the live Ask pipeline with {lm.model}. {lm.questions - lm.aiAnswers} matched no
             evidence, so the model was never called. The {lm.claims} claims in the other answers were checked by
-            the same verifier users see. Re-scored: the saved answers re-checked after we fixed verifier false alarms (chemical
+            the verifier at that time. These are saved historical metrics, not a new run or a rescore of this hardening pass. Re-scored: the saved answers re-checked after we fixed verifier false alarms (chemical
             formulas read as numbers, the question&apos;s own numbers, arithmetic in derived claims, negated safety words), with no
             new model calls.
           </p>
@@ -476,14 +567,14 @@ coverage  = Σ wᵢ (reported by the test) / Σ wᵢ`}
           <ul className="list-disc pl-5 space-y-2">
             <li>
               {experiments.length} BASS tests (thin samples in a small duct, near 1 atm) and {saffireRuns.length} Saffire runs
-              (large samples, some at reduced pressure, 54 to 73 kPa). All {evidenceRecords.length} test rows ran in microgravity: no test row
-              comes from Moon or Mars gravity.
+              (large samples, some at reduced pressure, 54 to 73 kPa) ran in microgravity. Two LUCI burns ran in lunar gravity simulated on a
+              spinning rocket, in normal air. No test row comes from the Moon itself or from Martian gravity.
             </li>
             <li>Many flows ended at fan settings with no recorded velocity, so exact quench and blowoff speeds are often unknown.</li>
             <li>Outcome codes are our reading of short crew and ground notes.</li>
             <li>Spread rates appear in NASA figures, not tables, and are not transcribed.</li>
             <li>Flame Vision measures published NASA media in pixels. Without calibration, it cannot report physical flame size or speed.</li>
-            <li>The Outcome Model is a statistical estimate from about {MODEL_REPORT.n_rows} microgravity tests, not a NASA safety rating, and it is not valid for Moon or Mars gravity or for conditions far outside the tested range. Nothing else here is a fire-risk prediction.</li>
+            <li>Nothing here is a fire-risk prediction or a NASA safety rating.</li>
           </ul>
         </Section>
       </div>

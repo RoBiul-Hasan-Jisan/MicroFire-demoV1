@@ -5,12 +5,17 @@
 import type { Finding, Source } from "./types";
 import { FAMILIES, ladder, SOURCE_FAMILY, type EvidenceRecord } from "./ontology.ts";
 import type { FrontierQuestion } from "./frontier.ts";
+import type { ResearchPlan } from "./research-planning";
 
-export type NodeType = "Family" | "Source" | "Material" | "Record" | "Finding" | "Scenario" | "Gap";
+type EvidenceNodeType = "Family" | "Source" | "Material" | "Record" | "Finding" | "Scenario" | "Gap";
+export type NodeType = EvidenceNodeType | "MissionScenario" | "EvidenceGap" | "CandidateExperiment" | "PlannedExperiment";
 export type EdgeType =
   | "RECORD_IN_FAMILY" | "RECORD_USES_MATERIAL" | "SOURCE_DOCUMENTS_RECORD" | "FINDING_SUPPORTED_BY_SOURCE"
-  | "FINDING_ABOUT_RECORD" | "SOURCE_IN_FAMILY" | "SCENARIO_DIRECT" | "SCENARIO_ANALOGOUS" | "SCENARIO_MECHANISTIC" | "SCENARIO_MISSING";
-export type GraphNode = { id: string; type: NodeType; label: string; data?: Record<string, unknown> };
+  | "FINDING_ABOUT_RECORD" | "SOURCE_IN_FAMILY" | "SCENARIO_DIRECT" | "SCENARIO_ANALOGOUS" | "SCENARIO_MECHANISTIC" | "SCENARIO_MISSING"
+  | "HAS_GAP" | "INFORMED_BY" | "ADDRESSES" | "COULD_INFORM" | "MAY_ADDRESS" | "PLAN_SUPPORTED_BY_FINDING";
+export type GraphNode = { id: string; type: EvidenceNodeType | "MissionScenario" | "EvidenceGap"; label: string; data?: Record<string, unknown> }
+  | { id:string; type:"CandidateExperiment"; status:"hypothetical-research-question"; label:string; data:{conditions:Record<string,unknown>;unknownDimensions:string[]} }
+  | { id:string; type:"PlannedExperiment"; status:"planned"; label:string; data?:Record<string,unknown> };
 export type GraphEdge = { from: string; to: string; type: EdgeType; note?: string };
 export type EvidenceGraph = { version: string; nodes: GraphNode[]; edges: GraphEdge[] };
 
@@ -48,4 +53,33 @@ export function buildGraph(records: EvidenceRecord[], findings: Finding[], sourc
     }
   }
   return { version: "microfire-evidence-graph-1", nodes: [...nodes.values()], edges };
+}
+
+/** The planning layer extends the SAME evidence nodes and source edges; candidates never become Record nodes. */
+export function buildResearchGraph(plan:ResearchPlan,records:EvidenceRecord[],findings:Finding[],sources:Source[]):EvidenceGraph {
+  const completed=records.filter(r=>["bass2","saffire","luci"].includes(r.family));
+  const graph=buildGraph(completed,findings,sources,[]);
+  for(const s of plan.registry.scenarios){
+    graph.nodes.push({id:`mission-scenario:${s.id}`,type:"MissionScenario",label:s.question,data:{conditions:s.scenario,category:s.category,origin:s.origin}});
+    const l=ladder(completed,findings,s.scenario);
+    for(const r of l.direct)graph.edges.push({from:`mission-scenario:${s.id}`,to:`record:${r.record.id}`,type:"SCENARIO_DIRECT",note:r.record.caveat});
+  }
+  const plans=new Set<string>();
+  for(const gap of plan.registry.gaps){
+    graph.nodes.push({id:gap.id,type:"EvidenceGap",label:gap.title,data:{conditions:gap.conditions,missingDimensions:gap.missingDimensions}});
+    for(const id of gap.scenarioIds)graph.edges.push({from:`mission-scenario:${id}`,to:gap.id,type:"HAS_GAP"});
+    for(const id of gap.closestRecordIds)graph.edges.push({from:gap.id,to:`record:${id}`,type:"INFORMED_BY",note:"Analogous, not a direct match"});
+    for(const id of gap.relevantFindingIds)graph.edges.push({from:gap.id,to:`finding:${id}`,type:"INFORMED_BY",note:"Publication finding, not a test row"});
+    for(const p of gap.plannedCoverage){const id=`planned:${p.program}`;
+      if(!plans.has(id)){graph.nodes.push({id,type:"PlannedExperiment",status:"planned",label:p.program});plans.add(id);
+        for(const f of p.findingIds)graph.edges.push({from:id,to:`finding:${f}`,type:"PLAN_SUPPORTED_BY_FINDING"});}
+      graph.edges.push({from:id,to:gap.id,type:"MAY_ADDRESS",note:`Planned dimensional overlap only: ${p.overlappingDimensions.join(", ")}`});}
+  }
+  for(const c of plan.candidates){
+    graph.nodes.push({id:c.id,type:"CandidateExperiment",status:c.status,label:`Hypothetical: ${c.id}`,data:{conditions:{...c.conditions},unknownDimensions:c.unknownDimensions}});
+    const gain=plan.gains.find(g=>g.candidateId===c.id)!;
+    for(const gap of gain.directGapsPotentiallyClosed)graph.edges.push({from:c.id,to:gap,type:"ADDRESSES",note:"Potential represented-condition coverage only"});
+    for(const s of gain.affectedScenarioIds)graph.edges.push({from:c.id,to:`mission-scenario:${s}`,type:"COULD_INFORM"});
+  }
+  return {...graph,version:"microfire-evidence-graph-research-1",nodes:graph.nodes.sort((a,b)=>a.id.localeCompare(b.id)),edges:graph.edges.sort((a,b)=>`${a.from}|${a.type}|${a.to}`.localeCompare(`${b.from}|${b.type}|${b.to}`))};
 }

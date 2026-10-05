@@ -30,7 +30,7 @@ const SCREENS: { id: ScreenId; chapter: ChapterId; goal: string }[] = [
   { id: "fabric", chapter: "predict", goal: "Guess, then line up 6 fabric records" },
   { id: "log", chapter: "log", goal: "Pin one real crew clue to your notebook" },
   { id: "quiet", chapter: "quiet", goal: "Find the hidden flame, then gust the fan" },
-  { id: "moon", chapter: "moon", goal: "Mark Moon-base air on the map" },
+  { id: "moon", chapter: "moon", goal: "Mark atmosphere A on the map" },
   { id: "debrief", chapter: "debrief", goal: "See your evidence trail" },
 ];
 
@@ -454,7 +454,7 @@ export function MissionFreefall() {
       update({ marker: true });
       sound.play("snap");
     } else {
-      setHint(`Your marker is at ${Math.round(pct)} % oxygen and ${Math.round(kpa)} kPa. Moon-base air is ${MOON_AIR.o2} % and ${MOON_AIR.kpa} kPa: ${pct < MOON_AIR.o2 ? "go higher" : "go lower"}${kpa > MOON_AIR.kpa + 8 ? " and further left" : kpa < MOON_AIR.kpa - 8 ? " and further right" : ""}.`);
+      setHint(`Your marker is at ${Math.round(pct)} % oxygen and ${Math.round(kpa)} kPa. NASA-studied atmosphere A is ${MOON_AIR.o2} % and ${MOON_AIR.kpa} kPa: ${pct < MOON_AIR.o2 ? "go higher" : "go lower"}${kpa > MOON_AIR.kpa + 8 ? " and further left" : kpa < MOON_AIR.kpa - 8 ? " and further right" : ""}.`);
       sound.play("tick");
     }
   };
@@ -510,8 +510,8 @@ export function MissionFreefall() {
         ? { crew: "mei", phase: save.gusted ? "gusted" : "found", pose: "wonder", line: save.gusted ? "Airflow changed the scene. Compare that illustration with the cited finding." : "You found the dim flame. Some low-flow flames can stay lit.", aim: save.gusted ? "Read the source before continuing." : "Try the gust, then inspect the evidence." }
         : { crew: "mei", phase: "seek", pose: "focus", line: "A flame can be hard to see when it is dim and blue.", aim: "Find the flame in the chamber." };
       case "moon": return save.answers.moon != null
-        ? { crew: "tala", phase: "gap", pose: "wonder", line: "These atlas rows do not cover the proposed Moon-base air. That's a real question to keep.", aim: "Open the evidence gap or finish the mission." }
-        : { crew: "tala", phase: save.marker ? "marked" : "map", pose: "point", line: save.marker ? "Your marker sits beyond the conditions in this atlas. What can we honestly say?" : "Let's mark the proposed habitat air on our evidence map.", aim: save.marker ? "Choose the evidence answer." : "Mark 34% oxygen at 56.5 kPa." };
+        ? { crew: "tala", phase: "gap", pose: "wonder", line: "These atlas rows do not cover NASA-studied atmosphere A. That's a real question to keep.", aim: "Open the evidence gap or finish the mission." }
+        : { crew: "tala", phase: save.marker ? "marked" : "map", pose: "point", line: save.marker ? "Your marker sits beyond the conditions in this atlas. What can we honestly say?" : "Let's mark NASA-studied atmosphere A on our evidence map.", aim: save.marker ? "Choose the evidence answer." : "Mark 34% oxygen at 56.5 kPa." };
       case "debrief": return { crew: "tala", phase: "debrief", pose: "cheer", line: "Look at your evidence trail. Which NASA clue would you show someone else?", aim: "Revisit a test or explore the atlas." };
     }
   })();
@@ -726,6 +726,7 @@ export function MissionFreefall() {
                   );
                 })}
               </ul>
+              <p className="mt-2 text-[11px] text-faint">3D illustration. Camera and glove models: Poly Haven (CC0) and NASA 3D Resources.</p>
             </div>
           )}
 
@@ -927,7 +928,7 @@ export function MissionFreefall() {
           {screen.id === "moon" && (
             <div className="mt-4">
               <p className="text-[15px]">
-                NASA has proposed air with <b>{MOON_AIR.o2} % oxygen at {MOON_AIR.kpa} kPa</b> for Moon and Mars habitats. <Cite sourceId="exploration-atmosphere" />
+                NASA has studied an exploration atmosphere with <b>{MOON_AIR.o2} % oxygen at {MOON_AIR.kpa} kPa</b> for exploration habitats; it is not a final, universal lunar-habitat atmosphere. <Cite sourceId="exploration-atmosphere" />
               </p>
               <MoonMap marker={save.marker} onTap={tapMap} />
               {hint && !save.marker && <p className="mt-2 text-sm text-flame" role="status">{hint}</p>}
@@ -1034,7 +1035,7 @@ function FabricLineup({ placed, onPlace, done = false }: { placed: string[]; onP
   );
 }
 
-/** Moon chapter: an oxygen vs pressure map. Atlas rows sit at sea-level pressure; the child marks the proposed habitat air. */
+/** Moon chapter: an oxygen vs pressure map. BASS rows with recorded pressure sit near sea-level pressure; the child marks NASA-studied atmosphere A. */
 function MoonMap({ marker, onTap }: { marker: boolean; onTap: (kpa: number, pct: number) => void }) {
   const W = 300, H = 180, kx = (k: number) => 28 + ((k - 40) / 75) * (W - 40), oy = (o: number) => H - 20 - ((o - 14) / 24) * (H - 30);
   const rows = experiments.filter((e) => e.oxygen_vol_pct != null && e.pressure_kpa != null);
@@ -1068,7 +1069,7 @@ function MoonMap({ marker, onTap }: { marker: boolean; onTap: (kpa: number, pct:
         )}
       </svg>
       <p className="text-[11px] text-faint">
-        Tap the map where Moon-base air would be. Orange dots: atlas tests ({noP} more have no recorded pressure). The box is the area the tests cover.
+        Tap the map at NASA-studied atmosphere A. Orange dots: BASS tests ({noP} more have no recorded pressure). The box is the area the tests cover.
       </p>
     </div>
   );

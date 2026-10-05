@@ -59,7 +59,7 @@ export function EvidenceStatus({ q, l, briefHref }: { q: MissionQuestion; l: Lad
           {worst && worst.level !== "exact" && worst.level !== "within" && (
             <p className={styles.worst}>
               <strong>Largest uncertainty:</strong>{" "}
-              {worst.level === "regime" ? `gravity. No test record ran at ${worst.you}; only short reduced-gravity findings exist.` : `${worst.dim.toLowerCase()} (${worst.gap ?? worst.record}).`}
+              {worst.level === "regime" ? `gravity. The closest record ran in ${worst.record}, not ${worst.you}.` : `${worst.dim.toLowerCase()} (${worst.gap ?? worst.record}).`}
             </p>
           )}
         </div>

@@ -6,3 +6,14 @@ __pycache__/
 .DS_Store
 .env*
 .venv/
+evaluation/flame-vision/candidates/
+
+# Kept locally, not published (pipelines, tests, data and docs are public so people can contribute)
+/film/
+/evaluation/
+/openapi.yaml
+/stackhawk.yml
+/docs/screenshots/*.mjs
+/apps/web/AGENTS.md
+/apps/web/CLAUDE.md
+/apps/web/README.md

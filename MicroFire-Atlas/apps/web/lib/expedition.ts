@@ -28,7 +28,7 @@ export function restoreJourney(raw: string | null) {
 
 /* ---------- Change one thing: hop between real tests ---------- */
 
-/** BASS-II thin PMMA films: same material, thickness, width, geometry and flow direction, so one condition can change at a time. */
+/** BASS-II thin PMMA films: same material, thickness, width, geometry and flow direction, with other recorded differences still checked. */
 export const isFilm = (e: Experiment) =>
   e.material === "PMMA" && e.thickness_mm === 0.1 && e.width_mm === 20 && e.flow_direction === "opposed";
 
@@ -44,7 +44,7 @@ export const CHANGES: { id: Change; label: string; kid: string }[] = [
   { id: "moon", label: "Moon gravity", kid: "Go to the Moon" },
 ];
 
-/** Same-condition tolerances: oxygen is recorded to 0.1 %, so 0.5 points is "the same"; flow uses the first logged value. */
+/** Candidate-search tolerances, not equality: flow uses the first logged value. */
 export const SAME = { oxygen: 0.5, flow: 0.5 };
 
 export type Hop =
@@ -57,7 +57,7 @@ const o2 = (e: Experiment) => e.oxygen_vol_pct ?? NaN;
 
 export function hop(from: Experiment, change: Change, all: Experiment[]): Hop {
   if (change === "moon")
-    return { kind: "gap", reason: "Every test in this atlas ran in orbit. No row here was burned in Moon gravity." };
+    return { kind: "gap", reason: "Every BASS-II test ran in orbit. None was burned in Moon gravity." };
   const pool = all.filter((e) => e.id !== from.id && isFilm(e) && COMPARABLE(e));
   const changeFlow = change === "more-flow" || change === "less-flow";
   const up = change === "more-flow" || change === "more-oxygen";
@@ -73,7 +73,7 @@ export function hop(from: Experiment, change: Change, all: Experiment[]): Hop {
   const other = (e: Experiment) => (changeFlow ? Math.abs(o2(e) - o2(from)) / SAME.oxygen : Math.abs(flow(e) - flow(from)) / SAME.flow);
   const step = (e: Experiment) => Math.abs(changeFlow ? flow(e) - flow(from) : o2(e) - o2(from));
   const best = [...cands].sort((a, b) => other(a) - other(b) || step(a) - step(b) || a.id.localeCompare(b.id))[0];
-  if (other(best) <= 1) return { kind: "matched", to: best, differs: [] };
+  if (other(best) === 0) return { kind: "matched", to: best, differs: [] };
   const differs = changeFlow
     ? [`oxygen is ${o2(best)} % instead of ${o2(from)} %`]
     : [`airflow started at ${flow(best)} cm/s instead of ${flow(from)} cm/s`];

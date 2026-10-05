@@ -17,9 +17,10 @@ test("journey restores earned discoveries and rejects malformed or out-of-range 
   }
 });
 
-test("airflow hops from B20 land on the matched films B19 and B16", () => {
+test("airflow hops expose B19 oxygen difference and preserve B16 comparison", () => {
   const up = hop(get("bass2-B20"), "more-flow", exps);
-  assert.equal(up.kind, "matched");
+  assert.equal(up.kind, "closest");
+  assert.ok(up.kind === "closest" && up.differs[0].includes("16.4 % instead of 16.5 %"));
   assert.equal(dest(up), "bass2-B19");
   const down = hop(get("bass2-B20"), "less-flow", exps);
   assert.equal(dest(down), "bass2-B16");

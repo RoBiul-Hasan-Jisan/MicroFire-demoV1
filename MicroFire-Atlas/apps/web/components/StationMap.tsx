@@ -3,48 +3,53 @@ import Link from "next/link";
 export type Station = { href: string; label: string; title: string; detail: string; icon: string };
 export type NavGroup = { id: string; label: string; blurb: string; items: Station[] };
 
-/** The site map in four groups. Deeper research pages live on the Research Frontier page; About pages live in the footer. */
+/** The site map in five groups. Navigation and the home page's map both read this list. */
 export const NAV_GROUPS: NavGroup[] = [
   {
-    id: "try", label: "Try it", blurb: "Ask a question about your cabin, get an answer with its source",
+    id: "explore", label: "Explore", blurb: "Start here: the story-led adventure",
     items: [
-      { href: "/will-it-burn", label: "Will it burn?", title: "Strict evidence check", detail: "Did NASA test a cabin like yours? Burned, Mixed, No data or Unclear, never a guess.", icon: "chat" },
-      { href: "/predict", label: "Outcome Model", title: "Outcome model", detail: "Trained on NASA tests: will the flame keep burning? Estimate, interval, and the real tests behind it.", icon: "sliders" },
-      { href: "/ask", label: "Ask PIX", title: "Ask the evidence", detail: "Bring a question. Every answer leads back to its NASA source or the model estimate.", icon: "chat" },
-      { href: "/materials", label: "Materials check", title: "Check a materials list", detail: "Paste a materials list, pick a cabin, get an evidence grade for each material.", icon: "book" },
-      { href: "/brief", label: "Cabin brief", title: "Cabin brief generator", detail: "One cited page for a cabin: evidence, model limits, visibility and the tests to run.", icon: "book" },
+      { href: "/lab", label: "Flame Lab", title: "Interactive flame lab", detail: "Set gravity, oxygen and airflow, then see what NASA tested and where the evidence stops.", icon: "fire" },
+      { href: "/expedition", label: "Follow the Spark", title: "Follow the Spark", detail: "The main adventure: watch real NASA flames, find clues and take them to the Moon.", icon: "orbit" },
+      { href: "/learn", label: "Why flames change", title: "Why flames change", detail: "Switch gravity off, then scroll through three near-matched tests with different airflow and 16.4–16.5 % oxygen.", icon: "fire" },
+      { href: "/story", label: "Build the experiment", title: "Build the experiment", detail: "Mission Freefall: assemble NASA's wind tunnel in 3D and light a real test.", icon: "rocket" },
     ],
   },
   {
     id: "evidence", label: "Evidence", blurb: "Every NASA test, traced to its page",
     items: [
-      { href: "/atlas", label: "Atlas", title: "Test observatory", detail: "Every BASS-II test on one map. Open one to read what the crew recorded.", icon: "orbit" },
+      { href: "/atlas", label: "Atlas", title: "Test observatory", detail: "Every test record in three experiment families, with filters and a detective table.", icon: "orbit" },
       { href: "/saffire", label: "Saffire", title: "Fires inside a spacecraft", detail: "Twenty large fires NASA set on purpose inside empty cargo ships.", icon: "fire" },
       { href: "/compare", label: "Compare", title: "Comparison bench", detail: "What stayed the same, what changed, and what that lets us say.", icon: "compare" },
-      { href: "/analyze", label: "Flame Vision", title: "Observation station", detail: "Computer vision on real NASA footage, frame by frame, in pixels.", icon: "eye" },
     ],
   },
   {
-    id: "mission", label: "Moon & Mars", blurb: "From evidence to future missions",
+    id: "analyze", label: "Analyze", blurb: "Instruments for real NASA data",
+    items: [
+      { href: "/analyze", label: "Flame Vision", title: "Observation station", detail: "Computer vision on real NASA footage, frame by frame, in pixels.", icon: "eye" },
+      { href: "/ask", label: "Ask PIX", title: "Ask the evidence", detail: "Bring a question. Every answer leads back to its NASA source.", icon: "chat" },
+      { href: "/model-lab", label: "AI Model Lab", title: "Evidence-bounded ML", detail: "A validated model on NASA tests that refuses to predict outside its evidence.", icon: "sliders" },
+    ],
+  },
+  {
+    id: "mission", label: "Mission", blurb: "From evidence to future missions",
     items: [
       { href: "/mission", label: "Mission Evidence", title: "Mission desk", detail: "The Evidence Ladder: what NASA evidence fits your cabin, and how well.", icon: "sliders" },
-      { href: "/gaps", label: "Research Frontier", title: "The frontier", detail: "Where the evidence runs out, which test comes next, and the deeper research views.", icon: "map" },
-      { href: "/fire-response", label: "Fire response", title: "NASA's fire response", detail: "NASA's eight ISS steps, each with the evidence behind it and the gaps.", icon: "fire" },
-      { href: "/impact", label: "Impact", title: "Who this helps", detail: "Who benefits, what we measured so far, and the Bangladesh method case.", icon: "map" },
+      { href: "/gaps", label: "Research Frontier", title: "The frontier", detail: "Where the evidence runs out, and which test would push it further.", icon: "map" },
     ],
   },
   {
-    id: "extras", label: "Learn & play", blurb: "Lab and guided adventures",
+    id: "about", label: "About", blurb: "How MicroFire Atlas knows what it says",
     items: [
-      { href: "/lab", label: "Flame Lab", title: "Microgravity Flame Lab", detail: "Change gravity, oxygen and airflow, light a flame, and see what NASA's tests recorded.", icon: "fire" },
-      { href: "/expedition", label: "Follow the Spark", title: "Follow the Spark", detail: "The guided adventure: watch real NASA flames, find clues and take them to the Moon.", icon: "orbit" },
-      { href: "/story", label: "Build the experiment", title: "Build the experiment", detail: "Mission Freefall: assemble NASA's wind tunnel in 3D and light a real test.", icon: "rocket" },
+      { href: "/challenge", label: "Challenge Mode", title: "Challenge Mode", detail: "One mission question, answered stage by stage: find, compare, summarize, rank, interpret, verify, and where the evidence stops.", icon: "map" },
+      { href: "/tour", label: "Judge Mode", title: "For judges and mentors", detail: "Three one-click demonstrations and a guided 90-second tour.", icon: "orbit" },
+      { href: "/methodology", label: "Method", title: "How it works", detail: "Every rule, score and tolerance, so you can check it.", icon: "map" },
+      { href: "/sources", label: "Sources", title: "The station library", detail: "Every NASA document, with its NTRS record and file hash.", icon: "book" },
     ],
   },
 ];
 
 /** Destinations shown on the home page map: everything except About. */
-export const STATIONS: Station[] = NAV_GROUPS.filter((g) => g.id !== "extras").flatMap((g) => g.items);
+export const STATIONS: Station[] = NAV_GROUPS.filter((g) => g.id !== "about").flatMap((g) => g.items);
 
 const PATHS: Record<string, string> = {
   rocket: "M14 4c3-2 6-2 6-2s0 3-2 6l-7 7-4-4 7-7ZM7 11H3l4-5h5M11 15v4l5-4v-5M5 16l-2 5 5-2M14 7l3 3",

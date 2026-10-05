@@ -1,3 +1,0 @@
-opencv-python-headless==4.*
-numpy>=1.26
-scikit-learn>=1.4

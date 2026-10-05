@@ -1,0 +1,11 @@
+3D models used in the Mission Freefall build chapter (illustrations, not BASS-II flight hardware):
+
+camera-still.glb  "Camera 01" by Rajil Jose Macatangay, Poly Haven, CC0 1.0. https://polyhaven.com/a/Camera_01
+                  Strap removed; textures converted to WebP.
+camera-video.glb  "Infrared Camera", NASA 3D Resources. https://github.com/nasa/NASA-3D-Resources
+                  Draco decoded; materials re-assigned in code.
+glove.glb         "Astronaut Glove", NASA 3D Resources. https://github.com/nasa/NASA-3D-Resources
+                  Draco decoded; textures converted to WebP.
+
+The flow duct, fan, straightener, sample holder, igniter, radiometer, nitrogen nozzle, exit plate and
+glovebox are modelled in code (components/three/FlameScene.ts) following NASA's BASS-II description.

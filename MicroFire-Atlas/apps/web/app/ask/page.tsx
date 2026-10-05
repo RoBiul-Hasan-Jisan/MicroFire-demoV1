@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { QuestBoard } from "@/components/quest/QuestBoard";
 import Link from "next/link";
 import { AskPanel } from "@/components/AskPanel";
+import { VerifiedExample } from "@/components/VerifiedExample";
 import { RouteStage } from "@/components/world/RouteStage";
 
 export const metadata: Metadata = { title: "Ask" };
@@ -12,6 +13,7 @@ export default async function AskPage({ searchParams }: PageProps<"/ask">) {
   return (
     <div className="explorer-page mx-auto max-w-7xl px-4 sm:px-6 py-12">
       <RouteStage kind="ask" />
+      <VerifiedExample />
       <div className="mt-6"><QuestBoard page="ask" crew="kofi" /></div>
       <p className="mt-6 text-sm text-muted max-w-[78ch]">
         Questions are answered only from the NASA tests and quotes in this atlas. Every claim is labelled as observed,

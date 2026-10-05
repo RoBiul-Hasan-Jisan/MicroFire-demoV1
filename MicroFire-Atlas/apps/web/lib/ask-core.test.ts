@@ -98,32 +98,3 @@ test("verifier precision: formulas, the question's own numbers, arithmetic and n
   assert.ok(check("These records do not demonstrate that PMMA is safe at 34 % oxygen.", "DATA_GAP", []).verified);
   assert.ok(!check("These records show PMMA is safe at 34 % oxygen.", "INTERPRETATION", ["S:saffire-vi-3"]).verified);
 });
-
-// ---- outcome model in the evidence package ----
-import { readFileSync as readModelFile } from "node:fs";
-import type { Model } from "./model.ts";
-const outcomeModel = JSON.parse(readModelFile(new URL("../data/model.json", import.meta.url), "utf8")) as Model;
-const noData = [] as never[];
-
-test("the model estimate joins the package last, only when oxygen and airflow are both given", () => {
-  const withBoth = buildEvidence("What happens to PMMA at 21% oxygen and 10 cm/s?", noData, noData, noData, outcomeModel);
-  assert.equal(withBoth.items.at(-1)?.key, "M:outcome-model");
-  assert.match(withBoth.items.at(-1)!.text, /not a NASA result/);
-  assert.equal(buildEvidence("What happens to PMMA at 21% oxygen?", noData, noData, noData, outcomeModel).items.some((i) => i.key === "M:outcome-model"), false);
-  assert.equal(buildEvidence("PMMA at 21% oxygen and 10 cm/s", noData, noData, noData).items.some((i) => i.key === "M:outcome-model"), false);
-});
-
-test("the model is never offered for lunar gravity, and out-of-range inputs are labelled", () => {
-  assert.equal(buildEvidence("PMMA on the Moon at 21% oxygen and 10 cm/s", noData, noData, noData, outcomeModel).items.some((i) => i.key === "M:outcome-model"), false);
-  const far = buildEvidence("PMMA at 21% oxygen and 90 cm/s", noData, noData, noData, outcomeModel).items.at(-1)!;
-  assert.match(far.text, /outside the tested range/);
-});
-
-test("a DERIVED claim that restates the model numbers passes the checker; a wrong number does not", () => {
-  const item = buildEvidence("PMMA at 21% oxygen and 10 cm/s", noData, noData, noData, outcomeModel).items.at(-1)!;
-  const [, pct, lo, hi] = item.text.match(/estimates a (\d+) % chance.*?interval (\d+) % to (\d+) %/)!;
-  const good = checkAnswer({ summary: "", claims: [{ type: "DERIVED", cites: ["M:outcome-model"], text: `The model estimates a ${pct} % chance, interval ${lo} % to ${hi} %.` }] }, [item]);
-  assert.equal(good[0].verified, true, good[0].issues.join("; "));
-  const bad = checkAnswer({ summary: "", claims: [{ type: "DERIVED", cites: ["M:outcome-model"], text: "The model estimates a 88.123 % chance." }] }, [item]);
-  assert.equal(bad[0].verified, false);
-});

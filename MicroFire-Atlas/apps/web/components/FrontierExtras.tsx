@@ -39,12 +39,12 @@ export function ResearchHorizon() {
         <div><h4>Planned samples</h4><Q f={F("fm2-samples")} /></div>
         <div><h4>What it will measure</h4><Q f={F("fm2-measurements")} /></div>
       </div>
-      <h4 className={styles.closeTitle}>Which frontier questions it could answer directly</h4>
+      <h4 className={styles.closeTitle}>Which frontier questions it is designed to reach</h4>
       <ul className={styles.closes}>
         {rows.map(({ fq, closes, why }) => (
           <li key={fq.id} data-closes={closes}>
             <span aria-hidden="true">{closes ? "◆" : "◇"}</span>
-            <span><strong>{fq.title}</strong> {closes ? "Could gain its first direct evidence" : "Stays open"}: {why}.</span>
+            <span><strong>{fq.title}</strong> {closes ? "Could gain the first evidence from the Moon's surface" : "Not covered by FM²"}: {why}.</span>
             <Link href={`/mission?context=${fq.context}`} className="link text-sm" data-quest="frontier-link">Evidence Ladder</Link>
           </li>
         ))}
@@ -53,38 +53,57 @@ export function ResearchHorizon() {
   );
 }
 
-/** Spacecraft fire safety is more than flame spread. Coverage per domain, counted from the verified evidence. */
-const DOMAINS: { name: string; kid: string; topics: string[]; rows: boolean }[] = [
-  { name: "Flame spread", kid: "How fast fire crawls along a material", topics: ["airflow", "geometry", "scale"], rows: true },
-  { name: "Extinction", kid: "When and why flames go out", topics: ["quench", "blowoff"], rows: true },
-  { name: "Cabin atmosphere", kid: "Oxygen and air pressure", topics: ["oxygen", "pressure"], rows: true },
-  { name: "Reduced gravity", kid: "The Moon and Mars", topics: ["partial-gravity"], rows: false },
-  { name: "Smoke and detection", kid: "Noticing a fire and the gases it makes", topics: ["smoke", "detection"], rows: false },
-  { name: "Material screening", kid: "Which materials NASA rates as safe to fly", topics: ["materials-screening"], rows: false },
-  { name: "Suppression", kid: "Putting fires out", topics: ["suppression"], rows: false },
-  { name: "Post-fire cleanup", kid: "Cleaning the air afterwards", topics: ["cleanup"], rows: false },
+/**
+ * Spacecraft fire safety is more than flame spread. Each domain gets the strongest evidence status it actually has:
+ * structured test records (a record field measures it) > a verified NASA publication finding (observed, from a
+ * completed experiment) > context only > planned work only > not yet curated. Planned FM² work is flagged separately.
+ */
+type Status = "structured" | "finding" | "context" | "planned" | "none";
+const STATUS: Record<Status, string> = {
+  structured: "Structured test data", finding: "Verified publication finding", context: "Context only", planned: "Planned evidence", none: "Not yet curated",
+};
+const DOMAINS: { name: string; kid: string; topics: string[]; records?: (r: (typeof evidenceRecords)[number]) => boolean; what?: string }[] = [
+  { name: "Flame spread", kid: "How fast fire crawls along a material", topics: ["airflow", "geometry", "scale"], records: (r) => r.outcome !== "unknown", what: "outcome recorded" },
+  { name: "Extinction", kid: "When and why flames go out", topics: ["quench", "blowoff"], records: (r) => r.outcome === "extinguished", what: "flame went out" },
+  { name: "Cabin atmosphere", kid: "Oxygen and air pressure", topics: ["oxygen", "pressure"], records: (r) => r.oxygen != null || r.pressureKpa != null, what: "oxygen or pressure reported" },
+  { name: "Reduced gravity", kid: "The Moon and Mars", topics: ["partial-gravity"], records: (r) => r.gravity !== "microgravity", what: "simulated lunar gravity, not the Moon" },
+  { name: "Smoke and detection", kid: "Noticing a fire and the gases it makes", topics: ["smoke", "detection"] },
+  { name: "Material screening", kid: "How NASA screens materials for flammability before flight", topics: ["materials-screening"] },
+  { name: "Suppression", kid: "Putting fires out", topics: ["suppression"] },
+  { name: "Post-fire cleanup", kid: "Cleaning the air afterwards", topics: ["cleanup"] },
 ];
+
+export function matrixRows() {
+  return DOMAINS.map((d) => {
+    const fs = findings.filter((f) => f.topics.some((t) => d.topics.includes(t)));
+    const fam = (f: Finding) => SOURCE_FAMILY[f.source_id] ?? "context";
+    const planned = fs.filter((f) => fam(f) === "fm2");
+    const completed = fs.filter((f) => fam(f) !== "fm2" && fam(f) !== "context");
+    const recs = d.records ? evidenceRecords.filter(d.records) : [];
+    // only a solid-fuel observation earns "verified publication finding"; droplet/gas work stays mechanism-only
+    const status: Status = recs.length ? "structured" : completed.some((f) => f.kind === "observed" && FAMILIES[fam(f)].phase === "solid") ? "finding"
+      : completed.length || fs.some((f) => fam(f) === "context") ? "context" : planned.length ? "planned" : "none";
+    const fams = [...new Set(completed.map(fam))];
+    return { ...d, status, records: recs.length, findings: fs.length - planned.length, planned: planned.length, fams };
+  });
+}
 
 export function SafetyMatrix() {
   return (
     <ul className={styles.matrix}>
-      {DOMAINS.map((d) => {
-        const fs = findings.filter((f) => f.topics.some((t) => d.topics.includes(t)));
-        const fams = [...new Set(fs.map((f) => SOURCE_FAMILY[f.source_id]).filter((x) => x && x !== "context"))];
-        const level = d.rows && fs.length ? "rows" : fs.length ? "findings" : "none";
-        return (
-          <li key={d.name} data-level={level}>
-            <span className={styles.mLevel}>{level === "rows" ? "Test records and findings" : level === "findings" ? "Findings only" : "Not covered here"}</span>
-            <strong>{d.name}</strong>
-            <small>{d.kid}</small>
-            <span className={styles.mCount}>
-              {level === "rows" && <><b>{evidenceRecords.length}</b> records · </>}
-              <b>{fs.length}</b> verified finding{fs.length === 1 ? "" : "s"}
-            </span>
-            {fams.length > 0 && <span className={styles.mFams}>{fams.map((f) => FAMILIES[f!].name).join(", ")}</span>}
-          </li>
-        );
-      })}
+      {matrixRows().map((d) => (
+        <li key={d.name} data-level={d.status}>
+          <span className={styles.mLevel}>{STATUS[d.status]}</span>
+          <strong>{d.name}</strong>
+          <small>{d.kid}</small>
+          <span className={styles.mCount}>
+            {d.records > 0 && <><b>{d.records}</b> record{d.records === 1 ? "" : "s"} ({d.what}) · </>}
+            <b>{d.findings}</b> verified finding{d.findings === 1 ? "" : "s"}
+          </span>
+          {d.fams.length > 0 && <span className={styles.mFams}>{d.fams.map((f) => FAMILIES[f].name + (FAMILIES[f].phase === "solid" ? "" : " (mechanism only)")).join(", ")}</span>}
+          {d.planned > 0 && <span className={styles.mPlanned}>+ planned: FM² ({d.planned} plan statement{d.planned === 1 ? "" : "s"}, no results yet)</span>}
+        </li>
+      ))}
     </ul>
   );
 }

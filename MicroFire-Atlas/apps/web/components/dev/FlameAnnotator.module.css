@@ -1,0 +1,21 @@
+/* Dev-only annotation tool: plain and functional. */
+.page { max-width: 80rem; margin: 0 auto; padding: 32px 16px 64px; display: grid; gap: 16px; }
+.title { font-size: 28px; font-weight: 800; }
+.note { color: var(--muted); max-width: 80ch; }
+.layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 20px; align-items: start; }
+.list ol { display: grid; gap: 2px; max-height: 80vh; overflow: auto; font-size: 13px; }
+.list a { display: block; padding: 6px 8px; border-radius: 8px; color: var(--ink); text-decoration: none; }
+.list a[aria-current="true"] { background: #ffcf6b22; outline: 1px solid #ffcf6b; }
+.list small { display: block; color: var(--muted); }
+.work { display: grid; gap: 12px; }
+.label { font-size: 14px; color: var(--muted); }
+.canvas { width: 100%; height: auto; image-rendering: pixelated; cursor: crosshair; touch-action: none; border: 1px solid var(--rule-strong); }
+.tools, .form { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; font-size: 14px; }
+.tools button, .save { padding: 6px 12px; border-radius: 8px; border: 1px solid var(--rule-strong); color: var(--ink); background: #ffffff0a; }
+.tools button[aria-pressed="true"] { border-color: var(--signal); }
+.form input:not([type]), .form select, .form textarea { margin-left: 6px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--rule-strong); background: #0d1830; color: var(--ink); }
+.wide { flex-basis: 100%; }
+.wide textarea { width: 100%; min-height: 60px; margin: 4px 0 0; }
+.save { border-color: #ffcf6b; font-weight: 700; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+@media (max-width: 760px) { .layout { grid-template-columns: 1fr; } .list ol { max-height: 30vh; } }

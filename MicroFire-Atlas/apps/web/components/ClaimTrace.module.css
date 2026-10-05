@@ -1,0 +1,26 @@
+.trace { display: grid; margin-top: 1.25rem; counter-reset: t; }
+.trace > li { position: relative; padding: 0 0 1.4rem 2.6rem; border-left: 2px solid #8eeaf544; margin-left: 0.9rem; display: grid; gap: 0.4rem; }
+.trace > li:last-child { border-left-color: transparent; padding-bottom: 0; }
+.trace > li::before { counter-increment: t; content: counter(t); position: absolute; left: -0.95rem; top: -0.1rem; width: 1.8rem; height: 1.8rem; display: grid; place-items: center; border-radius: 50%; font-size: 0.8rem; font-weight: 800; color: #06121f; background: #8eeaf5; }
+.trace > li[data-final="true"]::before { content: "✓"; background: #3ddc97; }
+.trace > li > b { font-size: 1rem; }
+.trace > li > b small, .trace > li > small { display: block; font-weight: 400; font-size: 0.8rem; color: var(--faint); }
+.trace > li > p { color: var(--muted); max-width: 75ch; }
+.items { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; }
+.items li { display: grid; font-size: 0.9rem; }
+.items span { color: var(--faint); font-size: 0.75rem; }
+.claims { display: grid; gap: 0.75rem; }
+.claims > li { border: 1px solid var(--rule-strong); border-radius: 0.6rem; padding: 0.8rem 1rem; display: grid; gap: 0.5rem; background: #0d1830; }
+.claims > li[data-verified="false"] { border-color: #ff8a5a88; }
+.claimHead { display: flex; gap: 0.6rem; align-items: center; font-size: 0.85rem; color: #9df0c8; }
+.claims > li[data-verified="false"] .claimHead { color: #ffc3a8; }
+.type { font-size: 0.7rem; letter-spacing: 0.06em; padding: 0.1rem 0.45rem; border-radius: 0.3rem; background: #ffffff12; color: var(--ink); }
+.checks { display: grid; gap: 0.2rem 1rem; font-size: 0.85rem; }
+@media (min-width: 760px) { .checks { grid-template-columns: 1fr 1fr; } }
+.checks li { display: flex; gap: 0.4rem; flex-wrap: wrap; color: var(--muted); }
+.checks li > span { width: 1rem; font-weight: 700; color: #9df0c8; }
+.checks li[data-pass="false"] > span { color: #ff8a5a; }
+.checks small { flex-basis: 100%; padding-left: 1.4rem; color: #ffc3a8; }
+.claims details summary { cursor: pointer; color: var(--signal); font-size: 0.85rem; min-height: 2.25rem; display: flex; align-items: center; }
+.claims blockquote { display: grid; gap: 0.25rem; border-left: 3px solid var(--signal); padding: 0.25rem 0 0.25rem 0.75rem; margin-top: 0.5rem; font-size: 0.85rem; }
+.claims blockquote span { color: var(--muted); }

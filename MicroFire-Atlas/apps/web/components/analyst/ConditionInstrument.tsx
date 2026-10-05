@@ -114,8 +114,8 @@ export function ConditionInstrument({ form, set, records, joint }: {
         label="Gravity" value={form.gravity} onChange={(v) => set("gravity", v)}
         options={[
           { v: "microgravity", text: "Orbit (microgravity)", count: count((r) => r.gravity === "microgravity"), note: "ran in orbit" },
-          { v: "lunar", text: "Moon (1/6 g)", count: count((r) => r.gravity === "lunar"), note: "at lunar gravity: only short simulated-gravity findings exist" },
-          { v: "martian", text: "Mars (3/8 g)", count: count((r) => r.gravity === "martian"), note: "at Martian gravity: only drop-tower findings exist" },
+          { v: "lunar", text: "Moon (1/6 g)", count: count((r) => r.gravity === "lunar"), note: "at lunar gravity, simulated on a spinning rocket (LUCI)" },
+          { v: "martian", text: "Mars (3/8 g)", count: count((r) => r.gravity === "martian"), note: "at Martian gravity: only short drop-tower findings exist" },
         ]}
       />
       <Choice

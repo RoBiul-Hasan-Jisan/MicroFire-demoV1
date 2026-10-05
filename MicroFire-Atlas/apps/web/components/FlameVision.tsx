@@ -76,12 +76,13 @@ export function FlameVision({ item, initialMode = "vision", compact = false, onI
   return (
     <div className={`grid gap-6 ${compact ? "" : "xl:grid-cols-[minmax(0,8fr)_minmax(0,4fr)]"}`}>
       <div className="min-w-0">
+        <p className="text-sm text-muted mb-3">{audience === "pro" ? "Classical OpenCV segmentation; no trained fire-prediction model." : "The computer traces bright and blue flame pixels frame by frame."} Not yet validated against hand-annotated real frames.</p>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div data-guide="fv-modes" role="tablist" aria-label="View mode" className="inline-flex rounded-full border border-rule-strong p-1 bg-panel">
             {(
               [
                 ["raw", "Raw footage"],
-                ["vision", audience === "pro" ? "Computer vision" : "AI vision"],
+                ["vision", audience === "pro" ? "Computer vision measurement" : "Flame Vision"],
                 ...(isVideo ? ([["motion", "Motion"]] as [Mode, string][]) : []),
                 ["measure", "Measurements"],
               ] as [Mode, string][]

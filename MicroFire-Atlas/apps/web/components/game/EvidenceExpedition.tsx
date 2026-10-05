@@ -22,10 +22,10 @@ import styles from "./EvidenceExpedition.module.css";
 const STEPS: { name: string; title: string; line: string; crew: CrewId; world: World }[] = [
   { name: "Welcome", title: "Follow a spark. Find a story.", line: "A flame in space has a story to tell. You are the detective. Let's find the evidence together.", crew: "tala", world: "portal" },
   { name: "Choose", title: "Which flame catches your eye?", line: "These are real NASA experiments. Choose a film to bring into our observation room.", crew: "kofi", world: "lab" },
-  { name: "Look closely", title: "What can a computer see?", line: "Play the film. Turn on AI vision, then tap a measurement to light up its guide.", crew: "kofi", world: "bay" },
+  { name: "Look closely", title: "What can a computer see?", line: "Play the film. Turn on Flame Vision, then tap a measurement to light up its guide.", crew: "kofi", world: "bay" },
   { name: "Trace", title: "Put your detective eyes to work.", line: "Which outline follows this NASA flame photograph? Compare the edges, then check what the computer traced.", crew: "mei", world: "bay" },
   { name: "Compare", title: "One change. A different clue.", line: "Start with B20. Choose a condition to change, then open the crew's record of another real test.", crew: "mei", world: "constellation" },
-  { name: "Moon mission", title: "Take your clues to the Moon.", line: "A Moon base might use 34% oxygen at 56.5 kPa. Sort these clues onto the Evidence Ladder: how close can real NASA tests get?", crew: "tala", world: "moonlab" },
+  { name: "Moon mission", title: "Take your clues to the Moon.", line: "NASA studied an exploration atmosphere with 34% oxygen at 56.5 kPa. What evidence matches that atmosphere in Moon gravity? Sort the clues.", crew: "tala", world: "moonlab" },
   { name: "The unknown", title: "A missing star is a question.", line: "Our atlas contains tests made in orbit. Can they answer the same question for the Moon?", crew: "mei", world: "starfield" },
   { name: "Ask PIX", title: "Good scientists ask why.", line: "Ask about the tests you explored. PIX retrieves NASA evidence. Open a source and check the answer.", crew: "mei", world: "constellation" },
   { name: "Your discoveries", title: "You followed the evidence.", line: "You made choices, looked closely, and kept the questions that still need answers. That is how scientists learn.", crew: "tala", world: "constellation" },
@@ -35,9 +35,9 @@ const TITLES: Record<string, string> = { watch: "Flame observer", trace: "Outlin
 const HINTS = [
   "Tap the big button and I'll come with you!",
   "Both films are real NASA videos. Pick the one that makes you most curious.",
-  "Switch on AI vision, then tap a measurement. I light up what I measured.",
+  "Switch on Flame Vision, then tap a measurement. I light up what I measured.",
   "Look at the bright edge of the flame. Which outline hugs it best?",
-  "Change one thing about test B20, then predict before you peek!",
+  "Choose a condition to compare with B20. Check what else differs before you peek!",
   "Saffire is close, but not exact. Droplets explain how fire works. And one card is a test nobody has done yet!",
   "Can a missing test prove something is safe? Think like a scientist.",
   "Tap a suggested question, then open a source to check my answer.",
@@ -145,7 +145,7 @@ export function EvidenceExpedition({ trace }: { trace: FrameMetrics }) {
             <span className={styles.play}>▶</span><div><small>Real NASA video · {i === 0 ? "Saffire-V" : "Saffire-VI"}</small><h2 className="display">{i === 0 ? "A flame finds the thin ribs" : "Watch a flame spread"}</h2><p>{i === 0 ? "Can you spot where the flame advances?" : "What changes as the film moves?"}</p><b>Investigate this flame ↗</b></div>
           </button>)}</div>}
           {step === 2 && <div className={styles.lab}>
-            <FlameVision key={film} item={item} initialMode="raw" compact onInspect={() => earn("watch", "aivision", `Measured a real NASA flame with AI vision: ${MEDIA_CONTEXT[film].label}`)} />
+            <FlameVision key={film} item={item} initialMode="raw" compact onInspect={() => earn("watch", "aivision", `Measured a real NASA flame with Flame Vision: ${MEDIA_CONTEXT[film].label}`)} />
             <a className={styles.source} href={item.page_url} target="_blank" rel="noreferrer">NASA source: {MEDIA_CONTEXT[film].label} ↗</a>
             <p className={styles.note}>This Saffire film is not linked to the BASS-II table rows used later. Their conditions cannot be assigned to this footage.</p>
           </div>}

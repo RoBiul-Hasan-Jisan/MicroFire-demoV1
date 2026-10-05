@@ -1,0 +1,138 @@
+[
+ {
+  "id": "luci-sibal",
+  "sample": "SIBAL",
+  "material": "SIBAL fabric",
+  "material_verbatim": "cotton-fiberglass blend",
+  "size_verbatim": "5 cm wide x 30 cm",
+  "direction": "downward",
+  "o2_start_pct": 20,
+  "o2_end_pct": 18,
+  "pressure_kpa": 101.3,
+  "pressure_basis": "stated as normal pressure",
+  "spread_base_mm_s": 0.92,
+  "spread_tip_mm_s": 1.1,
+  "gravity": "lunar",
+  "gravity_note": "Simulated lunar gravity on a spinning sounding rocket (centrifugal acceleration, Coriolis force present), burns of about 2.5 minutes",
+  "outcome_group": "sustained",
+  "outcome_label": "Spread steadily for over a minute",
+  "provenance": {
+   "material_verbatim": {
+    "source_id": "luci",
+    "pdf_page": 16,
+    "quote": "SIBAL fabric (cotton-fiberglass blend) burning downward in Lunar-g"
+   },
+   "size": {
+    "source_id": "luci",
+    "pdf_page": 4,
+    "quote": "Fabric 5 cm wide x 30 cm"
+   },
+   "direction": {
+    "source_id": "luci",
+    "pdf_page": 16,
+    "quote": "burning downward in Lunar-g"
+   },
+   "o2_start_pct": {
+    "source_id": "luci",
+    "pdf_page": 42,
+    "quote": "decreases from ~20% to ~18%"
+   },
+   "o2_end_pct": {
+    "source_id": "luci",
+    "pdf_page": 42,
+    "quote": "decreases from ~20% to ~18%"
+   },
+   "spread_base_mm_s": {
+    "source_id": "luci",
+    "pdf_page": 19,
+    "quote": "Flame base spread rate = .92 mm/s."
+   },
+   "spread_tip_mm_s": {
+    "source_id": "luci",
+    "pdf_page": 19,
+    "quote": "Flame tip spread rate = 1.1 mm/s"
+   },
+   "outcome": {
+    "source_id": "luci",
+    "pdf_page": 16,
+    "quote": "The flame spread for over a minute."
+   },
+   "gravity": {
+    "source_id": "luci",
+    "pdf_page": 12,
+    "quote": "Blue Origin New Shepard sounding rocket yields Lunar gravity by using centrifugal acceleration."
+   },
+   "pressure": {
+    "source_id": "luci",
+    "pdf_page": 12,
+    "quote": "Two samples are burned simultaneously in air at normal pressure"
+   }
+  }
+ },
+ {
+  "id": "luci-pmma",
+  "sample": "PMMA rod",
+  "material": "PMMA",
+  "material_verbatim": "4-mm diameter rod of acrylic plastic",
+  "size_verbatim": "4-mm diameter rod",
+  "direction": "upward",
+  "o2_start_pct": 20,
+  "o2_end_pct": 14.3,
+  "pressure_kpa": 101.3,
+  "pressure_basis": "stated as normal pressure",
+  "spread_base_mm_s": null,
+  "spread_tip_mm_s": 1.5,
+  "gravity": "lunar",
+  "gravity_note": "Simulated lunar gravity on a spinning sounding rocket (centrifugal acceleration, Coriolis force present), burns of about 2.5 minutes",
+  "outcome_group": "extinguished",
+  "outcome_label": "Spread about 6 cm, then went out",
+  "provenance": {
+   "material_verbatim": {
+    "source_id": "luci",
+    "pdf_page": 12,
+    "quote": "a 4-mm diameter rod of acrylic plastic (polymethyl methacrylate)"
+   },
+   "size": {
+    "source_id": "luci",
+    "pdf_page": 12,
+    "quote": "a 4-mm diameter rod of acrylic plastic"
+   },
+   "direction": {
+    "source_id": "luci",
+    "pdf_page": 16,
+    "quote": "PMMA rod burning upward in air in Lunar-g"
+   },
+   "o2_start_pct": {
+    "source_id": "luci",
+    "pdf_page": 22,
+    "quote": "O2% decreases from 20% to 14.3%."
+   },
+   "o2_end_pct": {
+    "source_id": "luci",
+    "pdf_page": 22,
+    "quote": "O2% decreases from 20% to 14.3%."
+   },
+   "spread_base_mm_s": null,
+   "spread_tip_mm_s": {
+    "source_id": "luci",
+    "pdf_page": 21,
+    "quote": "Flame spread rate = 1.5 mm/s."
+   },
+   "outcome": {
+    "source_id": "luci",
+    "pdf_page": 20,
+    "quote": "Total base spread of ~6cm until extinction."
+   },
+   "gravity": {
+    "source_id": "luci",
+    "pdf_page": 12,
+    "quote": "Blue Origin New Shepard sounding rocket yields Lunar gravity by using centrifugal acceleration."
+   },
+   "pressure": {
+    "source_id": "luci",
+    "pdf_page": 12,
+    "quote": "Two samples are burned simultaneously in air at normal pressure"
+   }
+  }
+ }
+]

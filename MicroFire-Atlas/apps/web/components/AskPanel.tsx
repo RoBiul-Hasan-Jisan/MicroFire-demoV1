@@ -1,10 +1,11 @@
 "use client";
 
+import { ClaimChecks } from "@/components/ClaimTrace";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { CheckedClaim, ClaimType, EvidenceItem, EvidenceRung } from "@/lib/ask-core";
 import { buildEvidence } from "@/lib/ask-core";
-import { experiments, findings, saffireRuns } from "@/lib/data";
+import { experiments, findings, saffireRuns, luciRuns } from "@/lib/data";
 import { FAMILIES } from "@/lib/ontology";
 import { useExplorer } from "@/components/guide/EmberGuide";
 import styles from "./AskPanel.module.css";
@@ -67,7 +68,7 @@ export function AskPanel({ onAnswered, initialQuestion }: { onAnswered?: () => v
       setResult(answer);
       if (!answer.error && answer.evidence?.length) { discover("askpix"); onAnswered?.(); }
     } catch {
-      const local = buildEvidence(q, experiments, findings, saffireRuns);
+      const local = buildEvidence(q, experiments, findings, saffireRuns, luciRuns);
       setResult({ mode: "evidence-only", reason: "Offline evidence notebook: these saved NASA records match your question. No AI answer was generated.", evidence: local.items, outside: local.outside });
       if (local.items.length) { discover("askpix"); onAnswered?.(); }
     } finally {
@@ -186,12 +187,11 @@ export function AskPanel({ onAnswered, initialQuestion }: { onAnswered?: () => v
                               {FAMILIES[byKey.get(k)!.family ?? "context"].name} · {RUNG[byKey.get(k)!.rung ?? "context"].label}: {RUNG[byKey.get(k)!.rung ?? "context"].note}
                             </p>
                             <p>{byKey.get(k)!.text}</p>
-                            <Link href={byKey.get(k)!.href} className="link text-sm">{byKey.get(k)!.kind === "test" ? "Open the full record" : byKey.get(k)!.kind === "model" ? "See how the model works" : "See all sources"}</Link>
+                            <Link href={byKey.get(k)!.href} className="link text-sm">{byKey.get(k)!.kind === "test" ? "Open the full record" : "See all sources"}</Link>
                           </div>
                         ))}
-                        {!c.verified && (
-                          <p className="mt-2 text-sm text-flame">Not verified: {c.issues.join("; ")}. Treat this claim with caution.</p>
-                        )}
+                        <ClaimChecks issues={c.issues} />
+                        {!c.verified && <p className="mt-2 text-sm text-flame">Treat this claim with caution.</p>}
                       </li>
                     ))}
                   </ol>
@@ -233,7 +233,7 @@ export function AskPanel({ onAnswered, initialQuestion }: { onAnswered?: () => v
                     <li key={i.key} id={i.key} className={`border rounded-sm p-3 text-sm ${focus?.endsWith(`:${i.key}`) ? "border-signal bg-panel" : "border-rule"}`}>
                       <p className="font-medium flex flex-wrap items-center gap-2">
                         {i.family && <span className={styles.fam} data-family={i.family}>{FAMILIES[i.family].name}</span>}
-                        {i.kind === "test" || i.kind === "model" ? <Link href={i.href} className="link">{i.title}</Link> : i.title}
+                        {i.kind === "test" ? <Link href={i.href} className="link">{i.title}</Link> : i.title}
                       </p>
                       <p className="mt-1 text-muted">{i.text}</p>
                     </li>

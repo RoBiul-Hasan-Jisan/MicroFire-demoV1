@@ -54,9 +54,10 @@ if (process.argv[2] === "--rescore") {
   const exps = JSON.parse(readFileSync(new URL("../data/experiments.json", import.meta.url), "utf8"));
   const finds = JSON.parse(readFileSync(new URL("../data/findings.json", import.meta.url), "utf8"));
   const saff = JSON.parse(readFileSync(new URL("../data/saffire.json", import.meta.url), "utf8"));
+  const luci = JSON.parse(readFileSync(new URL("../data/luci.json", import.meta.url), "utf8"));
   const rows: Row[] = saved.rows.map((r: Row) => {
     if (r.mode !== "ai") return r;
-    const { items } = buildEvidence(r.q, exps, finds, saff);
+    const { items } = buildEvidence(r.q, exps, finds, saff, luci);
     // restore citations the run-time verifier removed, so they are judged again
     const raw = r.claims.map((c) => ({ text: c.text, type: c.type, cites: [...c.cites, ...removedKeys(c)] }));
     return { ...r, claims: checkAnswer({ summary: r.summary ?? "", claims: raw }, items, r.q) };

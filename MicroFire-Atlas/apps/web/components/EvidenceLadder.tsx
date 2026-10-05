@@ -173,6 +173,7 @@ function Cards({ items, q }: { items: LadderItem[]; q: MissionQuestion }) {
               {r.material} · {r.oxygen ?? "?"} % O₂ · {r.pressureKpa ? `${r.pressureKpa[0]} kPa` : "pressure ?"} · {r.flowCmS ?? "?"} cm/s{r.sizeCm ? ` · ${r.sizeCm} cm sample` : ""}
             </span>
             <span className={`${styles.outcome} ${OUTCOME[r.outcome].tone}`}>{r.outcomeLabel}</span>
+            {r.caveat && <span className={styles.caveat}>{r.caveat}</span>}
             {differs.length > 0 && (
               <span className={styles.differs}>
                 {differs.map((d) => (

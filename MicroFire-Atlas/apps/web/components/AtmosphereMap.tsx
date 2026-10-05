@@ -7,7 +7,7 @@ const x = (kpa: number) => L + ((kpa - P0) / (P1 - P0)) * (W - L - R);
 const y = (o2: number) => H - B - ((o2 - O0) / (O1 - O0)) * (H - T - B);
 
 /**
- * Every test with both pressure and oxygen recorded, on one atmosphere map, with NASA's proposed
+ * Every test with both pressure and oxygen recorded, on one atmosphere map, with NASA's two studied
  * exploration atmosphere marked. Shows how close (and how far) the evidence gets to habitat air.
  * Server-rendered SVG: attributes only, so the strict CSP holds.
  */
@@ -44,9 +44,9 @@ export function AtmosphereMap({ records }: { records: EvidenceRecord[] }) {
 
         {pts.map((r) => {
           const p = (r.pressureKpa![0] + r.pressureKpa![1]) / 2;
-          const saffire = r.family === "saffire";
+          const saffire = r.family === "saffire", luci = r.family === "luci";
           return (
-            <circle key={r.id} cx={x(p)} cy={y(r.oxygen!)} r={saffire ? 7 : 4.5} fill={saffire ? "#ffcf6b" : "#56d4e4"} fillOpacity={saffire ? 0.95 : 0.55} stroke="#070b16" strokeWidth="1.5">
+            <circle key={r.id} cx={x(p)} cy={y(r.oxygen!)} r={saffire || luci ? 7 : 4.5} fill={luci ? "#c7b8ff" : saffire ? "#ffcf6b" : "#56d4e4"} fillOpacity={saffire || luci ? 0.95 : 0.55} stroke="#070b16" strokeWidth="1.5">
               <title>{`${r.label}: ${r.oxygen} % O₂ at ${p} kPa`}</title>
             </circle>
           );
@@ -55,6 +55,7 @@ export function AtmosphereMap({ records }: { records: EvidenceRecord[] }) {
       <figcaption className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted">
         <span><i className="inline-block w-3 h-3 rounded-full bg-[#ffcf6b] align-middle mr-2" />Saffire run</span>
         <span><i className="inline-block w-3 h-3 rounded-full bg-[#56d4e4] opacity-60 align-middle mr-2" />BASS-II test</span>
+        <span><i className="inline-block w-3 h-3 rounded-full bg-[#c7b8ff] align-middle mr-2" />LUCI burn (simulated lunar gravity)</span>
         <span>Dashed rings: two NASA exploration-atmosphere scenarios (not tests, and not a universal Moon-base specification)</span>
       </figcaption>
     </figure>

@@ -11,7 +11,7 @@ export default function MissionPage() {
       <RouteStage kind="mission" />
       <p className="mt-6 text-sm text-muted max-w-[78ch]">
         Describe a cabin, and the atlas ranks every NASA test by how closely it matches. It shows the evidence and how
-        well it fits — it matches tests, it does not give a probability. For a statistical estimate of how the ISS test flames behaved, see the Outcome Model; for what to test next, see Next tests.
+        sure it is — it does not predict whether a fire will start or spread.
       </p>
       <div id="mission-tool" className="scroll-mt-20 mt-8">
         <Suspense fallback={<p className="text-muted">Loading Mission Lab…</p>}>

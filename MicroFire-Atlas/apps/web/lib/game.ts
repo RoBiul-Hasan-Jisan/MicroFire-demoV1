@@ -145,5 +145,5 @@ export const LOG_CLUES = [
   { id: "sibal-GMT45-T4", headline: "Fabric: quenched" },
 ];
 
-/** NASA's proposed exploration atmosphere (finding exploration-atmosphere): a proposal, not a test. */
+/** NASA-studied atmosphere A (finding exploration-atmosphere); not a final lunar habitat specification. */
 export const MOON_AIR = { o2: 34, kpa: 56.5 };

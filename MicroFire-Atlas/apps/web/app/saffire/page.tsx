@@ -13,9 +13,9 @@ export const metadata: Metadata = {
 };
 
 const GROUPS: { title: string; flights: string[]; blurb: string }[] = [
-  { title: "Saffire 1 and 2 (Saffire I to III flew in 2016 and 2017)", flights: ["Saffire-1", "Saffire-2"], blurb: "One wide cotton-fiberglass sheet burned for seven minutes, then nine small samples, including a material rated \"safe\" on Earth." },
+  { title: "Saffire 1 and 2 (Saffire I to III flew in 2016 and 2017)", flights: ["Saffire-1", "Saffire-2"], blurb: "One wide cotton-fiberglass sheet burned for seven minutes, then nine small samples, including silicone, which NASA found appeared less flammable in microgravity at the flow speeds tested." },
   { title: "Saffire IV and V (2020 to 2021)", flights: ["Saffire-IV", "Saffire-V"], blurb: "Thick fuels and longer burns, and the first runs at lower pressure with more oxygen." },
-  { title: "Saffire VI", flights: ["Saffire-VI"], blurb: "Pressure near 55 kPa and oxygen near 30 %, the closest any test in this atlas gets to proposed Moon-base air." },
+  { title: "Saffire VI", flights: ["Saffire-VI"], blurb: "Pressure near 55 kPa and oxygen near 30 %, the closest any test in this atlas gets to the exploration atmospheres NASA has studied." },
 ];
 
 const OUTCOME_COLOR: Record<SaffireRun["outcome_group"], string> = {
@@ -65,7 +65,7 @@ export default function SaffirePage() {
             <AtmosphereMap records={evidenceRecords} />
           </div>
           <div>
-            <h2 id="atm" className="display text-3xl">How close does the evidence get to Moon-base air?</h2>
+            <h2 id="atm" className="display text-3xl">How close does the evidence get to the exploration atmospheres NASA has studied?</h2>
             <p className="mt-4 text-[17px] leading-relaxed">
               Every BASS-II test ran near sea-level pressure. Saffire IV to VI lowered the pressure and raised the oxygen. Saffire VI
               reached about 55 kPa with 29 to 31 % oxygen: close to NASA&apos;s proposed 34 % at 56.5 kPa, but still not there, and

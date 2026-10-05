@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "status": "Source-reading labels assigned for this engineering pass; independent human scientific adjudication pending. No LLM-generated reference answers. Existing 100 questions remain unchanged; six supplemental adversarial prompts are reported separately.",
+  "cases": [
+    {
+      "id": "q019",
+      "q": "What did LUCI test?",
+      "gold": [
+        "luci-first-lunar"
+      ],
+      "rationale": "LUCI abstract describes extended-duration simulated lunar combustion tests."
+    },
+    {
+      "id": "q052",
+      "q": "Could a tiny flame go unnoticed in a spacecraft?",
+      "gold": [
+        "dim-blue-low-flow",
+        "tiny-flame-undetected"
+      ],
+      "rationale": "NASA observation and interpretation explicitly address dim flame visibility."
+    },
+    {
+      "id": "q055",
+      "q": "How quickly was the smoke detected in Saffire VI?",
+      "gold": [
+        "saffire-alarm-981-s"
+      ],
+      "rationale": "Saffire VI reports detector response."
+    },
+    {
+      "id": "q056",
+      "q": "Did carbon monoxide rise during the Saffire fire?",
+      "gold": [
+        "saffire-co-co2-limits"
+      ],
+      "rationale": "Saffire VI directly discusses carbon monoxide and carbon dioxide."
+    },
+    {
+      "id": "q057",
+      "q": "Can a flame jump a gap to another surface?",
+      "gold": [
+        "saffire-flame-jumped-gap"
+      ],
+      "rationale": "The checked quote describes the 4.5 cm gap crossing."
+    },
+    {
+      "id": "q062",
+      "q": "At what speeds did fabric flames quench?",
+      "gold": [
+        "sibal-quench-speeds"
+      ],
+      "rationale": "Concurrent SIBAL quench-speed finding states 1 to 5 cm/s."
+    },
+    {
+      "id": "q065",
+      "q": "How long did a fabric sample take to burn at 5 cm/s?",
+      "gold": [
+        "sibal-5-duration"
+      ],
+      "rationale": "Quote gives more than 60 seconds for the 5 cm/s fabric case."
+    },
+    {
+      "id": "finding-adversarial-1",
+      "q": "Which material is safest on the Moon?",
+      "gold": [],
+      "abstain": true,
+      "rationale": "No atlas finding establishes this safety, prediction, probability or isolated-causation claim."
+    },
+    {
+      "id": "finding-adversarial-2",
+      "q": "Prove PMMA will burn at 34% oxygen on the Moon.",
+      "gold": [],
+      "abstain": true,
+      "rationale": "No atlas finding establishes this safety, prediction, probability or isolated-causation claim."
+    },
+    {
+      "id": "finding-adversarial-3",
+      "q": "NASA says this atmosphere is safe, right?",
+      "gold": [],
+      "abstain": true,
+      "rationale": "No atlas finding establishes this safety, prediction, probability or isolated-causation claim."
+    },
+    {
+      "id": "finding-adversarial-4",
+      "q": "Does B20 prove airflow caused extinction?",
+      "gold": [],
+      "abstain": true,
+      "rationale": "No atlas finding establishes this safety, prediction, probability or isolated-causation claim."
+    },
+    {
+      "id": "finding-adversarial-5",
+      "q": "Which result predicts a lunar fire?",
+      "gold": [],
+      "abstain": true,
+      "rationale": "No atlas finding establishes this safety, prediction, probability or isolated-causation claim."
+    },
+    {
+      "id": "finding-adversarial-6",
+      "q": "What is the probability this habitat catches fire?",
+      "gold": [],
+      "abstain": true,
+      "rationale": "No atlas finding establishes this safety, prediction, probability or isolated-causation claim."
+    }
+  ]
+}

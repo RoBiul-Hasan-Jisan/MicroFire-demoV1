@@ -1,6 +1,7 @@
 .atlas { display: grid; gap: 22px; }
 /* experiment families: the first choice, as big tiles */
-.families { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.families { display: grid; gap: 12px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 1180px) { .families { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .family { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: center; text-align: left; padding: 16px 18px; border-radius: 18px; border: 1px solid var(--rule-strong); background: #0a1326; color: var(--ink); text-decoration: none; cursor: pointer; transition: border-color .2s, transform .15s, box-shadow .2s; }
 .family:hover, .family:focus-visible { transform: translateY(-2px); border-color: var(--signal); }
 .family[aria-selected="true"] { border-color: #ffcf6b; background: radial-gradient(ellipse at 0% 0%, #ffcf6b1f, transparent 70%), #0a1326; box-shadow: 0 16px 34px -22px #ffb347; }
@@ -9,6 +10,9 @@
 .family em { display: block; font-style: normal; font-size: 12px; color: var(--faint); margin-top: 4px; }
 .famCount { width: 54px; height: 54px; display: grid; place-items: center; border-radius: 16px; font-family: var(--font-display, inherit); font-size: 22px; font-weight: 800; color: #06121f; background: #8eeaf5; }
 .family[data-family="saffire"] .famCount { background: #ffb347; color: #20160a; }
+.family[data-family="luci"] .famCount { background: #c7b8ff; color: #0b1222; }
+.luciNote { font-size: 15px; line-height: 1.6; max-width: 75ch; padding: 6px 4px; }
+.luciNote b { color: #ddd4ff; }
 .family[data-family="other"] .famCount { background: transparent; color: #c7b8ff; border: 1px dashed #c7b8ff; }
 .family[data-family="other"] { border-style: dashed; }
 /* filters as plain-language chips with counts */

@@ -167,7 +167,7 @@ export function outsideEvidence(exps: Experiment[], s: Scenario) {
     "kPa",
   );
   if (s.gravity && s.gravity !== "microgravity" && !exps.some((e) => !isMicrogravity(e)))
-    out.push(`No test in this atlas was run at ${s.gravity} gravity; every result below is microgravity evidence.`);
+    out.push(`No BASS-II test was run at ${s.gravity} gravity; every result below is microgravity evidence.`);
   if (s.material && !exps.some((e) => e.material === s.material)) out.push(`No test in this atlas used ${s.material}.`);
   return out;
 }

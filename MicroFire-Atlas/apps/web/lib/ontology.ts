@@ -13,7 +13,7 @@
  *
  * Pure functions, no React. Tolerances are project choices, documented on /methodology.
  */
-import type { Experiment, Finding, OutcomeGroup, SaffireRun } from "./types";
+import type { Experiment, Finding, LuciRun, OutcomeGroup, SaffireRun } from "./types";
 import type { Gravity } from "./relevance";
 
 export type Phase = "solid" | "liquid" | "gas";
@@ -34,9 +34,9 @@ export type Family = {
 export const FAMILIES: Record<FamilyId, Family> = {
   bass2: { id: "bass2", name: "BASS and BASS-II", phase: "solid", fuel: "thin plastic films, fabric and rods", scale: "centimetres", platform: "glovebox flow duct aboard the ISS", gravity: "microgravity", kid: "Small samples in a wind tunnel on the space station." },
   saffire: { id: "saffire", name: "Saffire", phase: "solid", fuel: "fabric, silicone, Nomex and thick PMMA", scale: "5 cm to almost 1 m", platform: "flow unit inside an empty Cygnus cargo ship", gravity: "microgravity", kid: "Big, deliberate fires inside an empty cargo spaceship." },
-  luci: { id: "luci", name: "LUCI", phase: "solid", fuel: "fabric samples", scale: "centimetres", platform: "spinning New Shepard sounding rocket", gravity: "lunar (simulated)", kid: "A spinning rocket that made Moon-like gravity for a few minutes." },
+  luci: { id: "luci", name: "LUCI", phase: "solid", fuel: "SIBAL fabric and a PMMA rod", scale: "centimetres", platform: "spinning New Shepard sounding rocket", gravity: "lunar (simulated)", kid: "A spinning rocket that made Moon-like gravity for a few minutes." },
   "partial-g": { id: "partial-g", name: "Martian-gravity drop tests", phase: "solid", fuel: "spacecraft materials", scale: "centimetres", platform: "drop tower", gravity: "martian (simulated)", kid: "Short falls in a drop tower that feel like Mars gravity." },
-  sofie: { id: "sofie", name: "SoFIE", phase: "solid", fuel: "PMMA and engineering materials", scale: "centimetres", platform: "Combustion Integrated Rack aboard the ISS", gravity: "microgravity", kid: "A space-station lab built to test materials in Moon-base air." },
+  sofie: { id: "sofie", name: "SoFIE", phase: "solid", fuel: "PMMA and engineering materials", scale: "centimetres", platform: "Combustion Integrated Rack aboard the ISS", gravity: "microgravity", kid: "A space-station lab that can test materials at the lower pressure and higher oxygen NASA has studied for future habitats." },
   fm2: { id: "fm2", name: "FM² (planned)", phase: "solid", fuel: "SIBAL fabric and PMMA rods", scale: "centimetres", platform: "robotic chamber on a lunar lander, not yet flown", gravity: "lunar", kid: "A fire test that will happen on the Moon itself. No results yet." },
   flex: { id: "flex", name: "FLEX", phase: "liquid", fuel: "methanol and heptane droplets (2 to 5 mm)", scale: "millimetres", platform: "Combustion Integrated Rack aboard the ISS", gravity: "microgravity", kid: "Tiny burning droplets that float in space." },
   acme: { id: "acme", name: "ACME", phase: "gas", fuel: "gaseous fuel jets", scale: "millimetres to centimetres", platform: "Combustion Integrated Rack aboard the ISS", gravity: "microgravity", kid: "Gas flames that form perfect spheres in space." },
@@ -89,6 +89,7 @@ export type EvidenceRecord = {
   outcome: OutcomeGroup;
   outcomeLabel: string;
   cite: { source_id: string; pdf_page: number; table?: string } | null;
+  caveat?: string; // how this record differs from its label, e.g. simulated rather than real lunar gravity
 };
 
 export function fromBass(e: Experiment): EvidenceRecord {
@@ -110,6 +111,29 @@ export function fromBass(e: Experiment): EvidenceRecord {
     outcome: e.outcome_group,
     outcomeLabel: e.outcome_label,
     cite: { source_id: e.provenance.record.source_id, pdf_page: e.provenance.record.pdf_page, table: e.provenance.record.table },
+  };
+}
+
+/** LUCI burns count as lunar gravity, always with the caveat that it was simulated by spinning a rocket. */
+export function fromLuci(r: LuciRun): EvidenceRecord {
+  const o = r.provenance.outcome ?? r.provenance.o2_start_pct;
+  return {
+    id: r.id,
+    family: "luci",
+    label: `LUCI ${r.sample} (simulated lunar gravity)`,
+    href: `/atlas#${r.id}`,
+    material: r.material,
+    geometry: r.material === "PMMA" ? "rod" : "sheet",
+    sizeCm: r.material === "PMMA" ? null : 30,
+    gravity: "lunar",
+    oxygen: r.o2_start_pct,
+    pressureKpa: [r.pressure_kpa, r.pressure_kpa],
+    flowCmS: null,
+    flowDirection: r.direction,
+    outcome: r.outcome_group,
+    outcomeLabel: r.outcome_label,
+    cite: o ? { source_id: o.source_id, pdf_page: o.pdf_page } : null,
+    caveat: "Simulated lunar gravity: a spinning rocket, about 2.5 minutes, with Coriolis force; oxygen fell during the burn",
   };
 }
 
@@ -146,9 +170,14 @@ export type Difference = { dim: "material" | "gravity" | "oxygen" | "pressure" |
 
 /** How one record differs from the question, dimension by dimension. Unrecorded values count as differences. */
 export function differences(r: EvidenceRecord, q: MissionQuestion, tol: Tolerance = TOLERANCE): Difference[] {
+  return conditionDifferences(r, q, tol);
+}
+
+/** Reused for hypothetical condition coverage without manufacturing an experimental record or outcome. */
+export function conditionDifferences(r: {material?: string; gravity?: Gravity; oxygen: number | null; pressureKpa: [number,number] | null; flowCmS: number | null}, q: MissionQuestion, tol: Tolerance = TOLERANCE): Difference[] {
   const out: Difference[] = [];
-  if (q.material && r.material !== q.material) out.push({ dim: "material", text: `${r.material}, not ${q.material}` });
-  if (q.gravity && q.gravity !== r.gravity) out.push({ dim: "gravity", text: `${GRAVITY_NAME[r.gravity]}, not ${GRAVITY_NAME[q.gravity]}` });
+  if (q.material && r.material !== q.material) out.push({ dim: "material", text: `${r.material ?? "material not reported"}, not ${q.material}`, ...(!r.material ? {unknown:true} : {}) });
+  if (q.gravity && q.gravity !== r.gravity) out.push({ dim: "gravity", text: `${r.gravity ? GRAVITY_NAME[r.gravity] : "gravity not reported"}, not ${GRAVITY_NAME[q.gravity]}`, ...(!r.gravity ? {unknown:true} : {}) });
   if (q.oxygen != null) {
     if (r.oxygen == null) out.push({ dim: "oxygen", text: "oxygen not recorded", unknown: true });
     else if (Math.abs(r.oxygen - q.oxygen) > tol.oxygen) out.push({ dim: "oxygen", text: `${r.oxygen} % O₂, not ${q.oxygen} %` });
@@ -188,7 +217,9 @@ const describe = (q: MissionQuestion) =>
 export function ladder(records: EvidenceRecord[], findings: Finding[], q: MissionQuestion, tol: Tolerance = TOLERANCE): Ladder {
   const scored = records.map((record) => ({ record, differs: differences(record, q, tol) }));
   const direct = scored.filter((x) => x.differs.length === 0);
-  // fewer differences first, then fewer unknowns, then the smallest actual distance on oxygen and pressure
+  // fewer differences first (a gravity difference counts double: it is a different physical regime, not a nearby value),
+  // then fewer unknowns, then the smallest actual distance on oxygen and pressure
+  const weight = (ds: Difference[]) => ds.length + (ds.some((d) => d.dim === "gravity") ? 1 : 0);
   const distance = (r: EvidenceRecord) =>
     (q.oxygen != null && r.oxygen != null ? Math.abs(r.oxygen - q.oxygen) / 5 : 0) +
     (q.pressureKpa != null && r.pressureKpa != null ? Math.abs((r.pressureKpa[0] + r.pressureKpa[1]) / 2 - q.pressureKpa) / 20 : 0);
@@ -196,7 +227,7 @@ export function ladder(records: EvidenceRecord[], findings: Finding[], q: Missio
     .filter((x) => x.differs.length > 0)
     .sort(
       (a, b) =>
-        a.differs.length - b.differs.length ||
+        weight(a.differs) - weight(b.differs) ||
         a.differs.filter((d) => d.unknown).length - b.differs.filter((d) => d.unknown).length ||
         distance(a.record) - distance(b.record) ||
         a.record.id.localeCompare(b.record.id),
@@ -262,6 +293,7 @@ export function whyPath(r: EvidenceRecord, q: MissionQuestion): WhyStep[] {
   check("oxygen", q.oxygen, `Oxygen within ±${TOLERANCE.oxygen} points (${r.oxygen} %)`);
   check("pressure", q.pressureKpa, `Pressure within ±${TOLERANCE.pressureKpa} kPa (${r.pressureKpa?.[0]} kPa)`);
   check("flow", q.flow, `Airflow within ±${TOLERANCE.flowFraction * 100} % (${r.flowCmS} cm/s)`);
+  if (r.caveat) steps.push({ kind: "unknown", text: `Caveat: ${r.caveat}` });
   steps.push({ kind: "rung", text: d.length === 0 ? "Direct evidence: every condition you set is matched" : `Analogous evidence: differs in ${d.map((x) => x.dim).join(", ")}` });
   return steps;
 }

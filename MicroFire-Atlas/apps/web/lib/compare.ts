@@ -59,12 +59,12 @@ const DIMS: Dim[] = [
   { key: "thickness", label: "Thickness", get: (r) => r.thicknessMm, show: (v: number) => `${v} mm`, same: num(0.001) },
   { key: "width", label: "Sample width", get: (r) => r.widthMm, show: (v: number) => (v >= 50 ? `${v / 10} cm` : `${v} mm`), same: num(0.001) },
   { key: "direction", label: "Flow direction", get: (r) => r.flowDirection, show: (v: string) => v, same: (a, b) => a === b },
-  { key: "airflow", label: "Airflow", get: (r) => r.airflowCmS, show: (v: number) => `${v} cm/s`, same: num(0.5) },
-  { key: "oxygen", label: "Oxygen", get: (r) => r.oxygen, show: (v: number) => `${v} %`, same: num(0.5) },
+  { key: "airflow", label: "Airflow", get: (r) => r.airflowCmS, show: (v: number) => `${v} cm/s`, same: num(0) },
+  { key: "oxygen", label: "Oxygen", get: (r) => r.oxygen, show: (v: number) => `${v} %`, same: num(0) },
   {
     key: "pressure", label: "Pressure", get: (r) => r.pressureKpa,
     show: (v: [number, number]) => (v[0] === v[1] ? `${v[0]} kPa` : `${v[0]}–${v[1]} kPa`),
-    same: (a: [number, number], b: [number, number]) => Math.max(a[0], b[0]) - Math.min(a[1], b[1]) <= 2,
+    same: (a: [number, number], b: [number, number]) => a[0] === b[0] && a[1] === b[1],
   },
 ];
 

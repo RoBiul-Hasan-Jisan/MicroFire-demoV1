@@ -7,6 +7,7 @@ export const metadata: Metadata = { title: "Sources" };
 const DOWNLOADS: [file: string, label: string, note: string][] = [
   ["bass2-tests.csv", "BASS-II test records (CSV)", "Every test row: material, oxygen, pressure, airflow, outcome, NASA notes."],
   ["saffire-runs.csv", "Saffire runs (CSV)", "Large-scale spacecraft fires: conditions and measured results."],
+  ["luci-runs.csv", "LUCI lunar-gravity burns (CSV)", "Two burns in simulated lunar gravity, each value with its NASA sentence and page."],
   ["findings.json", "Findings (JSON)", "Each quoted NASA finding, verified against the PDF text."],
   ["source-manifest.json", "Source manifest (JSON)", "NTRS records, PDF links and SHA-256 hashes."],
   ["flame-frame-metrics.csv", "Flame Vision frame metrics (CSV)", "Per-frame flame measurements, in pixels."],

@@ -17,8 +17,8 @@ export type Preset = {
 export const PRESETS: Preset[] = [
   {
     id: "pmma-flow-window",
-    title: "Same film, same oxygen, different airflow",
-    question: "At about 16.5 % oxygen, what does airflow alone do to a thin PMMA flame?",
+    title: "Same thin PMMA film, near-identical oxygen, different airflow",
+    question: "What changed across these near-matched PMMA tests as airflow changed?",
     ids: ["bass2-B16", "bass2-B20", "bass2-B19"],
     varies: "Airflow",
     observed: [
@@ -28,7 +28,7 @@ export const PRESETS: Preset[] = [
       "B19 ran at 10 cm/s and NASA notes the flame blew out.",
     ],
     interpretation:
-      "Read together, the three runs bracket a flammability window at this oxygen level: too little flow and the flame starved, a moderate flow sustained it, a stronger flow blew it out. That matches the quenching and blowoff limits NASA reports for other PMMA geometries, but three runs do not locate the boundaries precisely.",
+      "The near-matched runs associate different airflow histories with different outcomes. B16 and B20 report 16.5 % oxygen; B19 reports 16.4 %, a difference of 0.1 percentage point. This pattern is consistent with limits reported for other PMMA geometries, but these isolated runs do not prove airflow caused the difference or locate a boundary.",
     gaps: [
       "The flows at which B16 quenched and B19 blew out are recorded only as fan settings, not cm/s.",
       "One run per condition, so run-to-run scatter is unknown.",
@@ -47,7 +47,7 @@ export const PRESETS: Preset[] = [
       "B19 at 16.4 % oxygen: “flame blew out at a pot of 6.0”.",
     ],
     interpretation:
-      "Lower oxygen made the flame vulnerable to blowoff at a flow it survived at near-normal oxygen. This is consistent with NASA's PMMA rod work, where the blowoff limit depends on oxygen concentration. Two runs show the direction of the effect, not its size.",
+      "The lower-oxygen run recorded blowoff, while the near-normal-oxygen run recorded continued spread. This association is consistent with NASA's PMMA rod work, but two isolated runs do not establish oxygen as the sole cause.",
     gaps: ["B19's exact blowoff flow is a fan setting, not cm/s.", "No intermediate oxygen levels at this flow in the table."],
     findings: ["pmma-rod-limits"],
   },
@@ -80,7 +80,7 @@ export const PRESETS: Preset[] = [
       "NASA reports the 10 cm/s burn took about 40 s; the 5 cm/s burn took more than 60 s, with a shorter flame that spread more slowly.",
     ],
     interpretation:
-      "Halving the flow slowed the fire. In a cabin, slower ventilation means a slower-growing flame — but the other comparisons show that cutting flow too far can also let a dim flame persist rather than go out.",
+      "NASA reported slower spread in the lower-flow fabric test. That result does not establish a universal ventilation rule for cabins; other NASA observations include dim flames persisting at very low flow.",
     gaps: ["Spread rates are given in a figure, not a table, so we do not transcribe numeric values."],
     findings: ["sibal-10-vs-5", "sibal-10-duration", "sibal-5-duration", "sibal-spread-trends"],
   },

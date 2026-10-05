@@ -4,6 +4,7 @@ import Link from "next/link";
 import { connection } from "next/server";
 import { Nav } from "@/components/Nav";
 import { ExplorerProvider } from "@/components/guide/EmberGuide";
+import { JudgeTourBar } from "@/components/JudgeTour";
 import "./globals.css";
 import "./explorer-ui.css";
 
@@ -40,6 +41,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <main id="main" className="flex-1">
           {children}
         </main>
+        <JudgeTourBar />
         <footer className="site-footer mt-24">
           <div className="footer-invitation mx-auto max-w-7xl px-4 sm:px-6"><div><p className="display text-2xl">Keep asking. Keep exploring.</p><p className="text-muted text-sm mt-2">Every discovery starts with a good question.</p></div><Link href="/ask" className="story-cta">Ask the evidence</Link></div>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 py-8 text-sm text-muted grid gap-3 sm:grid-cols-2">
@@ -54,10 +56,6 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
               <span className="mx-3 text-faint">/</span>
               <Link className="link" href="/sources">
                 Sources
-              </Link>
-              <span className="mx-3 text-faint">/</span>
-              <Link className="link" href="/changelog">
-                Model changelog
               </Link>
               <span className="mx-3 text-faint">/</span>
               <Link className="link" href="/tour">

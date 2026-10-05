@@ -3,15 +3,14 @@
  * anything but the evidence package built here, and every claim it returns is checked
  * against that package before it reaches the page.
  */
-import type { Experiment, Finding, SaffireRun } from "./types";
-import { predictOutcome, type Model } from "./model.ts";
+import type { Experiment, Finding, LuciRun, SaffireRun } from "./types";
 import { rank, type Scenario } from "./relevance.ts";
-import { differences, FAMILIES, fromBass, fromSaffire, KIND_LABEL, ladder, SOURCE_FAMILY, type FamilyId, type MissionQuestion } from "./ontology.ts";
+import { differences, FAMILIES, fromBass, fromLuci, fromSaffire, KIND_LABEL, ladder, SOURCE_FAMILY, type FamilyId, type MissionQuestion } from "./ontology.ts";
 
 export type EvidenceRung = "direct" | "analogous" | "mechanistic" | "context";
 export type EvidenceItem = {
   key: string; // "E:bass2-B19", "S:saffire-vi-2" or "F:low-flow-sensitivity"
-  kind: "test" | "finding" | "model";
+  kind: "test" | "finding";
   title: string;
   text: string;
   href: string;
@@ -138,6 +137,24 @@ function saffireItem(r: SaffireRun): EvidenceItem {
   return { key: `S:${r.id}`, kind: "test", title: `Saffire ${r.flight.replace("Saffire-", "")} sample ${r.sample}`, text: parts.filter(Boolean).join("; "), href: `/saffire#${r.id}`, family: "saffire", gravity: "microgravity" };
 }
 
+function luciItem(r: LuciRun): EvidenceItem {
+  const o = r.provenance.outcome;
+  const parts = [
+    `LUCI burn, ${r.sample}`,
+    `material ${r.material_verbatim}, ${r.size_verbatim}`,
+    `burning ${r.direction}`,
+    "lunar gravity simulated on a spinning New Shepard rocket (centrifugal acceleration, Coriolis force present), burn of about 2.5 minutes",
+    "in air at normal pressure",
+    `chamber oxygen fell from ${r.o2_start_pct} % to ${r.o2_end_pct} % during the burn`,
+    r.spread_base_mm_s != null ? `flame base spread rate ${r.spread_base_mm_s} mm/s` : "",
+    r.spread_tip_mm_s != null ? `flame tip spread rate ${r.spread_tip_mm_s} mm/s` : "",
+    `outcome: ${r.outcome_label}`,
+    o ? `NASA: "${o.quote}"` : "",
+    o ? `source: luci, PDF page ${o.pdf_page}` : "",
+  ];
+  return { key: `L:${r.id}`, kind: "test", title: `LUCI ${r.sample} (simulated lunar gravity)`, text: parts.filter(Boolean).join("; "), href: `/atlas#${r.id}`, family: "luci", gravity: "partial" };
+}
+
 function findingItem(f: Finding): EvidenceItem {
   const family = SOURCE_FAMILY[f.source_id] ?? "context";
   const phase = FAMILIES[family].phase;
@@ -158,32 +175,7 @@ function findingItem(f: Finding): EvidenceItem {
 const toQuestion = (s: Scenario): MissionQuestion => ({ material: s.material, oxygen: s.oxygen, pressureKpa: s.pressureKpa, gravity: s.gravity, flow: s.flow });
 
 /** Deterministic evidence package for a question. Saffire runs join when the question reaches their regime. */
-/**
- * The outcome model as one evidence item. It is MicroFire Atlas\'s own statistical estimate, not a NASA record,
- * so it carries no rung, is only built when the question gives both oxygen and airflow, and is never offered for
- * lunar or Mars gravity (the model was trained on microgravity tests only).
- */
-function modelItem(q: string, scenario: Scenario, model?: Model): EvidenceItem | null {
-  if (!model || scenario.oxygen == null || scenario.flow == null || scenario.gravity) return null;
-  const direction = /opposed/i.test(q) ? "opposed" : "concurrent";
-  const stated = /opposed|concurrent/i.test(q);
-  const r = predictOutcome(model, { o2: scenario.oxygen, flow: scenario.flow, direction });
-  const pct = (v: number) => Math.round(v * 100);
-  const bal = model.report?.models?.logistic_oxygen_flow_direction_SHIPPED?.balanced_accuracy;
-  const outside = !r.inRange.o2 || !r.inRange.flow;
-  const text = [
-    `MicroFire Atlas outcome model (a statistical estimate trained on ${model.report?.n_rows ?? model.points.length} NASA microgravity tests; not a NASA result)`,
-    `for oxygen ${scenario.oxygen} %, airflow ${scenario.flow} cm/s, ${direction} flow${stated ? "" : " (direction not stated, concurrent assumed)"}`,
-    `it estimates a ${pct(r.p)} % chance the flame was sustained, 90 % bootstrap interval ${pct(r.lo)} % to ${pct(r.hi)} %`,
-    bal != null ? `cross-validated balanced accuracy ${bal} (no-skill baseline 0.5)` : "",
-    outside ? `these conditions are outside the tested range (oxygen ${model.ranges.o2_pct[0]} to ${model.ranges.o2_pct[1]} %, airflow ${model.ranges.flow_cm_s[0]} to ${Math.round(model.ranges.flow_cm_s[1])} cm/s), so this is an extrapolation` : "",
-    `closest real tests: ${r.nearest.slice(0, 3).map((n) => `${n.id} (${n.o2} %, ${n.flow} cm/s, ${n.sustained ? "kept burning" : "went out or did not ignite"})`).join("; ")}`,
-    "model uses oxygen, airflow speed and direction only; run in microgravity data",
-  ].filter(Boolean).join("; ");
-  return { key: "M:outcome-model", kind: "model", title: "Outcome model estimate", text, href: "/predict", gravity: "microgravity" };
-}
-
-export function buildEvidence(q: string, exps: Experiment[], finds: Finding[], saffire: SaffireRun[] = [], model?: Model) {
+export function buildEvidence(q: string, exps: Experiment[], finds: Finding[], saffire: SaffireRun[] = [], luci: LuciRun[] = []) {
   const { scenario, topics, testIds, saffireIds } = parseQuestion(q);
   const named = exps.filter((e) => testIds.includes(e.test_id.toUpperCase()));
   const hasScenario = Object.keys(scenario).length > 0;
@@ -223,27 +215,35 @@ export function buildEvidence(q: string, exps: Experiment[], finds: Finding[], s
     .map((x) => x.f);
 
   // every test is placed on the ladder for this question; the closest evidence comes first
+  // LUCI: the only lunar-gravity test rows; they join any question about the Moon or reduced gravity
+  const wantsLuci = scenario.gravity === "lunar" || topics.has("partial-gravity");
   const placedTests = [
     ...tests.map((e) => ({ item: testItem(e), d: hasScenario ? differences(fromBass(e), sq).length : 1 })),
     ...saffireRuns.map((r) => ({ item: saffireItem(r), d: hasScenario ? differences(fromSaffire(r), sq).length : 1 })),
+    ...(wantsLuci ? luci : []).map((r) => ({ item: luciItem(r), d: hasScenario ? differences(fromLuci(r), sq).length : 1 })),
   ]
     .map((x, i) => ({ ...x, i }))
     .sort((a, b) => (hasScenario ? a.d - b.d : 0) || a.i - b.i)
     .map(({ item, d }) => ({ ...item, rung: (d === 0 && hasScenario ? "direct" : "analogous") as EvidenceRung }));
   // gaps come from the ladder over every family, so a Saffire run at 31 % oxygen counts as tested ground
-  const records = [...exps.map(fromBass), ...saffire.map(fromSaffire)];
+  const records = [...exps.map(fromBass), ...saffire.map(fromSaffire), ...luci.map(fromLuci)];
   const gaps: { dim: string; text: string }[] = hasScenario ? ladder(records, [], sq).gaps : [];
   // records the question names that this atlas does not hold are gaps too, never silently ignored
   for (const id of testIds) if (!named.some((e) => e.test_id.toUpperCase() === id)) gaps.push({ dim: "record", text: `This atlas holds no test ${id}.` });
+  if (/\bfm\s*[2²]\b/i.test(q)) gaps.push({ dim: "record", text: "FM² has not flown yet: no FM² results exist. Its planned conditions are listed on the Research Frontier page." });
+  // a question asking for danger, safety or a probability: the atlas reports evidence, never a forecast
+  if (/\b(probability|chance of|how likely|how long until|dangerous|safe|safest|unsafe|prove|proves|caused|predict\w*|will .{0,40}\b(burn|ignite|be safe|be dangerous|catch fire))\b/i.test(q))
+    gaps.push({ dim: "prediction", text: "MicroFire Atlas reports NASA evidence; these records do not establish mission safety, fire probability, predictions or isolated causal proof." });
+  // a premise that contradicts a named record: B19 did not burn on the Moon
+  if (scenario.gravity && scenario.gravity !== "microgravity")
+    for (const e of named) gaps.push({ dim: "premise", text: `Test ${e.test_id} ran in microgravity aboard the ISS, not at ${scenario.gravity} gravity.` });
   const flight = q.match(/\bsaffire[\s-]*(vii+|ix|x|[7-9]|1\d)\b/i);
   if (flight) gaps.push({ dim: "record", text: `This atlas holds Saffire I to VI only; it has no Saffire ${flight[1].toUpperCase()} record.` });
   // a question about a concept rather than conditions or named records reads NASA's own words first
   const conceptual = scenario.oxygen == null && scenario.flow == null && scenario.pressureKpa == null && !named.length && !saffireIds.length;
   const quoteItems = scored.map(findingItem);
-  const mItem = modelItem(q, scenario, model);
-  // the model estimate always comes last: it never displaces NASA evidence from the top of the package
   return {
-    items: [...(conceptual ? [...quoteItems, ...placedTests] : [...placedTests, ...quoteItems]), ...(mItem ? [mItem] : [])],
+    items: conceptual ? [...quoteItems, ...placedTests] : [...placedTests, ...quoteItems],
     scenario,
     outside: gaps.map((g) => g.text),
     gapDims: gaps.map((g) => g.dim),
@@ -261,8 +261,6 @@ Each item carries an evidence rung for this question:
 - mechanistic: droplet or gas-flame physics; use it only to explain mechanisms, never to describe how a solid material behaves;
 - context: background or objectives, not results.
 
-An item with key "M:outcome-model" is different: it is MicroFire Atlas's own statistical estimate from a small model, not a NASA record or measurement. Use it only as a DERIVED claim that cites "M:outcome-model", phrased as "the model estimates ..." and always with its interval, and say it is an estimate from limited data. Never present it as what will happen, as a safety rating or as NASA's result, and mention if the item says the conditions are outside the tested range. Do not use it to answer questions about lunar or Mars gravity.
-
 Return a short summary and a list of claims. Each claim has a type:
 - OBSERVED: something NASA recorded or reported. Cite the evidence keys that state it.
 - DERIVED: a comparison or count you computed from cited items, such as which of two tests had more oxygen. Cite every item used.
@@ -272,7 +270,7 @@ Return a short summary and a list of claims. Each claim has a type:
 Rules:
 - Cite only keys that appear in the evidence list, exactly as written (for example "E:bass2-B19" or "F:low-flow-sensitivity").
 - Copy numbers exactly as they appear in the cited items.
-- All tests were run in microgravity aboard the ISS. Never present them as Moon or Mars measurements; if asked about other gravity levels, say what the cited partial-gravity quotes report and add a DATA_GAP claim.
+- BASS/BASS-II ran in microgravity aboard the ISS; Saffire ran in uncrewed Cygnus vehicles. LUCI simulated lunar gravity on a spinning rocket, not on the Moon surface. Preserve each cited item's actual platform and gravity; report unmatched conditions as DATA_GAP claims.
 - These are past test outcomes, not predictions or safety ratings. Do not give operational crew advice.
 - Never write that something causes, proves, ensures or guarantees an outcome, or that a material or habitat is safe, unless a cited NASA quote says so. Say "was recorded with" or "differed in" instead.
 - Never predict ("will burn", "would ignite"). If asked, say what was recorded and add a DATA_GAP claim.

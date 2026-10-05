@@ -111,3 +111,24 @@ export type SaffireRun = {
   provenance: { conditions: Citation | null; results: Citation | null; outcome: Citation | null; thickness: Citation | null };
   notes: string[];
 };
+
+/** LUCI: burns in simulated lunar gravity on a spinning rocket. Every value carries its exact NASA text and page. */
+export type LuciRun = {
+  id: string;
+  sample: string;
+  material: string;
+  material_verbatim: string;
+  size_verbatim: string;
+  direction: string;
+  o2_start_pct: number;
+  o2_end_pct: number;
+  pressure_kpa: number;
+  pressure_basis: string;
+  spread_base_mm_s: number | null;
+  spread_tip_mm_s: number | null;
+  gravity: "lunar";
+  gravity_note: string;
+  outcome_group: OutcomeGroup;
+  outcome_label: string;
+  provenance: Record<string, { source_id: string; pdf_page: number; quote: string } | null>;
+};

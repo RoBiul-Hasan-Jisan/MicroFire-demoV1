@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { FlameLab } from "@/components/lab/FlameLab";
+import { experiments } from "@/lib/data";
+import { deployedSnapshot } from "@/lib/model-lab";
 
 export const metadata: Metadata = {
-  title: "Microgravity Flame Lab",
-  description: "Change gravity, oxygen, airflow and fuel, light a flame, and see what NASA's space-station fire tests recorded.",
+  title: "Flame Lab",
+  description: "An interactive combustion chamber: set gravity, oxygen, airflow, pressure and material, and see what NASA actually tested, what is analogous, and where the evidence stops.",
 };
 
 export default function LabPage() {
   return (
-    <Suspense fallback={<p className="mx-auto max-w-7xl px-4 py-12 text-muted">Loading the Flame Lab…</p>}>
-      <FlameLab />
-    </Suspense>
+    <div data-flame-lab>
+      <h1 className="sr-only">MicroFire Flame Lab</h1>
+      <FlameLab snap={deployedSnapshot(experiments)} />
+    </div>
   );
 }

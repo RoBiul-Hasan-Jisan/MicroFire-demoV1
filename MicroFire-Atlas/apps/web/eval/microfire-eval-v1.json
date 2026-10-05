@@ -1,6 +1,6 @@
 {
  "name": "MicroFire-Eval",
- "version": "1.0",
+ "version": "1.1",
  "written": "2026-10-03",
  "note": "Gold evidence keys come from the transcribed NASA data, not from the system's output. Questions are frozen: when the system fails one, the system is changed, not the question.",
  "questions": [
@@ -567,7 +567,6 @@
    "expect": {
     "signal": "gap",
     "gaps": [
-     "gravity",
      "oxygen"
     ]
    }
@@ -591,7 +590,7 @@
    "expect": {
     "signal": "gap",
     "gaps": [
-     "gravity"
+     "combination"
     ]
    }
   },
@@ -611,10 +610,7 @@
    "category": "mission",
    "q": "How does fabric burn at 21% oxygen on the Moon?",
    "expect": {
-    "signal": "gap",
-    "gaps": [
-     "gravity"
-    ]
+    "signal": "direct"
    }
   },
   {
@@ -654,10 +650,7 @@
    "category": "mission",
    "q": "How would fabric burn in a lunar habitat with normal air?",
    "expect": {
-    "signal": "gap",
-    "gaps": [
-     "gravity"
-    ]
+    "signal": "direct"
    }
   },
   {
@@ -697,7 +690,6 @@
    "expect": {
     "signal": "gap",
     "gaps": [
-     "gravity",
      "oxygen"
     ]
    }
@@ -709,7 +701,7 @@
    "expect": {
     "signal": "gap",
     "gaps": [
-     "gravity"
+     "combination"
     ]
    }
   },
@@ -803,7 +795,7 @@
    "expect": {
     "signal": "gap",
     "gaps": [
-     "gravity"
+     "premise"
     ]
    }
   },
@@ -852,7 +844,6 @@
    "expect": {
     "signal": "gap",
     "gaps": [
-     "gravity",
      "oxygen"
     ]
    }
@@ -864,7 +855,6 @@
    "expect": {
     "signal": "gap",
     "gaps": [
-     "gravity",
      "oxygen"
     ]
    }
@@ -896,6 +886,157 @@
    "anyOf": [
     "F:flames-survive-below-1",
     "F:dim-blue-low-flow"
+   ]
+  }
+ ],
+ "changelog": [
+  {
+   "version": "1.1",
+   "date": "2026-10-03",
+   "note": "Question text unchanged. Nine expectations changed because the evidence changed (LUCI added); each is listed with its reason. Three system guards were added in the same update (named records the atlas does not hold, forecast requests, false premises about a named test).",
+   "changes": [
+    {
+     "id": "q066",
+     "from": {
+      "signal": "gap",
+      "gaps": [
+       "gravity",
+       "oxygen"
+      ]
+     },
+     "to": {
+      "signal": "gap",
+      "gaps": [
+       "oxygen"
+      ]
+     },
+     "why": "The 2026-10-03 data update added two LUCI burns in simulated lunar gravity, so lunar gravity alone is no longer missing; the gap is now the 34 % oxygen no record reaches."
+    },
+    {
+     "id": "q079",
+     "from": {
+      "signal": "gap",
+      "gaps": [
+       "gravity",
+       "oxygen"
+      ]
+     },
+     "to": {
+      "signal": "gap",
+      "gaps": [
+       "oxygen"
+      ]
+     },
+     "why": "The 2026-10-03 data update added two LUCI burns in simulated lunar gravity, so lunar gravity alone is no longer missing; the gap is now the 34 % oxygen no record reaches."
+    },
+    {
+     "id": "q096",
+     "from": {
+      "signal": "gap",
+      "gaps": [
+       "gravity",
+       "oxygen"
+      ]
+     },
+     "to": {
+      "signal": "gap",
+      "gaps": [
+       "oxygen"
+      ]
+     },
+     "why": "The 2026-10-03 data update added two LUCI burns in simulated lunar gravity, so lunar gravity alone is no longer missing; the gap is now the 34 % oxygen no record reaches."
+    },
+    {
+     "id": "q097",
+     "from": {
+      "signal": "gap",
+      "gaps": [
+       "gravity",
+       "oxygen"
+      ]
+     },
+     "to": {
+      "signal": "gap",
+      "gaps": [
+       "oxygen"
+      ]
+     },
+     "why": "The 2026-10-03 data update added two LUCI burns in simulated lunar gravity, so lunar gravity alone is no longer missing; the gap is now the 34 % oxygen no record reaches."
+    },
+    {
+     "id": "q068",
+     "from": {
+      "signal": "gap",
+      "gaps": [
+       "gravity"
+      ]
+     },
+     "to": {
+      "signal": "gap",
+      "gaps": [
+       "combination"
+      ]
+     },
+     "why": "The 2026-10-03 data update added two LUCI burns in simulated lunar gravity, so lunar gravity alone is no longer missing; the gap is now the combination: each condition was tested somewhere, never all together."
+    },
+    {
+     "id": "q080",
+     "from": {
+      "signal": "gap",
+      "gaps": [
+       "gravity"
+      ]
+     },
+     "to": {
+      "signal": "gap",
+      "gaps": [
+       "combination"
+      ]
+     },
+     "why": "The 2026-10-03 data update added two LUCI burns in simulated lunar gravity, so lunar gravity alone is no longer missing; the gap is now the combination: each condition was tested somewhere, never all together."
+    },
+    {
+     "id": "q070",
+     "from": {
+      "signal": "gap",
+      "gaps": [
+       "gravity"
+      ]
+     },
+     "to": {
+      "signal": "direct"
+     },
+     "why": "LUCI burned SIBAL fabric in air at normal pressure in simulated lunar gravity: direct evidence now exists, with its caveat."
+    },
+    {
+     "id": "q075",
+     "from": {
+      "signal": "gap",
+      "gaps": [
+       "gravity"
+      ]
+     },
+     "to": {
+      "signal": "direct"
+     },
+     "why": "LUCI burned SIBAL fabric in air at normal pressure in simulated lunar gravity: direct evidence now exists, with its caveat."
+    },
+    {
+     "id": "q091",
+     "from": {
+      "signal": "gap",
+      "gaps": [
+       "gravity"
+      ]
+     },
+     "to": {
+      "signal": "gap",
+      "gaps": [
+       "premise"
+      ]
+     },
+     "why": "The false premise (B19 on the Moon) is now flagged directly; LUCI's lunar burns mean gravity alone is no longer a gap."
+    }
    ]
   }
  ]

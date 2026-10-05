@@ -1,11 +1,8 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { experiments, findings, saffireRuns } from "@/lib/data";
-import modelJson from "@/data/model.json";
-import type { Model } from "@/lib/model";
+import { experiments, findings, saffireRuns, luciRuns } from "@/lib/data";
 import { ANSWER_SCHEMA, buildEvidence, checkAnswer, isRawAnswer, SYSTEM_PROMPT, userMessage } from "@/lib/ask-core";
 
 const MAX_QUESTION = 400;
-const outcomeModel = modelJson as unknown as Model;
 const WINDOW_MS = 60_000;
 const MAX_PER_WINDOW = Number(process.env.ASK_RATE_LIMIT ?? 8); // raised only for security scans
 const CACHE_MS = 6 * 60 * 60_000;
@@ -96,7 +93,7 @@ export async function POST(request: Request) {
     return json({ error: `Ask a question between 3 and ${MAX_QUESTION} characters.` }, 400);
 
   const q = question.trim();
-  const { items, outside } = buildEvidence(q, experiments, findings, saffireRuns, outcomeModel);
+  const { items, outside } = buildEvidence(q, experiments, findings, saffireRuns, luciRuns);
   const base = { evidence: items, outside };
 
   if (items.length === 0)
