@@ -8,6 +8,7 @@ import { abstention, ABSTAIN_QUESTION, buildChallenge, CHALLENGE_ATMOSPHERES, TR
 import { FAMILIES, KIND_LABEL, SOURCE_FAMILY } from "@/lib/ontology";
 import { BriefActions, StageRail } from "@/components/challenge/StageRail";
 import { deployedSnapshot, gate } from "@/lib/model-lab";
+import { dossierUrl } from "@/lib/dossier";
 import styles from "@/components/challenge/Challenge.module.css";
 
 export const metadata: Metadata = {
@@ -45,6 +46,10 @@ export default async function ChallengePage({ searchParams }: { searchParams: Pr
   const top = c.topFindings[0];
   const passed = c.ai.checked.filter((x) => x.verified).length;
   const tested = c.gap.coverage.map((d) => `${d.label.toLowerCase()} ${d.count > 0 ? `in ${d.count} record${d.count === 1 ? "" : "s"}` : "never"}`).join(", ");
+  const dossierHref = dossierUrl(
+    { material: c.q.material!, gravity: "lunar", o2: c.q.oxygen!, kpa: c.q.pressureKpa!, flow: c.q.flow! },
+    { gravity: "microgravity", o2: 21, kpa: 101.3 },
+  );
   const ml = gate(deployedSnapshot(experiments), { material: c.q.material!, gravity: "lunar", o2: c.q.oxygen!, kpa: c.q.pressureKpa!, flow: c.q.flow! });
   const blockedBy = ml.checks.filter((x) => x.status === "out" || x.status === "insufficient").map((x) => x.dim.toLowerCase());
   const brief: [string, string, string?][] = [
@@ -212,6 +217,7 @@ export default async function ChallengePage({ searchParams }: { searchParams: Pr
       <Stage n={8} verb="Next question" title="The experiment that would close the gap">
         <p className="mb-5"><Link className="link" href={`/gaps?scenario=mission-${atm === "ea-a" ? "moon-base" : "moon-base-alt"}#research-planning`}>See how this gap compares with the whole research landscape</Link></p>
         <p className="mb-5"><Link className="link" href="/gaps#evidence-gain">Which experiment could address the most open gaps?</Link></p>
+        <p className="mb-5"><Link className="link" href={dossierHref}>Turn this question into a full dossier, and see what would have to change for the evidence to apply</Link></p>
         {c.gap.nextExperiment ? (
           <div className={styles.next}>
             <p className={styles.meta}>Matched-condition research question</p>
@@ -272,6 +278,7 @@ export default async function ChallengePage({ searchParams }: { searchParams: Pr
         <nav className={styles.briefLinks} aria-label="Go deeper">
           <a href="#stage-1">View details</a>
           <Link href={`/mission?context=${atm === "ea-a" ? "moon-base" : "moon-base-alt"}`}>Open Mission Analyst</Link>
+          <Link href={dossierHref}>Open the Scenario Dossier</Link>
           <Link href="/model-lab">Why the model abstains</Link>
         </nav>
       </section>

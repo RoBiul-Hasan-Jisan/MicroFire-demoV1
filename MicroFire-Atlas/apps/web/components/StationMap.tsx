@@ -27,6 +27,8 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: "/analyze", label: "Flame Vision", title: "Observation station", detail: "Computer vision on real NASA footage, frame by frame, in pixels.", icon: "eye" },
       { href: "/ask", label: "Ask PIX", title: "Ask the evidence", detail: "Bring a question. Every answer leads back to its NASA source.", icon: "chat" },
+      { href: "/dossier", label: "Scenario Dossier", title: "One scenario, five answers", detail: "What NASA's tests say, what changes, where evidence is missing, which test helps, and a shareable link.", icon: "map" },
+      { href: "/what-if", label: "What-if Lab", title: "Counterfactual explorer", detail: "Change one condition and see how the evidence, the estimate and its uncertainty respond, or where they stop.", icon: "compare" },
       { href: "/model-lab", label: "AI Model Lab", title: "Evidence-bounded ML", detail: "A validated model on NASA tests that refuses to predict outside its evidence.", icon: "sliders" },
     ],
   },

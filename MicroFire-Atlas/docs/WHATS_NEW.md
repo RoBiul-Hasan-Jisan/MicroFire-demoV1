@@ -3,6 +3,8 @@
 The project started as a story/game-style site with a verified NASA dataset, an evidence ladder and a cited Ask page. It had no trained model. This version adds the data-and-AI part the challenge asks for.
 
 ## 0. Latest additions
+- **Scenario Dossier** (`/dossier`): one scenario, five numbered answers, a shareable link, Markdown download and print. Linked from Challenge Mode and the judge tour (now nine stops of 10 s).
+- **What-if Lab** (`/what-if`): counterfactual evidence explorer with an evidence-weighted envelope, one-condition-at-a-time comparison and a coverage map. Blocks the number outside tested conditions. See the FLARE-X tracker in `README.md`.
 - **Next tests** (`/next-tests`): ranks new experiments by expected uncertainty removed about Moon and Mars cabins.
 - **Gravity bridge** (`/gravity-bridge`): one transparent, adjustable, unvalidated way to read ISS results at 0.17 g and 0.38 g, with a scorecard against NASA statements already in the atlas.
 - **Burning but unseen** (`/unseen`): where a flame could persist small and dim, and where the data stop (no labelled test below 2 cm/s).
