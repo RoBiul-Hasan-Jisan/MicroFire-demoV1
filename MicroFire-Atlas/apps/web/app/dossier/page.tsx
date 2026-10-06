@@ -38,6 +38,10 @@ export default async function DossierPage({ searchParams }: { searchParams: Prom
         {!fromUrl && <p className={styles.note}>This is an example scenario. Edit it below; the address bar always holds a link to exactly what you see.</p>}
         {ignored.length > 0 && <p className={styles.note}>Some values in the link were out of range or not recognised and were ignored: {ignored.join(", ")}.</p>}
 
+        <nav className={`${styles.links} ${styles.linksTop}`} aria-label="Sections">
+          {dz.sections.map((s) => <a key={s.n} href={`#d-${s.n}`}>{s.n}. {s.title}</a>)}
+        </nav>
+
         <DossierActions markdown={dz.markdown} url={dz.url} />
 
         <details className={`${styles.edit} brief-actions`} open={!fromUrl}>

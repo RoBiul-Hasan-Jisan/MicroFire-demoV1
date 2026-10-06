@@ -34,3 +34,22 @@
 .trace ul { margin-top: 0.4rem; display: grid; gap: 0.25rem; }
 .links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin-top: 1.5rem; }
 .links a { text-decoration: underline; }
+
+/* Observatory look */
+.page { max-width: 72rem; color: #e6efff; }
+.kicker { letter-spacing: .08em; text-transform: uppercase; font-size: .78rem; color: #4aa8ff; }
+.title { font-weight: 800; }
+.edit, .card, .trace { background: linear-gradient(160deg, #0c1a33, #08111f); border: 1px solid #1d3a66; border-radius: 14px; box-shadow: 0 0 24px #0a4bff18; }
+.card { border-left-width: 1px; padding: 1.2rem 1.4rem; }
+.card::before { content: ""; display: block; height: 3px; border-radius: 3px; background: linear-gradient(90deg, #2f8cff, #2ee6c0); margin: -.4rem 0 .9rem; }
+.card[data-n="5"]::before { background: linear-gradient(90deg, #ff7a2f, #ffb938); }
+.num { display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 50%; background: #0b2a55; border: 1px solid #2f8cff; font-size: 1.1rem; min-width: 2.4rem; }
+.card[data-n="5"] .num { background: #4a2208; border-color: #ff7a2f; }
+.sections { grid-template-columns: 1fr; }
+@media (min-width: 900px) { .sections { grid-template-columns: 1fr 1fr; } .sections .card:first-child { grid-column: 1 / -1; } }
+.trace { padding: 1rem 1.25rem; }
+.submit { background: #1a6dff; border-color: #4aa8ff; color: #fff; }
+.links a { text-decoration: none; background: #0b1d3a; border: 1px solid #1d3a66; border-radius: 999px; padding: .4rem .9rem; }
+.links a:hover { border-color: #4aa8ff; }
+.linksTop { margin-top: 1rem; }
+.linksTop { margin-top: 1rem; }

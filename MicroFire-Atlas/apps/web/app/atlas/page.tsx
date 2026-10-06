@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { AtlasExplorer } from "@/components/AtlasExplorer";
+import { AtlasObservatory } from "@/components/AtlasObservatory";
 import { Cite } from "@/components/Cite";
 import { RouteStage } from "@/components/world/RouteStage";
 import { experiments, luciRuns, saffireRuns } from "@/lib/data";
@@ -16,7 +16,7 @@ export default function AtlasPage() {
         <Cite sourceId="bass2-summary" page={104} where="Table 7.1" />, <Cite sourceId="bass2-summary" page={111} where="Tables A.1–A.2" />.
       </p>
       <div id="atlas-tool" className="scroll-mt-20 mt-8">
-        <AtlasExplorer data={experiments} saffire={saffireRuns} luci={luciRuns} />
+        <AtlasObservatory data={experiments} saffire={saffireRuns} luci={luciRuns} />
       </div>
     </div>
   );
